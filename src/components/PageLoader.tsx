@@ -88,9 +88,9 @@ export default function PageLoader({ onComplete }: { onComplete?: () => void }) 
         style={{ background: 'linear-gradient(135deg, #100824 0%, #0a0612 60%, #160930 100%)' }}
       />
 
-      {/* Ambient glow orb */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full pointer-events-none"
-        style={{ background: 'radial-gradient(circle, rgba(124,77,187,0.12) 0%, transparent 70%)' }}
+      {/* Ambient glow orb — boosted for visibility */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full pointer-events-none"
+        style={{ background: 'radial-gradient(circle, rgba(139,92,246,0.28) 0%, rgba(124,77,187,0.12) 45%, transparent 70%)' }}
       />
 
       {/* Main layout */}
@@ -98,33 +98,41 @@ export default function PageLoader({ onComplete }: { onComplete?: () => void }) 
 
         {/* ── Top bar ── */}
         <div className="flex items-center justify-between">
-          <span className="ldr-el text-[10px] font-black uppercase tracking-[0.3em] text-white/25">
+          <span className="ldr-el text-[10px] font-black uppercase tracking-[0.3em] text-white/60">
             Digital Studio
           </span>
-          <span className="ldr-el text-[10px] font-black uppercase tracking-[0.3em] text-white/25">
+          <span className="ldr-el text-[10px] font-black uppercase tracking-[0.3em] text-white/60">
             Est. 2024
           </span>
         </div>
 
         {/* ── Centre: Logo + tagline ── */}
         <div className="flex flex-col items-center gap-6">
-          {/* Logo */}
+          {/* Logo with glowing halo */}
           <div
             ref={logoRef}
-            className="relative"
+            className="relative flex items-center justify-center"
           >
+            {/* Outer halo ring */}
+            <div className="absolute w-52 h-52 sm:w-60 sm:h-60 rounded-full pointer-events-none"
+              style={{
+                background: 'radial-gradient(circle, rgba(139,92,246,0.22) 0%, rgba(124,77,187,0.08) 55%, transparent 75%)',
+                boxShadow: '0 0 60px 20px rgba(139,92,246,0.18)',
+              }}
+            />
             <Image
               src="/vareweb-logo.png"
               alt="VareWeb"
-              width={160}
-              height={160}
+              width={180}
+              height={180}
               priority
-              className="object-contain w-28 h-28 sm:w-36 sm:h-36 md:w-44 md:h-44"
+              className="object-contain w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 relative z-10"
+              style={{ filter: 'brightness(1.15) drop-shadow(0 0 18px rgba(167,139,250,0.55))' }}
             />
           </div>
 
           {/* Tagline */}
-          <p className="ldr-el text-white/30 text-[10px] sm:text-xs font-medium tracking-[0.35em] uppercase text-center">
+          <p className="ldr-el text-white/70 text-[10px] sm:text-xs font-semibold tracking-[0.35em] uppercase text-center">
             Precision-engineered digital experiences
           </p>
         </div>
@@ -142,7 +150,7 @@ export default function PageLoader({ onComplete }: { onComplete?: () => void }) 
               </div>
               <span className="text-lg font-black text-vare-purple-light leading-none mb-0.5">%</span>
             </div>
-            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white/20">
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white/60">
               Loading
             </span>
           </div>

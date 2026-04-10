@@ -7,6 +7,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import ParticleBackground from '@/components/ParticleBackground';
+import VideoPopup from '@/components/VideoPopup';
 import {
   Smartphone, RefreshCw, Palette, Search, ShoppingCart,
   Star, ArrowRight, ChevronLeft, ChevronRight, ChevronDown, Quote,
@@ -33,12 +34,12 @@ function usePrefersReducedMotion(): boolean {
   return prefersReduced;
 }
 
-// ==================== SECTION: HERO (Split Layout - Single Image Cycle) ====================
-const heroSlides = [
-  { icon: Monitor, color: 'from-purple-500 to-indigo-600', label: 'Web Design', desc: 'Custom-built websites that convert visitors into loyal customers.' },
-  { icon: Smartphone, color: 'from-blue-500 to-cyan-500', label: 'Mobile Apps', desc: 'Native-quality mobile experiences for iOS and Android platforms.' },
-  { icon: ShoppingCart, color: 'from-emerald-500 to-teal-500', label: 'eCommerce', desc: 'Powerful online stores that drive sales and growth.' },
-  { icon: Zap, color: 'from-amber-500 to-orange-500', label: 'Performance', desc: 'Lightning-fast loading and optimized user experiences.' },
+// ==================== SECTION: HERO (4 Images with Smooth Fade Animation) ====================
+const heroImages = [
+  'https://res.cloudinary.com/dahmphiup/image/upload/v1775844618/side-banner-2_l9htej.webp',
+  'https://res.cloudinary.com/dahmphiup/image/upload/v1775844610/side-banner-3-1_ypxsdp.webp',
+  'https://res.cloudinary.com/dahmphiup/image/upload/v1775844609/side-banner-4_mlqohb.webp',
+  'https://res.cloudinary.com/dahmphiup/image/upload/v1775844829/side-banner-1_vns0fj.webp'
 ];
 
 // ==================== DISCOUNT MODAL ====================
@@ -268,10 +269,11 @@ function HeroSection() {
   const ctaSecondaryRef = useRef<HTMLAnchorElement>(null);
   const parallaxOrbsRef = useRef<(HTMLDivElement | null)[]>([]);
   const trustBadgesRef = useRef<HTMLDivElement>(null);
-  const [activeSlide, setActiveSlide] = useState(0);
   const [typedText, setTypedText] = useState('Growth');
   const [typingPhase, setTypingPhase] = useState<'idle' | 'typing' | 'done'>('idle');
   const [isDiscountOpen, setIsDiscountOpen] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isFading, setIsFading] = useState(false);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -399,14 +401,17 @@ function HeroSection() {
     return () => cleanupFns.forEach((fn) => fn());
   }, []);
 
-  // Auto-cycle hero slides every 4s
+  // Image fade cycle every 5 seconds with smooth transitions
   useEffect(() => {
     const interval = setInterval(() => {
-      setActiveSlide((prev) => (prev + 1) % heroSlides.length);
-    }, 4000);
+      setIsFading(true);
+      setTimeout(() => {
+        setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
+        setIsFading(false);
+      }, 500); // Half of transition duration for smoother effect
+    }, 5000);
     return () => clearInterval(interval);
   }, []);
-
 
   // Typing effect — cycle through multiple words
   useEffect(() => {
@@ -457,7 +462,7 @@ function HeroSection() {
     };
   }, []);
 
-  // Animate slide transitions
+  // Animate image container entrance
   useEffect(() => {
     const el = slideContainerRef.current;
     if (!el) return;
@@ -465,9 +470,7 @@ function HeroSection() {
       { y: 15, opacity: 0, scale: 0.97 },
       { y: 0, opacity: 1, scale: 1, duration: 0.45, ease: 'power2.out', force3D: true }
     );
-  }, [activeSlide]);
-
-  const currentSlide = heroSlides[activeSlide];
+  }, []);
 
   return (
     <>
@@ -656,75 +659,26 @@ function HeroSection() {
             </div>
           </div>
 
-          {/* ===== RIGHT COLUMN — 3D Card Stack (~40%) ===== */}
-          <div className="lg:col-span-2 flex items-center justify-center lg:justify-end py-8 lg:py-0">
+          {/* ===== RIGHT COLUMN — 4 Images with Smooth Fade Animation (~40%) ===== */}
+          <div className="lg:col-span-2 flex items-start justify-center py-8 lg:py-0">
             <div
               ref={slideContainerRef}
-              className="relative w-[280px] h-[360px] sm:w-[320px] sm:h-[410px] lg:w-[340px] lg:h-[430px]"
-              style={{ perspective: '1200px' }}
+              className="relative w-[420px] h-[400px] sm:w-[460px] sm:h-[460px] lg:w-[520px] lg:h-[520px] rounded-[36px] overflow-hidden lg:-mt-8"
             >
-              {heroSlides.map((slide, i) => {
-                const offset = ((i - activeSlide) % heroSlides.length + heroSlides.length) % heroSlides.length;
-                let transform = '';
-                let opacity = 0;
-                let zIndex = 0;
-                let boxShadow = 'none';
-
-                if (offset === 0) {
-                  transform = 'translateZ(0px) rotateY(0deg) scale(1)';
-                  opacity = 1;
-                  zIndex = 4;
-                  boxShadow = '0 25px 60px -12px rgba(0,0,0,0.5)';
-                } else if (offset === 1) {
-                  transform = 'translateX(35px) translateZ(-60px) rotateY(-6deg) scale(0.9)';
-                  opacity = 0.45;
-                  zIndex = 3;
-                  boxShadow = '0 15px 40px -8px rgba(0,0,0,0.3)';
-                } else if (offset === 2) {
-                  transform = 'translateX(70px) translateZ(-120px) rotateY(-12deg) scale(0.8)';
-                  opacity = 0.2;
-                  zIndex = 2;
-                } else {
-                  transform = 'translateX(105px) translateZ(-180px) rotateY(-18deg) scale(0.7)';
-                  opacity = 0.08;
-                  zIndex = 1;
-                }
-
-                return (
-                  <div
-                    key={i}
-                    className="absolute inset-0 rounded-2xl overflow-hidden transition-all duration-700 ease-out cursor-default"
-                    style={{
-                      transform,
-                      opacity,
-                      zIndex,
-                      boxShadow,
-                      transformStyle: 'preserve-3d',
-                    }}
-                  >
-                    {/* Card gradient background */}
-                    <div className={`absolute inset-0 bg-gradient-to-br ${slide.color}`} />
-                    {/* Large background icon */}
-                    <div className="absolute inset-0 flex items-center justify-center opacity-[0.1]">
-                      <slide.icon className="w-20 h-20 sm:w-24 sm:h-24 text-white" />
-                    </div>
-                    {/* Subtle glass overlay */}
-                    <div className="absolute inset-0 bg-black/10" />
-                    {/* Bottom content area */}
-                    <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6 bg-gradient-to-t from-black/60 via-black/25 to-transparent">
-                      <div className="flex items-center gap-2.5 mb-2">
-                        <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center backdrop-blur-sm">
-                          <slide.icon className="w-4 h-4 text-white/90" />
-                        </div>
-                        <h3 className="text-white text-sm sm:text-base font-bold">{slide.label}</h3>
-                      </div>
-                      <p className="text-white/55 text-xs sm:text-sm leading-relaxed line-clamp-2">{slide.desc}</p>
-                    </div>
-                    {/* Shiny top highlight */}
-                    <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-                  </div>
-                );
-              })}
+              {heroImages.map((imageSrc, index) => (
+                <img
+                  key={index}
+                  src={imageSrc}
+                  alt={`VareWeb Hero Image ${index + 1}`}
+                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${
+                    index === currentImageIndex
+                      ? isFading
+                        ? 'opacity-0'
+                        : 'opacity-100'
+                      : 'opacity-0'
+                  }`}
+                />
+              ))}
             </div>
           </div>
 
@@ -1365,12 +1319,48 @@ function ServicesSection() {
 
 // ==================== SECTION: PORTFOLIO DATA ====================
 const portfolioItems = [
-  { title: 'E-Commerce Platform', category: 'Web Design', color: 'from-vare-purple to-violet-600', icon: ShoppingCart },
-  { title: 'Brand Identity System', category: 'Branding', color: 'from-blue-600 to-cyan-500', icon: Palette },
-  { title: 'SaaS Dashboard', category: 'UI/UX Design', color: 'from-emerald-500 to-teal-500', icon: Monitor },
-  { title: 'Mobile Banking App', category: 'App Design', color: 'from-orange-500 to-red-500', icon: Smartphone },
-  { title: 'Restaurant Chain Website', category: 'Web Development', color: 'from-pink-500 to-rose-500', icon: Globe },
-  { title: 'Real Estate Portal', category: 'Web Design', color: 'from-indigo-500 to-purple-500', icon: Layout },
+  { 
+    title: 'E-Commerce Platform', 
+    category: 'Web Design', 
+    color: 'from-vare-purple to-violet-600', 
+    icon: ShoppingCart,
+    image: 'https://images.unsplash.com/photo-1557821552-17105176677c?w=1000&auto=format&fit=crop&q=80'
+  },
+  { 
+    title: 'Brand Identity System', 
+    category: 'Branding', 
+    color: 'from-blue-600 to-cyan-500', 
+    icon: Palette,
+    image: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800&h=1000&fit=crop'
+  },
+  { 
+    title: 'SaaS Dashboard', 
+    category: 'UI/UX Design', 
+    color: 'from-emerald-500 to-teal-500', 
+    icon: Monitor,
+    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=1000&fit=crop'
+  },
+  { 
+    title: 'Mobile Banking App', 
+    category: 'App Design', 
+    color: 'from-orange-500 to-red-500', 
+    icon: Smartphone,
+    image: 'https://res.cloudinary.com/dahmphiup/image/upload/v1775847315/tran-mau-tri-tam-QwAL909kTiY-unsplash_1_pwxsph.jpg'
+  },
+  { 
+    title: 'Restaurant Chain Website', 
+    category: 'Web Development', 
+    color: 'from-pink-500 to-rose-500', 
+    icon: Globe,
+    image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800&h=1000&fit=crop'
+  },
+  { 
+    title: 'Real Estate Portal', 
+    category: 'Web Design', 
+    color: 'from-indigo-500 to-purple-500', 
+    icon: Layout,
+    image: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&h=1000&fit=crop'
+  },
 ];
 
 // ==================== SECTION: PORTFOLIO (High-Impact Editorial Display) ====================
@@ -1530,16 +1520,29 @@ function PortfolioSection() {
           {portfolioItems.map((item, i) => (
             <div key={i} className="portfolio-card flex-shrink-0 w-[320px] sm:w-[420px] group transition-all duration-700">
                <div className="relative glass-card-accent aspect-[4/5] rounded-[2.5rem] p-4 border border-white/5 overflow-hidden group-hover:border-white/20 transition-all duration-700">
-                  {/* Card Gradient Background */}
+                  {/* Card Background */}
                   <div className={`absolute inset-0 bg-gradient-to-br ${item.color} opacity-10 group-hover:opacity-20 transition-opacity duration-700`} />
                   
-                  {/* Image Placeholder / Icon Display */}
-                  <div className="relative h-full w-full rounded-[2rem] bg-black/40 border border-white/5 flex flex-col items-center justify-center overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />
-                    <item.icon className="w-20 h-20 text-white/5 group-hover:text-white/10 group-hover:scale-110 transition-all duration-700" />
+                  {/* Image Display Container */}
+                  <div className="relative h-full w-full rounded-[2rem] bg-black/40 border border-white/5 flex flex-col items-center justify-center overflow-hidden group-hover:border-white/10 transition-all duration-700">
+                    {/* Background Image */}
+                    <img
+                      src={item.image}
+                      alt={item.title}
+                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).style.display = 'none';
+                      }}
+                    />
+                    
+                    {/* Dark Gradient Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent group-hover:via-black/20 transition-colors duration-700" />
+                    
+                    {/* Fallback Icon (if image fails) */}
+                    <item.icon className="relative w-20 h-20 text-white/10 group-hover:text-white/20 group-hover:scale-110 transition-all duration-700 z-10" />
                     
                     {/* View Badge */}
-                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0">
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0 z-20">
                       <div className="px-6 py-3 bg-white text-black text-[10px] font-black uppercase tracking-widest rounded-full shadow-[0_10px_30px_rgba(255,255,255,0.4)]">
                         Deep Dive
                       </div>
@@ -1547,7 +1550,7 @@ function PortfolioSection() {
                   </div>
 
                   {/* Content Overlay */}
-                  <div className="absolute bottom-10 left-10 right-10">
+                  <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black via-black/60 to-transparent">
                     <span className="inline-block text-vare-gold text-[10px] font-black uppercase tracking-[0.2em] mb-4">
                       {item.category}
                     </span>
@@ -1752,9 +1755,9 @@ const faqItems = [
 
 // ==================== SECTION: TESTIMONIALS DATA ====================
 const testimonials = [
-  { name: 'Sarah Johnson', role: 'CEO, TechStart', text: 'VareWeb transformed our online presence completely. The team delivered beyond our expectations with a stunning website that drives real results for our business. Their attention to detail is unmatched.', rating: 5 },
-  { name: 'Michael Chen', role: 'Founder, GrowthHub', text: 'Working with VareWeb was an absolute pleasure. Their attention to detail and creative approach helped us stand out in a crowded market. Revenue increased by 200% within three months of launch.', rating: 5 },
-  { name: 'Emily Williams', role: 'Marketing Director, NovaCorp', text: 'The results speak for themselves. Our conversions increased by 300% after the redesign. Best investment we have made for our digital presence. The team was professional and responsive throughout.', rating: 5 },
+  { name: 'Lisa Jo Davis', role: 'Founder, Healing Light With Lisa Jo', text: 'VareWeb transformed our online presence completely. The team delivered beyond our expectations with a stunning website that drives real results for our business. Their attention to detail is unmatched.', rating: 5 },
+  { name: 'Rachel Kennard', role: 'Co-Founder Exotic Dent Works', text: 'Working with VareWeb was an absolute pleasure. Their attention to detail and creative approach helped us stand out in a crowded market. Revenue increased by 200% within three months of launch.', rating: 5 },
+  { name: 'Todd Garner', role: 'Co-Founder, Viara Journeys', text: 'The results speak for themselves. Our conversions increased by 300% after the redesign. Best investment we have made for our digital presence. The team was professional and responsive throughout.', rating: 5 },
 ];
 
 // ==================== SECTION: TESTIMONIALS + FAQ (Split Layout) ====================
@@ -2001,40 +2004,76 @@ function TestimonialsAndFAQSection() {
 // ==================== SECTION: CLIENT VIDEO REVIEWS ====================
 const videoTestimonials = [
   {
-    name: 'Sarah Mitchell',
-    role: 'CEO, TechStart Inc.',
+    name: 'Lisa Jo Davis',
+    role: 'Founder, Healing Light With Lisa Jo',
     quote: 'VareWeb transformed our online presence completely. Our conversion rates doubled within the first month of launching the new site.',
     gradient: 'from-purple-500 to-indigo-600',
+    videoUrl: 'https://res.cloudinary.com/dahmphiup/video/upload/v1775840925/lisa-jo-davis-review_aey8d0.mp4',
+    thumbnailImage: 'https://res.cloudinary.com/dahmphiup/image/upload/v1775842368/Untitled_2_b19sk4.webp',
+    profileImage: 'https://res.cloudinary.com/dahmphiup/image/upload/v1775842368/Untitled_2_b19sk4.webp',
   },
   {
-    name: 'James Rodriguez',
-    role: 'Marketing Director, Global Retail Co.',
+    name: 'Rachel Kennard',
+    role: 'Co-founder, Exotic Dent Works',
     quote: 'The team at VareWeb understood our vision perfectly. They delivered a website that exceeded all our expectations.',
     gradient: 'from-blue-500 to-teal-500',
+    videoUrl: 'https://res.cloudinary.com/dahmphiup/video/upload/v1775840971/Webiste-Review-Vareweb_xpxdq4.mp4',
+    thumbnailImage: 'https://res.cloudinary.com/dahmphiup/image/upload/v1775842368/Poster_t5l9wy.webp',
+    profileImage: 'https://res.cloudinary.com/dahmphiup/image/upload/v1775842368/Poster_t5l9wy.webp',
   },
   {
-    name: 'Emily Chen',
+    name: 'Jarmaine Parris',
     role: 'Founder, StyleHub',
     quote: 'Working with VareWeb was the best investment we made for our brand. The ROI has been incredible.',
     gradient: 'from-teal-400 to-emerald-500',
+    videoUrl: 'https://res.cloudinary.com/dahmphiup/video/upload/v1775840959/client-review_qkmuzs.mp4',
+    thumbnailImage: 'https://res.cloudinary.com/dahmphiup/image/upload/v1775842369/frame-1-6_ppejbp.png',
+    profileImage: 'https://res.cloudinary.com/dahmphiup/image/upload/v1775842369/frame-1-6_ppejbp.png',
   },
   {
-    name: 'Michael Brooks',
-    role: 'CTO, FinanceFlow',
+    name: 'Tony Kennard',
+    role: 'Co-founder, Exotic Dent Works',
     quote: 'Their technical expertise combined with creative design skills makes VareWeb stand out from every other agency we\'ve worked with.',
     gradient: 'from-orange-500 to-red-500',
+    videoUrl: 'https://res.cloudinary.com/dahmphiup/video/upload/v1775840962/uri_ifs___V_o8R7B_lFsXs6X-6wLepRp3U3oQR4Lb1mu2ndNiCCZyk_e5748p.mp4',
+    thumbnailImage: 'https://res.cloudinary.com/dahmphiup/image/upload/v1775842370/tony_osxvwr.png',
+    profileImage: 'https://res.cloudinary.com/dahmphiup/image/upload/v1775842370/tony_osxvwr.png',
   },
   {
-    name: 'Lisa Wang',
-    role: 'VP of Product, HealthTech Solutions',
+    name: 'Todd Garner',
+    role: 'Co-founder, Viara Journeys',
     quote: 'From concept to launch, VareWeb was professional, responsive, and delivered beyond what we imagined possible.',
     gradient: 'from-pink-500 to-purple-500',
+    videoUrl: 'https://res.cloudinary.com/dahmphiup/video/upload/v1775840936/Todd-Garner-Review_neylgu.mp4',
+    thumbnailImage: 'https://res.cloudinary.com/dahmphiup/image/upload/v1775842368/Untitled-4_epbgn8.webp',
+    profileImage: 'https://res.cloudinary.com/dahmphiup/image/upload/v1775842368/Untitled-4_epbgn8.webp',
   },
   {
-    name: 'David Thompson',
+    name: 'Tiya Hopewell Cooper',
     role: 'Owner, Thompson Restaurants',
     quote: 'Our online orders increased by 300% after VareWeb redesigned our website. Absolutely phenomenal work.',
     gradient: 'from-indigo-500 to-blue-600',
+    videoUrl: 'https://res.cloudinary.com/dahmphiup/video/upload/v1775840937/WhatsApp-Video-2025-11-22-at-01.11.35_567e97a3_ifyjnw.mp4',
+    thumbnailImage: 'https://res.cloudinary.com/dahmphiup/image/upload/v1775842368/frame-1_7_ogum5g.png',
+    profileImage: 'https://res.cloudinary.com/dahmphiup/image/upload/v1775842368/frame-1_7_ogum5g.png',
+  },
+  {
+    name: 'Bob Bowden',
+    role: 'Founder Dino West Aventures',
+    quote: 'Our online orders increased by 300% after VareWeb redesigned our website. Absolutely phenomenal work.',
+    gradient: 'from-indigo-500 to-blue-600',
+    videoUrl: 'https://res.cloudinary.com/dahmphiup/video/upload/v1775840924/dino-west-review_lf3byr.mp4',
+    thumbnailImage: 'https://res.cloudinary.com/dahmphiup/image/upload/v1775842368/dino-west-review_q8gueu.jpg',
+    profileImage: 'https://res.cloudinary.com/dahmphiup/image/upload/v1775842368/dino-west-review_q8gueu.jpg',
+  },
+  {
+    name: 'Peggie Smith',
+    role: 'Founder ArtisticCreations',
+    quote: 'Our online orders increased by 300% after VareWeb redesigned our website. Absolutely phenomenal work.',
+    gradient: 'from-indigo-500 to-blue-600',
+    videoUrl: 'https://res.cloudinary.com/dahmphiup/video/upload/v1775843185/you_how_Vareweb_has_1_1_wdab1l.mp4',
+    thumbnailImage: 'https://res.cloudinary.com/dahmphiup/image/upload/v1775842993/peggi_iqldfi.webp',
+    profileImage: 'https://res.cloudinary.com/dahmphiup/image/upload/v1775842993/peggi_iqldfi.webp',
   },
 ];
 
@@ -2042,6 +2081,8 @@ function ClientVideoReviewsSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
+  const [selectedVideo, setSelectedVideo] = useState<typeof videoTestimonials[0] | null>(null);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   // Particle dots data (deterministic)
   const particles = [
@@ -2066,6 +2107,11 @@ function ClientVideoReviewsSection() {
     { id: 18, top: '30%', left: '5%', size: 2, opacity: 0.09, delay: '3.8s', duration: '24s' },
     { id: 19, top: '95%', left: '48%', size: 4, opacity: 0.05, delay: '1.5s', duration: '22s' },
   ];
+
+  const handleVideoClick = (video: typeof videoTestimonials[0]) => {
+    setSelectedVideo(video);
+    setIsPopupOpen(true);
+  };
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -2097,98 +2143,111 @@ function ClientVideoReviewsSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="py-24 sm:py-32 relative overflow-hidden mesh-gradient-dark">
-      <div className="absolute inset-0 bg-[#0a0612]/60 backdrop-blur-3xl" />
-      
-      {/* Floating particle dots */}
-      <div className="absolute inset-0 pointer-events-none opacity-20">
-        {particles.map((p) => (
-          <div
-            key={p.id}
-            className="absolute rounded-full"
-            style={{
-              top: p.top,
-              left: p.left,
-              width: p.size,
-              height: p.size,
-              opacity: p.opacity,
-              background: 'radial-gradient(circle, rgba(124,77,187,0.5), rgba(124,77,187,0.2))',
-              animation: `floatShape1 ${p.duration} ease-in-out infinite ${p.delay}`,
-            }}
-          />
-        ))}
-      </div>
-
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <div ref={headerRef} className="text-center mb-20 opacity-0">
-          <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-vare-purple/20 text-vare-purple-light text-xs font-bold uppercase tracking-widest mb-6 border border-white/10">
-            <Quote className="w-4 h-4 mr-2 text-vare-gold" />
-            Social Proof
-          </span>
-          <h2 className="text-3xl sm:text-5xl font-bold text-white mb-6">
-            Client Video <span className="text-transparent bg-clip-text bg-gradient-to-r from-vare-purple-light to-blue-400">Reviews</span>
-          </h2>
-          <p className="text-white/50 max-w-2xl mx-auto text-lg leading-relaxed">
-            Real stories from business leaders who scaled with VareWeb
-          </p>
+    <>
+      <section ref={sectionRef} className="py-24 sm:py-32 relative overflow-hidden mesh-gradient-dark">
+        <div className="absolute inset-0 bg-[#0a0612]/60 backdrop-blur-3xl" />
+        
+        {/* Floating particle dots */}
+        <div className="absolute inset-0 pointer-events-none opacity-20">
+          {particles.map((p) => (
+            <div
+              key={p.id}
+              className="absolute rounded-full"
+              style={{
+                top: p.top,
+                left: p.left,
+                width: p.size,
+                height: p.size,
+                opacity: p.opacity,
+                background: 'radial-gradient(circle, rgba(124,77,187,0.5), rgba(124,77,187,0.2))',
+                animation: `floatShape1 ${p.duration} ease-in-out infinite ${p.delay}`,
+              }}
+            />
+          ))}
         </div>
 
-        {/* Vertical Video Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
-          {videoTestimonials.map((video, i) => (
-            <div
-              key={i}
-              ref={(el) => { if(cardsRef.current) cardsRef.current[i] = el; }}
-              className="video-card group cursor-pointer"
-            >
-              <div className="relative h-full glass-card rounded-[32px] overflow-hidden border border-white/10 transition-all duration-500 hover:border-white/20 hover:shadow-2xl hover:shadow-purple-500/20">
-                {/* Vertical Thumbnail Area (9:16) */}
-                <div className="relative aspect-[9/16] overflow-hidden bg-gradient-to-br from-[#1a1128] to-[#0a0612]">
-                  {/* Fake Video Content Graphic */}
-                  <div className={`absolute inset-0 opacity-40 bg-gradient-to-br ${video.gradient}`} />
-                  <div className="absolute inset-0 bg-cover bg-center grayscale mix-blend-overlay opacity-30" style={{ backgroundImage: `url('https://images.unsplash.com/photo-${1500000000000 + i}?auto=format&fit=crop&q=80')` }} />
-                  
-                  {/* Decorative Elements */}
-                  <div className="absolute inset-0 opacity-20 pointer-events-none">
-                    <div className="absolute top-10 left-1/2 -translate-x-1/2 w-32 h-32 rounded-full border border-white/20" />
-                    <div className="absolute bottom-20 right-0 w-40 h-40 rounded-full border border-white/10" />
-                  </div>
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Section Header */}
+          <div ref={headerRef} className="text-center mb-20 opacity-0">
+            <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-vare-purple/20 text-vare-purple-light text-xs font-bold uppercase tracking-widest mb-6 border border-white/10">
+              <Quote className="w-4 h-4 mr-2 text-vare-gold" />
+              Social Proof
+            </span>
+            <h2 className="text-3xl sm:text-5xl font-bold text-white mb-6">
+              Client Video <span className="text-transparent bg-clip-text bg-gradient-to-r from-vare-purple-light to-blue-400">Reviews</span>
+            </h2>
+            <p className="text-white/50 max-w-2xl mx-auto text-lg leading-relaxed">
+              Real stories from business leaders who scaled with VareWeb
+            </p>
+          </div>
 
-                  {/* Play Button */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-16 h-16 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20 group-hover:bg-vare-purple group-hover:scale-110 group-hover:border-vare-purple-light transition-all duration-500 shadow-2xl">
-                      <Play className="w-6 h-6 text-white ml-1 fill-white" />
-                    </div>
-                  </div>
-
-                  {/* Bottom Info Overlay */}
-                  <div className="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-[#0a0612] via-[#0a0612]/80 to-transparent">
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${video.gradient} flex items-center justify-center text-white text-xs font-bold shadow-lg border border-white/20`}>
-                        {video.name.charAt(0)}
+          {/* Vertical Video Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+            {videoTestimonials.map((video, i) => (
+              <div
+                key={i}
+                ref={(el) => { if(cardsRef.current) cardsRef.current[i] = el; }}
+                className="video-card group cursor-pointer"
+                onClick={() => handleVideoClick(video)}
+              >
+                <div className="relative h-full glass-card rounded-[32px] overflow-hidden border border-white/10 transition-all duration-500 hover:border-white/20 hover:shadow-2xl hover:shadow-purple-500/20">
+                  {/* Vertical Thumbnail Area (9:16) */}
+                  <div className="relative aspect-[9/16] overflow-hidden bg-gradient-to-br from-[#1a1128] to-[#0a0612]">
+                    {/* Thumbnail Image */}
+                    <img 
+                      src={video.thumbnailImage} 
+                      alt={video.name}
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                    {/* Overlay Gradient */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0a0612] via-transparent to-transparent opacity-40" />
+                    
+                    {/* Play Button */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="w-16 h-16 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20 group-hover:bg-vare-purple group-hover:scale-110 group-hover:border-vare-purple-light transition-all duration-500 shadow-2xl">
+                        <Play className="w-6 h-6 text-white ml-1 fill-white" />
                       </div>
-                      <div className="overflow-hidden">
-                        <h4 className="text-white font-bold text-sm truncate">{video.name}</h4>
-                        <p className="text-white/50 text-[10px] uppercase tracking-widest truncate">{video.role}</p>
-                      </div>
                     </div>
-                    <p className="text-white/70 text-xs leading-relaxed line-clamp-3 italic">
-                      &ldquo;{video.quote}&rdquo;
-                    </p>
-                  </div>
 
-                  {/* Duration Badge */}
-                  <div className="absolute top-4 right-4 px-2 py-1 rounded-full bg-black/60 backdrop-blur-md text-white text-[10px] font-bold border border-white/10">
-                    {String(2).padStart(2, '0')}:{String(30 + i * 7).padStart(2, '0')}
+                    {/* Bottom Info Overlay */}
+                    <div className="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-[#0a0612] via-[#0a0612]/80 to-transparent">
+                      <div className="flex items-center gap-3 mb-4">
+                        <img
+                          src={video.profileImage}
+                          alt={video.name}
+                          className="w-10 h-10 rounded-full object-cover border border-white/20 shadow-lg"
+                        />
+                        <div className="overflow-hidden">
+                          <h4 className="text-white font-bold text-sm truncate">{video.name}</h4>
+                          <p className="text-white/50 text-[10px] uppercase tracking-widest truncate">{video.role}</p>
+                        </div>
+                      </div>
+                      <p className="text-white/70 text-xs leading-relaxed line-clamp-3 italic">
+                        &ldquo;{video.quote}&rdquo;
+                      </p>
+                    </div>
+
+                    {/* Duration Badge */}
+                    <div className="absolute top-4 right-4 px-2 py-1 rounded-full bg-black/60 backdrop-blur-md text-white text-[10px] font-bold border border-white/10">
+                      {String(2).padStart(2, '0')}:{String(30 + i * 7).padStart(2, '0')}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+
+      {/* Video Popup */}
+      {selectedVideo && (
+        <VideoPopup
+          isOpen={isPopupOpen}
+          onClose={() => setIsPopupOpen(false)}
+          video={selectedVideo}
+        />
+      )}
+    </>
   );
 }
 
@@ -2610,8 +2669,8 @@ export default function HomePage() {
   return (
     <main>
       <FloatingElements />
-      <div className="relative z-10">
       <Navigation />
+      <div className="relative z-10">
       <HeroSection />
 
       <CounterSection />

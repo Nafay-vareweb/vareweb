@@ -323,8 +323,8 @@ export default function PricingPage() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-white/[0.04]">
-                    {comparisonFeatures.map((row, i) => (
-                      <tr key={row.feature} className="group/row hover:bg-white/[0.03] transition-colors">
+                    {comparisonFeatures.map((row) => (
+                      <tr key={row.feature} className="comparison-row group/row hover:bg-white/[0.03] transition-colors">
                         <td className="py-6 px-10 text-sm font-bold text-white/80 group-hover/row:text-white transition-colors">{row.feature}</td>
                         <td className="py-6 px-6 text-center">{renderCellValue(row.starter)}</td>
                         <td className="py-6 px-6 text-center bg-vare-purple/[0.02] group-hover/row:bg-vare-purple/[0.05] transition-colors">{renderCellValue(row.professional)}</td>
@@ -378,7 +378,7 @@ export default function PricingPage() {
 
                 <div className="lg:w-1/2 grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
                     {[
-                      { icon: ShieldCheck, title: 'Risk-Free 30 Days', desc: 'Full refund if expectations aren\'t met.', colorClass: 'bg-emerald-500/10' },
+                      { icon: ShieldCheck, title: 'Risk-Free 30 Days', desc: "Full refund if expectations aren't met.", colorClass: 'bg-emerald-500/10' },
                       { icon: CheckCircle, title: 'No Hidden Costs', desc: 'What we quote is exactly what you pay.', colorClass: 'bg-vare-purple/10' },
                       { icon: Sparkles, title: 'Premium Revisions', desc: 'Refinement until it is perfect for you.', colorClass: 'bg-vare-gold/10' },
                       { icon: Headphones, title: 'Lifetime Care', desc: 'We stay with you long after the launch.', colorClass: 'bg-blue-500/10' }

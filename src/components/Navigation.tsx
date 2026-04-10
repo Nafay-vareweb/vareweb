@@ -77,18 +77,18 @@ export default function Navigation() {
     <>
       <nav
         ref={navRef}
-        className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 opacity-0 ${
+        className={`fixed top-0 left-0 right-0 z-[9999] pointer-events-auto transition-all duration-500 opacity-0 ${
           scrolled
             ? 'py-3'
             : 'py-5'
         }`}
       >
-        <div className={`absolute inset-0 transition-all duration-500 ${
+        <div className={`absolute inset-0 transition-all duration-500 pointer-events-none ${
           scrolled 
             ? 'bg-[#0a0612]/70 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.4)] border-b border-white/5' 
             : 'bg-transparent'
         }`} />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 pointer-events-auto">
           <div className="flex items-center justify-between h-20">
             {/* Logo */}
             <Link href="/" className="flex items-center space-x-2 group">

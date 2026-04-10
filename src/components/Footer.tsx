@@ -244,7 +244,7 @@ export default function Footer() {
       <button
         id="scroll-top-btn"
         onClick={scrollToTop}
-        className="fixed bottom-8 right-8 z-[100] w-14 h-14 gradient-purple rounded-2xl flex items-center justify-center text-white shadow-2xl shadow-purple-500/20 hover:shadow-purple-500/40 transform hover:-translate-y-2 transition-all duration-500 border border-white/10 backdrop-blur-sm"
+        className="fixed bottom-8 right-8 z-[90] w-14 h-14 gradient-purple rounded-2xl flex items-center justify-center text-white shadow-2xl shadow-purple-500/20 hover:shadow-purple-500/40 transform hover:-translate-y-2 transition-all duration-500 border border-white/10 backdrop-blur-sm"
       >
         <ArrowUp className="w-6 h-6" />
       </button>
