@@ -65,7 +65,7 @@ function VideoPopup({ isOpen, onClose, video }: VideoPopupProps) {
 
   return (
     <div
-      className="fixed inset-0 z-[1000] flex items-center justify-center p-4"
+      className="fixed inset-0 z-[10001] flex items-center justify-center p-4 overflow-y-auto"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
@@ -80,23 +80,23 @@ function VideoPopup({ isOpen, onClose, video }: VideoPopupProps) {
       {/* Content Container */}
       <div
         ref={contentRef}
-        className="relative w-full max-w-5xl z-10"
+        className="relative w-full max-w-5xl max-h-[calc(100vh-80px)] overflow-hidden overflow-y-auto z-10 rounded-[36px] bg-[#0b0916]/95 border border-white/10 shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute -top-10 right-4 p-2 text-white/50 hover:text-white transition-colors duration-200 z-20"
+          className="absolute top-4 right-4 p-3 text-white/70 hover:text-white bg-black/30 rounded-full backdrop-blur-md transition-colors duration-200 z-20"
           aria-label="Close popup"
         >
           <X className="w-6 h-6" />
         </button>
 
         {/* Horizontal Layout: Video left, Text right */}
-        <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr] gap-6 md:gap-8 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-6 lg:gap-10 items-start">
           {/* LEFT: Video Player - Vertical Format (9:16) */}
-          <div className="flex justify-center md:justify-end">
-            <div className="relative w-full max-w-xs aspect-[9/16] rounded-2xl overflow-hidden bg-black border border-white/10 shadow-2xl">
+          <div className="flex justify-center lg:justify-end">
+            <div className="relative w-full max-w-[400px] aspect-[9/16] rounded-3xl overflow-hidden bg-black border border-white/10 shadow-2xl">
               <video
                 ref={videoRef}
                 src={video.videoUrl}
@@ -110,13 +110,13 @@ function VideoPopup({ isOpen, onClose, video }: VideoPopupProps) {
           </div>
 
           {/* RIGHT: Text Content */}
-          <div className="flex flex-col justify-start gap-6 md:pl-4">
+          <div className="flex flex-col justify-center gap-6 px-2 sm:px-0 lg:pl-4 text-center lg:text-left">
             {/* Client Avatar and Info */}
             <div className="space-y-4">
               <img
                 src={video.profileImage}
                 alt={video.name}
-                className="w-16 h-16 rounded-2xl object-cover border border-white/20 shadow-lg"
+                className="hidden sm:block w-16 h-16 rounded-2xl object-cover border border-white/20 shadow-lg"
               />
               <div>
                 <h3 className="text-white font-bold text-xl">{video.name}</h3>

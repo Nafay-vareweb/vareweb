@@ -143,7 +143,7 @@ export default function Navigation() {
             {/* CTA Button */}
             <Link
               href="/contact"
-              className="px-6 py-2.5 text-xs font-bold uppercase tracking-widest text-white gradient-purple rounded-xl hover:shadow-[0_0_30px_rgba(124,77,187,0.4)] transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center border border-white/10"
+              className="hidden lg:inline-flex px-6 py-2.5 text-xs font-bold uppercase tracking-widest text-white gradient-purple rounded-xl hover:shadow-[0_0_30px_rgba(124,77,187,0.4)] transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center border border-white/10"
             >
               Get a Quote
             </Link>
@@ -167,7 +167,7 @@ export default function Navigation() {
           ref={mobileMenuRef}
           className="fixed inset-0 z-[99] bg-[#0a0612]/95 backdrop-blur-xl lg:hidden overflow-y-auto"
         >
-          <div className="pt-24 px-6 pb-8">
+          <div className="pt-32 px-6 pb-8">
             <div className="space-y-1">
               {navLinks.map((link, index) => (
                 <div key={link.name}>
