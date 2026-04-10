@@ -1,0 +1,163 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+// Blog Category
+model BlogCategory {
+  id          String   @id @default(cuid())
+  name        String   @db.VarChar(255)
+  slug        String   @unique @db.VarChar(191)
+  description String?  @db.Text
+  createdAt   DateTime @default(now())
+}
+
+// Blog Post
+model BlogPost {
+  id            String        @id @default(cuid())
+  title         String        @db.VarChar(255)
+  slug          String        @unique @db.VarChar(191)
+  excerpt       String?       @db.Text
+  content       String        @db.LongText
+  featuredImage String?       @db.Text
+  category      String        @db.VarChar(255)
+  tags          String        @default("") @db.Text
+  status        String        @default("DRAFT") @db.VarChar(50)
+  authorName    String        @default("") @db.VarChar(255)
+  publishedAt   DateTime?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+// Resume / CV Management
+model Resume {
+  id            String   @id @default(cuid())
+  fullName      String   @db.VarChar(255)
+  email         String   @db.VarChar(255)
+  phone         String   @db.VarChar(50)
+  position      String   @db.VarChar(255)
+  experience    String   @db.LongText
+  education     String   @db.LongText
+  skills        String   @db.Text
+  resumeFileUrl String?  @db.Text
+  coverLetter   String?  @db.LongText
+  status        String   @default("NEW") @db.VarChar(50)
+  notes         String?  @db.Text
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+// Client Form Management
+model ClientForm {
+  id          String   @id @default(cuid())
+  fullName    String   @db.VarChar(255)
+  email       String   @db.VarChar(255)
+  phone       String   @db.VarChar(50)
+  companyName String?  @db.VarChar(255)
+  serviceType String   @db.VarChar(255)
+  budget      String?  @db.VarChar(100)
+  message     String?  @db.Text
+  status      String   @default("NEW") @db.VarChar(50)
+  assignedTo  String?  @db.VarChar(255)
+  notes       String?  @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// Contact Form Submissions
+model ContactSubmission {
+  id          String   @id @default(cuid())
+  name        String   @db.VarChar(255)
+  email       String   @db.VarChar(255)
+  phone       String?  @db.VarChar(50)
+  serviceType String?  @db.VarChar(255)
+  message     String   @db.Text
+  createdAt   DateTime @default(now())
+}
+
+// Appointment Booking
+model Appointment {
+  id            String   @id @default(cuid())
+  fullName      String   @db.VarChar(255)
+  email         String   @db.VarChar(255)
+  phone         String   @db.VarChar(50)
+  serviceType   String   @db.VarChar(255)
+  preferredDate String   @db.VarChar(50)
+  preferredTime String   @db.VarChar(50)
+  message       String?  @db.Text
+  status        String   @default("PENDING") @db.VarChar(50) // PENDING, CONFIRMED, COMPLETED, CANCELLED
+  notes         String?  @db.Text
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+// Website Settings
+model SiteSetting {
+  id        String   @id @default(cuid())
+  key       String   @unique @db.VarChar(191)
+  value     String   @db.LongText
+  updatedAt DateTime @updatedAt
+}
+
+// ─── Authentication & Users ───────────────────────────────────
+
+// User accounts for dashboard access
+model User {
+  id                    String   @id @default(cuid())
+  username              String   @unique @db.VarChar(191)
+  password              String   @db.VarChar(255)
+  name                  String   @db.VarChar(255)
+  email                 String?  @db.VarChar(255)
+  role                  String   @default("CV_CHECKER") @db.VarChar(50) // ADMIN, BLOG_MANAGER, CV_CHECKER, CLIENT_CHECKER
+  isActive              Boolean  @default(true)
+  passwordChangeRequest Boolean  @default(true)
+  requestedPassword     String?  @db.VarChar(255)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+}
+
+// ─── Careers / Job Listings ───────────────────────────────────
+
+// Job positions listed on careers page
+model JobListing {
+  id          String   @id @default(cuid())
+  title       String   @db.VarChar(255)
+  slug        String   @unique @db.VarChar(191)
+  department  String   @db.VarChar(255)
+  location    String   @default("Remote") @db.VarChar(255)
+  type        String   @default("Full-Time") @db.VarChar(50) // Full-Time, Part-Time, Contract, Internship
+  salary      String?  @db.VarChar(255)
+  description String   @db.LongText
+  requirements String  @db.LongText
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  applications CareerApplication[]
+}
+
+// Career applications submitted from the careers page
+model CareerApplication {
+  id            String   @id @default(cuid())
+  jobId         String   @db.VarChar(191)
+  job           JobListing @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  fullName      String   @db.VarChar(255)
+  email         String   @db.VarChar(255)
+  phone         String   @db.VarChar(50)
+  portfolioUrl  String?  @db.Text
+  linkedinUrl   String?  @db.Text
+  experience    String   @db.LongText
+  education     String   @db.LongText
+  skills        String   @db.Text
+  coverLetter   String?  @db.LongText
+  resumeFileUrl String?  @db.Text
+  status        String   @default("NEW") @db.VarChar(50) // NEW, REVIEWING, SHORTLISTED, INTERVIEW, OFFERED, REJECTED
+  notes         String?  @db.Text
+  reviewedBy    String?  @db.VarChar(255)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
