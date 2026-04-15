@@ -20,7 +20,8 @@ export function useNavigationLoader() {
 export default function ClientLoader({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const [showLoader, setShowLoader] = useState(true);
+  const isAdminPath = pathname?.startsWith('/admin');
+  const [showLoader, setShowLoader] = useState<boolean>(() => !isAdminPath);
   const prevPathRef = useRef(pathname);
   const isNavigating = useRef(false);
   // Store pathname in a ref so click handler always has the latest value (no stale closure)
@@ -30,6 +31,14 @@ export default function ClientLoader({ children }: { children: React.ReactNode }
   // Keep pathnameRef in sync
   useEffect(() => {
     pathnameRef.current = pathname;
+  }, [pathname]);
+
+  // Ensure admin routes never show the global page loader
+  useEffect(() => {
+    if (!pathname) return;
+    if (pathname.startsWith('/admin')) {
+      setShowLoader(false);
+    }
   }, [pathname]);
 
   const handleLoaderComplete = useCallback(() => {
@@ -74,6 +83,14 @@ export default function ClientLoader({ children }: { children: React.ReactNode }
       // Same page - don't show loader
       if (href === currentPath) return;
 
+      // If navigating into admin routes, skip the global page loader
+      if (href.startsWith('/admin')) {
+        e.preventDefault();
+        window.scrollTo({ top: 0 });
+        router.push(href);
+        return;
+      }
+
       // Mark as navigating and show loader
       e.preventDefault();
       isNavigating.current = true;
@@ -93,6 +110,11 @@ export default function ClientLoader({ children }: { children: React.ReactNode }
   // Listen for browser back/forward (popstate)
   useEffect(() => {
     const handlePopState = () => {
+      // Avoid showing loader for admin routes on history navigation
+      if (window.location.pathname.startsWith('/admin')) {
+        window.scrollTo({ top: 0 });
+        return;
+      }
       // Show loader immediately on popstate
       setShowLoader(true);
       window.scrollTo({ top: 0 });
@@ -115,6 +137,13 @@ export default function ClientLoader({ children }: { children: React.ReactNode }
   }, []);
 
   const navigateWithLoader = useCallback((href: string) => {
+    // Don't show global loader for admin navigation
+    if (href.startsWith('/admin')) {
+      window.scrollTo({ top: 0 });
+      router.push(href);
+      return;
+    }
+
     isNavigating.current = true;
     window.scrollTo({ top: 0 });
     setShowLoader(true);

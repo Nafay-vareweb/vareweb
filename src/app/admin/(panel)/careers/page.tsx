@@ -59,7 +59,6 @@ const jobFormDefaults = {
 export default function AdminCareersPage() {
   const [jobs, setJobs] = useState<Job[]>([])
   const [applications, setApplications] = useState<Application[]>([])
-  const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState('applications')
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState('')
@@ -86,7 +85,6 @@ export default function AdminCareersPage() {
   }, [])
 
   const fetchApplications = useCallback(async () => {
-    setLoading(true)
     try {
       const params = new URLSearchParams()
       if (search) params.set('search', search)
@@ -97,7 +95,6 @@ export default function AdminCareersPage() {
         setApplications(json.data || [])
       }
     } catch { toast.error('Failed to fetch applications') }
-    finally { setLoading(false) }
   }, [search, statusFilter])
 
   useEffect(() => { fetchJobs() }, [fetchJobs])
@@ -230,9 +227,7 @@ export default function AdminCareersPage() {
 
           <Card className="border-vare-border bg-white">
             <CardContent className="p-0">
-              {loading ? (
-                <div className="p-6 space-y-4">{[...Array(5)].map((_, i) => <Skeleton key={i} className="h-4 w-full" />)}</div>
-              ) : applications.length === 0 ? (
+              {applications.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-16 text-vare-gray">
                   <Users className="h-12 w-12 mb-4 opacity-20" />
                   <p className="text-lg font-medium mb-1">No applications found</p>

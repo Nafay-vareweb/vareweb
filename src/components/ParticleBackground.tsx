@@ -1,6 +1,8 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import React from 'react';
+
+const DEFAULT_OPACITY = { min: 0.15, max: 0.35 };
 
 interface ParticleBackgroundProps {
   /** Number of particles (default: 50) */
@@ -25,15 +27,15 @@ export default function ParticleBackground({
   count = 50,
   className = '',
   zIndex = 0,
-  opacity = { min: 0.15, max: 0.35 },
+  opacity = DEFAULT_OPACITY,
   connectLines = true,
   connectionDistance = 100,
   interactive = false,
   theme = 'dark',
 }: ParticleBackgroundProps) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const canvasRef = React.useRef<HTMLCanvasElement | null>(null);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -85,11 +87,13 @@ export default function ParticleBackground({
 
     let mouseX = -1000;
     let mouseY = -1000;
-    const mouseRadius = interactive ? 120 : 0;
+    // Force-disable interactive mouse behavior for static particles.
+    const interactiveEnabled = false;
+    const mouseRadius = 0;
     const repelForce = 2.5;
 
     const handleMouseMove = (e: MouseEvent) => {
-      if (!interactive) return;
+      if (!interactiveEnabled) return;
       const rect = canvas.getBoundingClientRect();
       mouseX = e.clientX - rect.left;
       mouseY = e.clientY - rect.top;
@@ -115,7 +119,7 @@ export default function ParticleBackground({
     const burstParticles: BurstParticle[] = [];
 
     const handleClick = (e: MouseEvent) => {
-      if (!interactive) return;
+      if (!interactiveEnabled) return;
       const rect = canvas.getBoundingClientRect();
       const clickX = e.clientX - rect.left;
       const clickY = e.clientY - rect.top;
@@ -141,7 +145,7 @@ export default function ParticleBackground({
       }
     };
 
-    if (interactive) {
+    if (interactiveEnabled) {
       const parent = canvas.parentElement;
       if (parent) {
         parent.addEventListener('mousemove', handleMouseMove);
@@ -156,8 +160,8 @@ export default function ParticleBackground({
 
       // Update and draw particles
       particles.forEach((p) => {
-        // Mouse repulsion
-        if (interactive && mouseRadius > 0) {
+        // Mouse repulsion is disabled for static behavior.
+        if (interactiveEnabled && mouseRadius > 0) {
           const dx = p.x - mouseX;
           const dy = p.y - mouseY;
           const dist = Math.sqrt(dx * dx + dy * dy);
@@ -239,7 +243,7 @@ export default function ParticleBackground({
     return () => {
       cancelAnimationFrame(animId);
       window.removeEventListener('resize', resize);
-      if (interactive) {
+      if (interactiveEnabled) {
         const parent = canvas.parentElement;
         if (parent) {
           parent.removeEventListener('mousemove', handleMouseMove);
@@ -248,7 +252,7 @@ export default function ParticleBackground({
         }
       }
     };
-  }, [count, opacity, connectLines, connectionDistance, interactive, theme]);
+  }, [count, opacity.min, opacity.max, connectLines, connectionDistance, theme]);
 
   return (
     <canvas

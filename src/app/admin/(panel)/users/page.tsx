@@ -44,7 +44,6 @@ const roleColors: Record<string, string> = {
 
 export default function AdminUsersPage() {
   const [users, setUsers] = useState<User[]>([])
-  const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
 
   // Create user dialog
@@ -72,12 +71,10 @@ export default function AdminUsersPage() {
   const [deleteId, setDeleteId] = useState<string | null>(null)
 
   const fetchUsers = async () => {
-    setLoading(true)
     try {
       const res = await fetch('/api/admin/users')
       if (res.ok) setUsers((await res.json()).data || [])
     } catch { toast.error('Failed to fetch users') }
-    finally { setLoading(false) }
   }
 
   useEffect(() => { fetchUsers() }, [])
@@ -234,11 +231,8 @@ export default function AdminUsersPage() {
       {/* Users Table */}
       <Card className="border-vare-border bg-white">
         <CardContent className="p-0">
-          {loading ? (
-            <div className="p-6 space-y-4">{[...Array(5)].map((_, i) => <Skeleton key={i} className="h-4 w-full" />)}</div>
-          ) : (
-            <div className="overflow-x-auto">
-              <Table>
+          <div className="overflow-x-auto">
+            <Table>
                 <TableHeader>
                   <TableRow className="bg-vare-ice/50 hover:bg-vare-ice/50">
                     <TableHead>User</TableHead>
@@ -303,7 +297,6 @@ export default function AdminUsersPage() {
                 </TableBody>
               </Table>
             </div>
-          )}
         </CardContent>
       </Card>
 

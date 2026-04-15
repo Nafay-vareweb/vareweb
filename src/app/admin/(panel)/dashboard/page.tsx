@@ -130,8 +130,14 @@ function AnimatedCard({ stat, stats, index }: { stat: typeof statCards[0]; stats
 }
 
 export default function AdminDashboardPage() {
-  const [stats, setStats] = useState<DashboardStats | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [stats, setStats] = useState<DashboardStats>({
+    blogs: { total: 0, published: 0, draft: 0 },
+    resumes: { total: 0, new: 0 },
+    clients: { total: 0, new: 0, inProgress: 0, completed: 0 },
+    contact: { total: 0 },
+    careers: { totalApplications: 0, newApplications: 0, activeJobs: 0 },
+    appointments: { total: 0, new: 0 },
+  })
   const [recentItems, setRecentItems] = useState<RecentItem[]>([])
   const activityRef = useRef<HTMLDivElement>(null)
 
@@ -145,8 +151,6 @@ export default function AdminDashboardPage() {
         }
       } catch {
         console.error('Failed to fetch stats')
-      } finally {
-        setLoading(false)
       }
     }
     fetchStats()
@@ -238,44 +242,6 @@ export default function AdminDashboardPage() {
     return styles[type]
   }
 
-  if (loading) {
-    return (
-      <div>
-        <div className="mb-8">
-          <h1 className="text-2xl font-bold text-vare-slate">Dashboard</h1>
-          <p className="text-vare-gray mt-1">Overview of your website content</p>
-        </div>
-        <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
-          {[...Array(4)].map((_, i) => (
-            <Card key={i} className="border-vare-border">
-              <CardContent className="p-6">
-                <Skeleton className="h-4 w-24 mb-3" />
-                <Skeleton className="h-9 w-16 mb-2" />
-                <Skeleton className="h-3 w-32" />
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </div>
-    )
-  }
-
-  if (!stats) {
-    return (
-      <div>
-        <div className="mb-8">
-          <h1 className="text-2xl font-bold text-vare-slate">Dashboard</h1>
-          <p className="text-vare-gray mt-1">Overview of your website content</p>
-        </div>
-        <Card className="border-vare-border">
-          <CardContent className="p-6 text-center text-vare-gray">
-            Failed to load dashboard statistics. Please try again.
-          </CardContent>
-        </Card>
-      </div>
-    )
-  }
-
   return (
     <div>
       <div className="mb-8">
@@ -283,8 +249,23 @@ export default function AdminDashboardPage() {
         <p className="text-vare-gray mt-1">Overview of your website content</p>
       </div>
 
+      {/* Welcome Card */}
+      <Card className="border-vare-border bg-gradient-to-r from-vare-purple/5 to-vare-purple-light/5 mb-8">
+        <CardContent className="p-6">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-full gradient-purple flex items-center justify-center">
+              <span className="text-white text-lg font-bold">V</span>
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold text-vare-slate">Welcome back!</h2>
+              <p className="text-vare-gray">Here's what's happening with your website today.</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Stats Cards */}
-      <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-6 mb-8">
+      <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 mb-8">
         {statCards.map((card, i) => (
           <AnimatedCard key={card.key} stat={card} stats={stats} index={i} />
         ))}

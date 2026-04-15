@@ -54,14 +54,12 @@ interface Pagination {
 export default function AdminBlogsPage() {
   const [blogs, setBlogs] = useState<BlogPost[]>([])
   const [pagination, setPagination] = useState<Pagination>({ page: 1, limit: 10, total: 0, totalPages: 0 })
-  const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState('')
   const [searchInput, setSearchInput] = useState('')
   const [deleteId, setDeleteId] = useState<string | null>(null)
 
   const fetchBlogs = useCallback(async () => {
-    setLoading(true)
     try {
       const params = new URLSearchParams({
         page: pagination.page.toString(),
@@ -78,8 +76,6 @@ export default function AdminBlogsPage() {
       }
     } catch {
       toast.error('Failed to fetch blog posts')
-    } finally {
-      setLoading(false)
     }
   }, [pagination.page, pagination.limit, search, statusFilter])
 
@@ -190,18 +186,7 @@ export default function AdminBlogsPage() {
       {/* Table */}
       <Card className="border-vare-border bg-white">
         <CardContent className="p-0">
-          {loading ? (
-            <div className="p-6 space-y-4">
-              {[...Array(5)].map((_, i) => (
-                <div key={i} className="flex items-center gap-4">
-                  <Skeleton className="h-4 flex-1" />
-                  <Skeleton className="h-4 w-20" />
-                  <Skeleton className="h-5 w-16 rounded-full" />
-                  <Skeleton className="h-4 w-24" />
-                </div>
-              ))}
-            </div>
-          ) : blogs.length === 0 ? (
+          {blogs.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 text-vare-gray">
               <Eye className="h-12 w-12 mb-4 opacity-20" />
               <p className="text-lg font-medium mb-1">No blog posts found</p>

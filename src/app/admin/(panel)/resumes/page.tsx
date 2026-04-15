@@ -77,7 +77,6 @@ const statusConfig: Record<string, { label: string; className: string }> = {
 export default function AdminResumesPage() {
   const [resumes, setResumes] = useState<Resume[]>([])
   const [pagination, setPagination] = useState<Pagination>({ page: 1, limit: 10, total: 0, totalPages: 0 })
-  const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [searchInput, setSearchInput] = useState('')
   const [statusFilter, setStatusFilter] = useState('')
@@ -88,7 +87,6 @@ export default function AdminResumesPage() {
   const [detailStatus, setDetailStatus] = useState('')
 
   const fetchResumes = useCallback(async () => {
-    setLoading(true)
     try {
       const params = new URLSearchParams({
         page: pagination.page.toString(),
@@ -105,8 +103,6 @@ export default function AdminResumesPage() {
       }
     } catch {
       toast.error('Failed to fetch resumes')
-    } finally {
-      setLoading(false)
     }
   }, [pagination.page, pagination.limit, search, statusFilter])
 
@@ -240,19 +236,7 @@ export default function AdminResumesPage() {
       {/* Table */}
       <Card className="border-vare-border bg-white">
         <CardContent className="p-0">
-          {loading ? (
-            <div className="p-6 space-y-4">
-              {[...Array(5)].map((_, i) => (
-                <div key={i} className="flex items-center gap-4">
-                  <Skeleton className="h-4 flex-1" />
-                  <Skeleton className="h-4 w-32" />
-                  <Skeleton className="h-4 w-24" />
-                  <Skeleton className="h-5 w-20 rounded-full" />
-                  <Skeleton className="h-4 w-24" />
-                </div>
-              ))}
-            </div>
-          ) : resumes.length === 0 ? (
+          {resumes.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 text-vare-gray">
               <Eye className="h-12 w-12 mb-4 opacity-20" />
               <p className="text-lg font-medium mb-1">No resumes found</p>

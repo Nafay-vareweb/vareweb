@@ -94,7 +94,7 @@ function DiscountModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
       {/* Modal Container */}
       <div
         ref={modalRef}
-        className="relative max-w-3xl w-full rounded-2xl overflow-hidden shadow-2xl grid grid-cols-1 md:grid-cols-[45%_55%]"
+        className="relative max-w-4xl w-full max-h-[90vh] overflow-y-auto rounded-2xl overflow-hidden shadow-2xl grid grid-cols-1 md:grid-cols-[45%_55%]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close button */}
@@ -107,7 +107,7 @@ function DiscountModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
         </button>
 
         {/* LEFT COLUMN — Black bg with rocket + stars */}
-        <div className="relative bg-black flex flex-col items-center justify-center p-8 min-h-[260px] md:min-h-[480px] overflow-hidden">
+        <div className="relative bg-black flex flex-col items-center justify-center p-6 xs:p-8 min-h-[240px] sm:min-h-[260px] md:min-h-[480px] overflow-hidden">
           {/* Star field */}
           {Array.from({ length: 30 }).map((_, i) => (
             <div
@@ -128,7 +128,7 @@ function DiscountModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
           <svg
             viewBox="0 0 80 100"
             fill="none"
-            className="w-20 h-24 mb-6 animate-rocket-float relative z-10"
+            className="w-16 h-20 xs:w-20 xs:h-24 mb-4 xs:mb-6 animate-rocket-float relative z-10"
             xmlns="http://www.w3.org/2000/svg"
           >
             <path
@@ -477,7 +477,7 @@ function HeroSection() {
     <section
       id="hero"
       ref={sectionRef}
-      className="relative min-h-screen flex items-center overflow-hidden gradient-purple-dark pt-24 sm:pt-28"
+      className="relative min-h-screen flex items-center overflow-hidden gradient-purple-dark pt-32 sm:pt-40"
     >
       {/* ========== Animated Background (PRESERVED) ========== */}
       <div className="absolute inset-0">
@@ -537,7 +537,7 @@ function HeroSection() {
       </div>
 
       {/* Particle Background */}
-      <ParticleBackground count={80} interactive={true} zIndex={5} />
+      <ParticleBackground count={80} interactive={false} zIndex={5} />
 
       {/* ========== Left Edge Discount Bar (NEW) ========== */}
       <button
@@ -557,7 +557,7 @@ function HeroSection() {
       {/* Mobile discount FAB */}
       <button
         onClick={() => setIsDiscountOpen(true)}
-        className="md:hidden absolute bottom-28 right-4 z-20 flex items-center gap-2 px-4 py-2.5 rounded-full bg-red-600 text-white text-xs font-bold shadow-lg shadow-red-600/30 hover:bg-red-500 active:scale-95 transition-all duration-200"
+        className="md:hidden absolute bottom-20 xs:bottom-24 right-4 z-20 flex items-center gap-2 px-3 xs:px-4 py-2 xs:py-2.5 rounded-full bg-red-600 text-white text-xs font-bold shadow-lg shadow-red-600/30 hover:bg-red-500 active:scale-95 transition-all duration-200"
       >
         <ShoppingBag className="w-3.5 h-3.5" />
         50% OFF
@@ -565,10 +565,10 @@ function HeroSection() {
 
       {/* ========== Main Content — Split Layout ========== */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 md:pl-[72px] w-full pb-28 lg:pb-8">
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-16 items-center">
+        <div className="grid grid-cols-1 xl:grid-cols-5 gap-10 xl:gap-16 items-center">
 
           {/* ===== LEFT COLUMN — Text Content (~60%) ===== */}
-          <div className="lg:col-span-3 text-left">
+          <div className="xl:col-span-3 text-left">
             {/* Badge */}
             <div ref={badgeRef} className="mb-8 sm:mb-12 opacity-0">
               <span className="inline-flex items-center space-x-2 px-4 py-2 rounded-full glass-effect text-white/90 text-sm">
@@ -580,16 +580,16 @@ function HeroSection() {
             {/* Heading */}
             <h1
               ref={headingRef}
-              className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-white leading-[1.05] mb-10 opacity-0 tracking-tight"
+              className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-6xl xl:text-7xl font-black text-white leading-[1.05] mb-6 xs:mb-8 sm:mb-10 opacity-0 tracking-tight"
               style={{ perspective: '1000px' }}
             >
-              <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 min-w-0">
                 <span className="word inline-block">Automated</span>
-                <span className="typed-growth inline-block text-transparent bg-clip-text bg-gradient-to-r from-vare-gold via-yellow-400 to-amber-500 min-w-[200px] md:min-w-[320px]">
+                <span className="typed-growth inline-block min-w-0 max-w-full text-transparent bg-clip-text bg-gradient-to-r from-vare-gold via-yellow-400 to-amber-500 min-w-[120px] xs:min-w-[160px] sm:min-w-[200px] md:min-w-[240px] lg:min-w-[260px] xl:min-w-[320px]">
                   {typedText}<span className={`inline-block w-[4px] h-[0.9em] bg-vare-gold ml-[4px] align-middle ${typingPhase === 'done' ? 'opacity-0' : 'animate-pulse'}`} />
                 </span>
               </div>
-              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-2">
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-2 min-w-0">
                 <span className="word inline-block">Meets</span>
                 <span className="word inline-block">Creative</span>
                 <span className="word inline-block text-vare-purple-light">Design</span>
@@ -660,10 +660,10 @@ function HeroSection() {
           </div>
 
           {/* ===== RIGHT COLUMN — 4 Images with Smooth Fade Animation (~40%) ===== */}
-          <div className="lg:col-span-2 flex items-start justify-center py-8 lg:py-0">
+          <div className="xl:col-span-2 flex items-start justify-center py-8 xl:py-0">
             <div
               ref={slideContainerRef}
-              className="relative w-[420px] h-[400px] sm:w-[460px] sm:h-[460px] lg:w-[520px] lg:h-[520px] rounded-[36px] overflow-hidden lg:-mt-8"
+              className="relative w-full max-w-[420px] h-[400px] xs:max-w-[440px] sm:max-w-[460px] sm:h-[460px] lg:max-w-[500px] lg:h-[500px] xl:max-w-[520px] xl:h-[520px] rounded-[36px] overflow-hidden xl:-mt-8"
             >
               {heroImages.map((imageSrc, index) => (
                 <img
@@ -823,7 +823,7 @@ function CounterSection() {
               <div className="w-16 h-16 rounded-2xl bg-white/[0.03] flex items-center justify-center mx-auto mb-6 group-hover:bg-vare-purple transition-all duration-300 border border-white/5 group-hover:border-vare-purple-light shadow-2xl">
                 <item.icon className="w-8 h-8 text-vare-purple-light group-hover:text-white transition-colors duration-300" />
               </div>
-              <div className="counter-number text-4xl sm:text-5xl font-black text-white">0</div>
+              <div className="counter-number text-3xl xs:text-4xl sm:text-4xl md:text-5xl font-black text-white">0</div>
               <div className="text-xs font-bold text-white/30 mt-2 uppercase tracking-widest">{item.label}</div>
             </div>
           ))}
@@ -1064,8 +1064,8 @@ function TrustedBySection() {
       {/* Fade edges — deep dark theme */}
       <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-[#0a0612] to-transparent pointer-events-none z-20" />
       <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#090510] to-transparent pointer-events-none z-20" />
-      <div className="absolute top-0 bottom-0 left-0 w-32 bg-gradient-to-r from-[#090510] to-transparent pointer-events-none z-20" />
-      <div className="absolute top-0 bottom-0 right-0 w-32 bg-gradient-to-l from-[#090510] to-transparent pointer-events-none z-20" />
+      <div className="absolute top-0 bottom-0 left-0 w-16 xs:w-20 sm:w-24 md:w-32 bg-gradient-to-r from-[#090510] to-transparent pointer-events-none z-20" />
+      <div className="absolute top-0 bottom-0 right-0 w-16 xs:w-20 sm:w-24 md:w-32 bg-gradient-to-l from-[#090510] to-transparent pointer-events-none z-20" />
 
       {/* Custom keyframes for 3D decorative elements */}
       <style>{`
@@ -1258,12 +1258,12 @@ function ServicesSection() {
         </div>
 
         {/* High-Impact Bento Grid */}
-        <div className="svc-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-[280px]">
+        <div className="svc-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 xs:gap-6 auto-rows-[240px] xs:auto-rows-[260px] sm:auto-rows-[280px] md:auto-rows-[300px]">
           {services.slice(0, 6).map((service, i) => (
             <Link
               key={i}
               href={`/services/${service.slug || ''}`}
-              className={`svc-card group relative glass-card-accent p-8 rounded-[2.5rem] border border-white/5 overflow-hidden transition-all duration-700 flex flex-col justify-between ${
+              className={`svc-card group relative glass-card-accent p-6 xs:p-8 rounded-[2.5rem] border border-white/5 overflow-hidden transition-all duration-700 flex flex-col justify-between ${
                 i === 0 ? 'lg:col-span-2' : 
                 i === 3 ? 'lg:row-span-2' : ''
               }`}
@@ -1518,7 +1518,7 @@ function PortfolioSection() {
           onTouchEnd={handlePointerUp}
         >
           {portfolioItems.map((item, i) => (
-            <div key={i} className="portfolio-card flex-shrink-0 w-[320px] sm:w-[420px] group transition-all duration-700">
+            <div key={i} className="portfolio-card flex-shrink-0 w-[280px] xs:w-[300px] sm:w-[320px] md:w-[380px] lg:w-[420px] group transition-all duration-700">
                <div className="relative glass-card-accent aspect-[4/5] rounded-[2.5rem] p-4 border border-white/5 overflow-hidden group-hover:border-white/20 transition-all duration-700">
                   {/* Card Background */}
                   <div className={`absolute inset-0 bg-gradient-to-br ${item.color} opacity-10 group-hover:opacity-20 transition-opacity duration-700`} />
@@ -1680,7 +1680,7 @@ function ProcessSection() {
             <div ref={lineRef} className="w-full h-full bg-gradient-to-b from-vare-purple via-vare-purple-light to-transparent origin-top" />
           </div>
 
-          <div className="space-y-24 md:space-y-48">
+          <div className="space-y-16 xs:space-y-20 sm:space-y-24 md:space-y-32 lg:space-y-48">
             {steps.map((step, i) => (
               <div key={i} className={`flex flex-col md:flex-row items-center gap-12 md:gap-0 ${i % 2 === 1 ? 'md:flex-row-reverse' : ''}`}>
                 
@@ -1695,7 +1695,7 @@ function ProcessSection() {
                     
                     <div className="relative z-10">
                       <div className="flex items-center justify-between mb-8">
-                        <span className="text-5xl font-black text-white/5 tracking-tighter uppercase group-hover:text-vare-purple-light/20 transition-colors duration-500">
+                        <span className="text-3xl xs:text-4xl sm:text-5xl font-black text-white/5 tracking-tighter uppercase group-hover:text-vare-purple-light/20 transition-colors duration-500">
                           {step.num}
                         </span>
                         <div className="px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-vare-gold text-[10px] font-black uppercase tracking-[0.2em]">
@@ -1880,7 +1880,7 @@ function TestimonialsAndFAQSection() {
         </div>
 
         {/* Split layout: FAQ left, Testimonial right */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16">
           {/* LEFT: FAQ Accordion with glass-morphism */}
           <div className="space-y-4">
             <h3 className="text-2xl font-bold text-white mb-8 flex items-center gap-3">
@@ -1908,7 +1908,7 @@ function TestimonialsAndFAQSection() {
                 <div
                   className="overflow-hidden transition-all duration-300"
                   style={{
-                    maxHeight: openFaq === i ? '300px' : '0px',
+                    maxHeight: openFaq === i ? '400px' : '0px',
                     opacity: openFaq === i ? 1 : 0,
                   }}
                 >
@@ -2182,7 +2182,7 @@ function ClientVideoReviewsSection() {
           </div>
 
           {/* Vertical Video Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8">
             {videoTestimonials.map((video, i) => (
               <div
                 key={i}
@@ -2204,8 +2204,8 @@ function ClientVideoReviewsSection() {
                     
                     {/* Play Button */}
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-16 h-16 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20 group-hover:bg-vare-purple group-hover:scale-110 group-hover:border-vare-purple-light transition-all duration-500 shadow-2xl">
-                        <Play className="w-6 h-6 text-white ml-1 fill-white" />
+                      <div className="w-12 h-12 xs:w-14 xs:h-14 sm:w-16 sm:h-16 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20 group-hover:bg-vare-purple group-hover:scale-110 group-hover:border-vare-purple-light transition-all duration-500 shadow-2xl">
+                        <Play className="w-4 h-4 xs:w-5 xs:h-5 sm:w-6 sm:h-6 text-white ml-1 fill-white" />
                       </div>
                     </div>
 
@@ -2349,12 +2349,12 @@ function WhyChooseUsSection() {
             Why Brands Choose <span className="text-transparent bg-clip-text bg-gradient-to-r from-vare-purple-light to-blue-400">VareWeb</span>
           </h2>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {reasons.map((reason, i) => (
               <div
                 key={i}
                 ref={(el) => { if(cardRefs.current) cardRefs.current[i] = el; }}
-                className="reason-card glass-card rounded-[32px] p-8 border border-white/5 hover:border-white/20 transition-all duration-300 text-center group"
+                className="reason-card glass-card rounded-[32px] p-6 xs:p-8 border border-white/5 hover:border-white/20 transition-all duration-300 text-center group"
                 style={{ transformStyle: 'preserve-3d' }}
               >
                 <div

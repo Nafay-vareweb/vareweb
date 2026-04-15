@@ -151,7 +151,8 @@ export default function AdminPanelLayout({
   children: React.ReactNode
 }) {
   const [mobileOpen, setMobileOpen] = useState(false)
-  const [user, setUser] = useState<{ name: string; role: string; username: string } | null>(null)
+  type User = { name: string; role: string; username: string }
+  const [user, setUser] = useState<User>({ name: 'Admin', role: 'ADMIN', username: 'admin' })
   const [loggingOut, setLoggingOut] = useState(false)
   const router = useRouter()
 
@@ -161,7 +162,13 @@ export default function AdminPanelLayout({
         if (!res.ok) throw new Error('Not authenticated')
         return res.json()
       })
-      .then(data => setUser(data.data))
+      .then(data => {
+        if (data && data.data) {
+          setUser(data.data as User)
+        } else {
+          router.push('/admin/login')
+        }
+      })
       .catch(() => {
         router.push('/admin/login')
       })
@@ -177,17 +184,6 @@ export default function AdminPanelLayout({
       toast.error('Logout failed')
       setLoggingOut(false)
     }
-  }
-
-  if (!user) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-vare-ice">
-        <div className="flex flex-col items-center gap-3">
-          <div className="w-8 h-8 border-3 border-vare-purple/30 border-t-vare-purple rounded-full animate-spin" />
-          <p className="text-vare-gray text-sm">Loading dashboard...</p>
-        </div>
-      </div>
-    )
   }
 
   return (
@@ -227,7 +223,7 @@ export default function AdminPanelLayout({
                 <ExternalLink className="h-3.5 w-3.5" />
                 <span className="hidden sm:inline">View Website</span>
               </Button>
-            </Link>
+            </Link> 
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -269,7 +265,7 @@ export default function AdminPanelLayout({
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 p-4 sm:p-6 lg:p-8">
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 bg-white">
           {children}
         </main>
       </div>

@@ -143,7 +143,7 @@ export default function Navigation() {
             {/* CTA Button */}
             <Link
               href="/contact"
-              className="hidden lg:inline-flex px-6 py-2.5 text-xs font-bold uppercase tracking-widest text-white gradient-purple rounded-xl hover:shadow-[0_0_30px_rgba(124,77,187,0.4)] transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center border border-white/10"
+              className="hidden lg:inline-flex px-6 py-2.5 text-xs font-bold uppercase tracking-widest text-white gradient-purple rounded-xl hover:shadow-[0_0_30px_rgba(124,77,187,0.4)] transform hover:-translate-y-1 transition-all duration-300 items-center justify-center border border-white/10"
             >
               Get a Quote
             </Link>
