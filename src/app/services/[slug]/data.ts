@@ -4,6 +4,7 @@ import {
   BarChart3, Globe, Server, Cloud, Shield, Target, Users,
   FileText, Megaphone, Share2, PenTool, BookOpen, Database,
   AppWindow, Rocket, Eye, Layout, Settings, Cpu, Star,
+  MessageSquare, Mic, Headphones,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -32,6 +33,7 @@ export interface ServiceData {
   icon: LucideIcon;
   color: string;
   heroDesc: string;
+  layoutVariant?: string;
   overviewP1: string;
   overviewP2: string;
   highlights: string[];
@@ -48,6 +50,7 @@ export const servicesData: ServiceData[] = [
   {
     slug: 'custom-web-design',
     title: 'Custom Web Design',
+    layoutVariant: 'portfolio',
     badge: 'Bespoke Websites',
     icon: Monitor,
     color: 'from-purple-500 to-indigo-600',
@@ -157,6 +160,7 @@ export const servicesData: ServiceData[] = [
   {
     slug: 'ux-ui-design',
     title: 'UX/UI Design',
+    layoutVariant: 'ux',
     badge: 'User-Centered',
     icon: Palette,
     color: 'from-orange-500 to-red-500',
@@ -194,6 +198,7 @@ export const servicesData: ServiceData[] = [
   {
     slug: 'search-engine-optimization',
     title: 'Search Engine Optimization',
+    layoutVariant: 'seo',
     badge: 'Organic Growth',
     icon: Search,
     color: 'from-violet-500 to-purple-600',
@@ -230,6 +235,7 @@ export const servicesData: ServiceData[] = [
   {
     slug: 'ecommerce-development',
     title: 'eCommerce Design & Development',
+    layoutVariant: 'ecommerce',
     badge: 'Sell Online',
     icon: ShoppingCart,
     color: 'from-pink-500 to-rose-500',
@@ -302,6 +308,7 @@ export const servicesData: ServiceData[] = [
   {
     slug: 'ghl-development',
     title: 'GHL (GoHighLevel) Development & Automation',
+    layoutVariant: 'ghl',
     badge: 'Business Automation',
     icon: Zap,
     color: 'from-amber-500 to-orange-500',
@@ -332,6 +339,41 @@ export const servicesData: ServiceData[] = [
     ],
     metaTitle: 'GoHighLevel Development & Automation | VareWeb',
     metaDesc: 'Custom GoHighLevel automation, funnel builds, and integrations that streamline operations and accelerate growth. Unlock the full power of GHL.',
+  },
+
+  // NEW ── AI Chat & Voice Bots
+  {
+    slug: 'ai-chat-bot',
+    title: 'AI Chat & Voice Bots',
+    layoutVariant: 'ai',
+    badge: 'Conversational AI',
+    icon: MessageSquare,
+    color: 'from-indigo-500 to-violet-600',
+    heroDesc: 'Build intelligent chat and voice assistants that automate support, increase engagement, and provide 24/7 conversational experiences across web and phone channels.',
+    overviewP1: 'We design and implement AI-driven conversational agents — both text-based chat bots and voice assistants — tailored to your business needs. These solutions use modern NLP, speech-to-text, and TTS systems to provide natural, context-aware conversations that feel live.',
+    overviewP2: 'From rapid prototypes to production-ready integrations with CRMs, ticketing systems, and telephony providers, our team ensures your conversational AI is secure, scalable, and measurable.',
+    highlights: ['Live-like demo simulations', 'Speech-to-text & TTS', 'CRM & API integrations', 'Custom intents & entities', 'Conversation analytics', 'Multi-channel deployment'],
+    features: [
+      { icon: MessageSquare, title: 'Smart Chat Bots', desc: 'Context-aware chat experiences with fallback intents, sentiment-awareness, and handoff to human agents when necessary.' },
+      { icon: Mic, title: 'Voice Assistants', desc: 'Phone and voice-enabled assistants with natural TTS, call flows, and IVR integrations for 24/7 voice support.' },
+      { icon: Headphones, title: 'Omnichannel Support', desc: 'Deploy across webchat, in-app, SMS, and telephony channels with consistent conversational state and analytics.' },
+      { icon: Zap, title: 'Automation & Workflows', desc: 'Trigger automations, update CRM records, and run downstream workflows based on conversational events and user intent.' },
+      { icon: BarChart3, title: 'Analytics', desc: 'Conversation transcripts, intent performance, and friction points visualized to continuously improve accuracy and user experience.' },
+      { icon: Cloud, title: 'Secure & Scalable', desc: 'Enterprise-grade data handling, role-based access, encryption, and cloud scaling for production workloads.' },
+    ],
+    process: [
+      { num: '01', title: 'Discovery & Persona Mapping', desc: 'Define user intents, success metrics, and conversation flows aligned to business goals.', icon: Search },
+      { num: '02', title: 'Prototype & Test', desc: 'Rapid conversational prototypes with simulated users and real-time iteration to validate flows and tone.', icon: Palette },
+      { num: '03', title: 'Integrate & Secure', desc: 'Connect to CRMs, analytics, and telephony providers; implement data governance and security controls.', icon: Code },
+      { num: '04', title: 'Launch & Iterate', desc: 'Continuous monitoring, retraining, and A/B experiments to improve conversation accuracy and conversion outcomes.', icon: Rocket },
+    ],
+    technologies: ['OpenAI', 'Twilio', 'Deepgram', 'Dialogflow / Rasa', 'Node.js', 'WebSockets', 'Postgres', 'Redis', 'Vercel'],
+    faqs: [
+      { question: 'Can the bot handle complex, multi-turn conversations?', answer: 'Yes — we design contextual state management and slot-filling patterns to handle multi-turn flows reliably. Complex logic can be model-assisted and backed by deterministic rules where needed.' },
+      { question: 'Do you provide voice telephony integration?', answer: 'Yes — we integrate with Twilio, Plivo, and other telephony providers for inbound/outbound calls and SIP connections, with full analytics and recording options.' },
+    ],
+    metaTitle: 'AI Chat & Voice Bots | VareWeb',
+    metaDesc: 'Design, build, and deploy conversational AI chat bots and voice assistants — prototypes to production with omnichannel support and analytics.',
   },
 
   // 9 ── Mobile App Development

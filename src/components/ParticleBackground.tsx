@@ -24,13 +24,13 @@ interface ParticleBackgroundProps {
 }
 
 export default function ParticleBackground({
-  count = 50,
+  count = 70,
   className = '',
   zIndex = 0,
   opacity = DEFAULT_OPACITY,
   connectLines = true,
   connectionDistance = 100,
-  interactive = false,
+  interactive = true,
   theme = 'dark',
 }: ParticleBackgroundProps) {
   const canvasRef = React.useRef<HTMLCanvasElement | null>(null);

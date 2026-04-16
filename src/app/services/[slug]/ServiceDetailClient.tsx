@@ -13,6 +13,7 @@ import {
   BarChart3, BookOpen, ChevronDown, Target,
 } from 'lucide-react';
 import { servicesData, type ServiceData } from './data';
+import layouts from '@/components/ServiceLayouts';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -101,6 +102,8 @@ export default function ServiceDetailClient() {
     });
     return () => ctx.revert();
   }, [service]);
+
+  const Variant = service ? (layouts as Record<string, any>)[service.layoutVariant ?? ''] : null;
 
   if (!service) {
     return (
@@ -237,6 +240,8 @@ export default function ServiceDetailClient() {
             </div>
           </div>
         </section>
+
+        {Variant && <Variant service={service} />}
 
         {/* ─── Features Section ─── */}
         <section ref={featuresRef} className="py-24 sm:py-32 mesh-gradient-dark relative overflow-hidden">

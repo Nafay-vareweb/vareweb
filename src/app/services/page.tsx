@@ -13,7 +13,7 @@ import {
   ArrowRight, Layers, Code, Zap, TrendingUp, CheckCircle,
   Code2, Server, Cloud, BarChart3, Star, Target,
   Stethoscope, Landmark, GraduationCap, Building2, UtensilsCrossed, Plane, Cpu,
-  Wrench, Workflow, Share2, FileText,
+  Wrench, Workflow, Share2, FileText, MessageSquare, Mic, Headphones,
 } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -137,6 +137,22 @@ const services = [
       'Funnel design and landing page creation',
       'Third-party app integration and API connections',
       'SMS, email, and voicemail drop campaign automation',
+    ],
+  },
+  {
+    icon: MessageSquare,
+    title: 'AI Chat & Voice Bots',
+    slug: 'ai-chat-bot',
+    desc: 'Design and deploy conversational AI agents for chat and voice — from prototype demos to production-grade integrations with CRM and telephony.',
+    desc2: 'Omnichannel conversational experiences with analytics, secure integrations, and automated workflows.',
+    color: 'from-indigo-500 to-violet-600',
+    features: [
+      'Smart, multi-turn chat bots',
+      'Voice assistants with TTS & STT',
+      'Omnichannel deployment (web, SMS, telephony)',
+      'CRM and workflow automations',
+      'Conversation analytics & transcripts',
+      'Enterprise-grade security and scaling',
     ],
   },
   {

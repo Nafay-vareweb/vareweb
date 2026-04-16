@@ -77,7 +77,7 @@ export default function BlogPostPage() {
     return (
       <>
         <Navigation />
-        <main className="pt-32 pb-24 bg-[#0a0612]">
+        <main className="pt-32 pb-24 bg-[#1b052f]">
           <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 animate-pulse">
             <div className="h-8 bg-white/[0.06] rounded w-48 mb-6" />
             <div className="h-10 bg-white/[0.06] rounded w-full mb-4" />
@@ -98,9 +98,9 @@ export default function BlogPostPage() {
     return (
       <>
         <Navigation />
-        <main className="pt-32 pb-24 text-center bg-[#0a0612]">
+        <main className="pt-32 pb-24 text-center bg-[#1b052f]">
           <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h1 className="text-4xl font-bold text-[#f0ecf7] mb-4">Post Not Found</h1>
+            <h1 className="text-4xl font-bold text-[#f6eefc] mb-4">Post Not Found</h1>
             <p className="text-white/70 text-lg mb-8">The blog post you are looking for does not exist or may have been removed.</p>
             <Link
               href="/blog"
@@ -122,19 +122,19 @@ export default function BlogPostPage() {
 
         {/* Hero Banner */}
         {blog.featuredImage && (
-          <div className="relative h-[300px] md:h-[400px] mesh-gradient-dark overflow-hidden">
+            <div className="relative h-[300px] md:h-[400px] mesh-gradient-dark overflow-hidden">
             <img
               src={blog.featuredImage}
               alt={blog.title}
               className="absolute inset-0 w-full h-full object-cover opacity-40"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0a0612]/90 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#1b052f]/90 to-transparent" />
             <ParticleBackground count={40} interactive={true} zIndex={5} />
           </div>
         )}
 
         {/* Content */}
-        <article ref={contentRef} className="py-16 sm:py-20 bg-[#0d0818]">
+        <article ref={contentRef} className="py-16 sm:py-20 bg-[#1b052f]">
           <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
             {/* Back link */}
             <Link
@@ -146,13 +146,13 @@ export default function BlogPostPage() {
 
             {/* Category */}
             {blog.category && (
-              <span className="blog-animate inline-block px-3 py-1 rounded-full bg-white/[0.06] text-[#a78bfa] text-sm font-medium mb-4 opacity-0 border border-white/[0.08]">
+              <span className="blog-animate inline-block px-3 py-1 rounded-full bg-white/[0.06] text-[#dcb7ff] text-sm font-medium mb-4 opacity-0 border border-white/[0.08]">
                 {blog.category}
               </span>
             )}
 
             {/* Title */}
-            <h1 className="blog-animate text-3xl md:text-4xl lg:text-5xl font-bold text-[#f0ecf7] mb-6 leading-tight opacity-0">
+            <h1 className="blog-animate text-3xl md:text-4xl lg:text-5xl font-bold text-[#f6eefc] mb-6 leading-tight opacity-0">
               {blog.title}
             </h1>
 
@@ -188,19 +188,19 @@ export default function BlogPostPage() {
 
             {/* Markdown Content */}
             <div className="blog-animate prose prose-lg max-w-none opacity-0
-              prose-headings:text-[#f0ecf7] prose-headings:font-bold
-              prose-h2:text-2xl prose-h2:mt-10 prose-h2:mb-4
-              prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3
-              prose-p:text-white/80 prose-p:leading-relaxed prose-p:mb-4
-              prose-a:text-[#a78bfa] prose-a:no-underline hover:prose-a:underline
-              prose-strong:text-white prose-strong:font-semibold
-              prose-ul:my-4 prose-ol:my-4
-              prose-li:text-white/80 prose-li:leading-relaxed
-              prose-code:text-[#a78bfa] prose-code:bg-white/[0.06] prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm
-              prose-pre:bg-[#12081f] prose-pre:text-white/90 prose-pre:rounded-xl prose-pre:p-6 prose-pre:border prose-pre:border-white/[0.08]
-              prose-blockquote:border-l-4 prose-blockquote:border-[#7c4dbb] prose-blockquote:pl-6 prose-blockquote:italic prose-blockquote:text-white/70
-              prose-img:rounded-xl prose-img:shadow-lg
-              prose-hr:border-white/[0.08]
+              	prose-headings:text-[#f6eefc] prose-headings:font-bold
+              	prose-h2:text-2xl prose-h2:mt-10 prose-h2:mb-4
+              	prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3
+              	prose-p:text-white/80 prose-p:leading-relaxed prose-p:mb-4
+              	prose-a:text-[#ff79c6] prose-a:no-underline hover:prose-a:underline
+              	prose-strong:text-white prose-strong:font-semibold
+              	prose-ul:my-4 prose-ol:my-4
+              	prose-li:text-white/80 prose-li:leading-relaxed
+              	prose-code:text-[#dcb7ff] prose-code:bg-white/[0.06] prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm
+              	prose-pre:bg-[#12081f] prose-pre:text-white/90 prose-pre:rounded-xl prose-pre:p-6 prose-pre:border prose-pre:border-white/[0.08]
+              	prose-blockquote:border-l-4 prose-blockquote:border-[#a16cf0] prose-blockquote:pl-6 prose-blockquote:italic prose-blockquote:text-white/70
+              	prose-img:rounded-xl prose-img:shadow-lg
+              	prose-hr:border-white/[0.08]
             ">
               <ReactMarkdown>{blog.content}</ReactMarkdown>
             </div>
@@ -208,7 +208,7 @@ export default function BlogPostPage() {
             {/* Author Card */}
             <div className="mt-14 glass-card rounded-2xl p-6 sm:p-8 border border-white/[0.08]">
               <div className="flex items-center gap-4">
-                <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#7c4dbb] to-[#a78bfa] flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
+                <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#a16cf0] to-[#dcb7ff] flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
                   {blog.authorName ? blog.authorName.charAt(0).toUpperCase() : 'V'}
                 </div>
                 <div>
@@ -223,7 +223,7 @@ export default function BlogPostPage() {
             <div className="text-center">
               <Link
                 href="/blog"
-                className="inline-flex items-center text-[#a78bfa] font-medium hover:underline"
+                className="inline-flex items-center text-[#dcb7ff] font-medium hover:underline"
               >
                 <ArrowLeft className="mr-1.5 w-4 h-4" /> Back to Blog
               </Link>

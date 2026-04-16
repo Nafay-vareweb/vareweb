@@ -53,6 +53,19 @@
   --color-vare-dark: #111111;
   --color-vare-gold: #f59e0b;
 }
+/* Prevent thin seams/artifacts when using backdrop-filter + transforms on large screens */
+@media (min-width: 1280px) {
+  .glass-card, .glass-card * {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    will-change: transform;
+  }
+  .glass-card {
+    outline: 1px solid transparent;
+  }
+}
 
 :root {
   --radius: 0.625rem;
@@ -327,6 +340,18 @@
   background: #0a0612;
 }
 
+/* Hide horizontal scrollbar on desktop for intentional scrolling areas */
+@media (min-width: 1280px) {
+  .hide-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+    height: 0;
+  }
+}
+
 /* Smooth scroll */
 html {
   scroll-behavior: smooth;
@@ -400,6 +425,37 @@ a, button {
   transform: translateY(0);
 }
 
+/* Prose fallback styles for blog content (applies if typography plugin not installed yet) */
+.prose {
+  max-width: 65ch;
+  color: var(--foreground);
+}
+.prose img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.75rem;
+}
+.prose pre {
+  overflow: auto;
+  background: #12081f;
+  color: #f6eefc;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.prose h1, .prose h2, .prose h3, .prose h4 {
+  color: #f6eefc;
+  font-weight: 700;
+}
+.prose p {
+  color: rgba(255,255,255,0.9);
+  line-height: 1.8;
+}
+.prose a {
+  color: #ff79c6;
+  text-decoration: underline;
+}
+
 /* Magnetic button effect base */
 .magnetic-btn {
   transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -435,3 +491,59 @@ html {
     }
   }
 }
+
+/* AI Chat waveform & wave animations */
+.wave-anim {
+  animation: wave-slide 10s linear infinite;
+  transform-origin: 0 50%;
+}
+
+@keyframes wave-slide {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.waveform-anim {
+  animation: waveform-move 3s linear infinite;
+}
+
+@keyframes waveform-move {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-25%); }
+}
+
+.dot-pulse { animation: dot-pulse 1s infinite ease-in-out; }
+@keyframes dot-pulse {
+  0% { transform: translateY(0); opacity: 0.9 }
+  50% { transform: translateY(-3px); opacity: 1 }
+  100% { transform: translateY(0); opacity: 0.9 }
+}
+
+/* Bar-style waveform (voice demo) */
+.waveform-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  padding: 8px;
+  height: 100%;
+}
+.waveform-bars .wave-bar {
+  width: 4px;
+  height: 36%;
+  background: linear-gradient(180deg, #7c4dbb, #5b2d9e);
+  border-radius: 2px;
+  transform-origin: bottom;
+  animation: bar-pulse 900ms ease-in-out infinite;
+  animation-play-state: paused;
+  opacity: 0.85;
+}
+.waveform-bars.playing .wave-bar {
+  animation-play-state: running;
+}
+
+@keyframes bar-pulse {
+  0% { transform: scaleY(0.25); opacity: 0.35; }
+  50% { transform: scaleY(1.0); opacity: 1; }
+  100% { transform: scaleY(0.25); opacity: 0.35; }
+}
+

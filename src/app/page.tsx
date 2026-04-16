@@ -536,8 +536,8 @@ function HeroSection() {
         </div>
       </div>
 
-      {/* Particle Background */}
-      <ParticleBackground count={80} interactive={false} zIndex={5} />
+      {/* Particle Background - reduced for performance on heavy pages */}
+      <ParticleBackground count={40} connectLines={false} interactive={false} zIndex={5} />
 
       {/* ========== Left Edge Discount Bar (NEW) ========== */}
       <button
@@ -583,16 +583,21 @@ function HeroSection() {
               className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-6xl xl:text-7xl font-black text-white leading-[1.05] mb-6 xs:mb-8 sm:mb-10 opacity-0 tracking-tight"
               style={{ perspective: '1000px' }}
             >
-              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 min-w-0">
-                <span className="word inline-block">Automated</span>
-                <span className="typed-growth inline-block min-w-0 max-w-full text-transparent bg-clip-text bg-gradient-to-r from-vare-gold via-yellow-400 to-amber-500 min-w-[120px] xs:min-w-[160px] sm:min-w-[200px] md:min-w-[240px] lg:min-w-[260px] xl:min-w-[320px]">
-                  {typedText}<span className={`inline-block w-[4px] h-[0.9em] bg-vare-gold ml-[4px] align-middle ${typingPhase === 'done' ? 'opacity-0' : 'animate-pulse'}`} />
-                </span>
-              </div>
-              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-2 min-w-0">
-                <span className="word inline-block">Meets</span>
-                <span className="word inline-block">Creative</span>
-                <span className="word inline-block text-vare-purple-light">Design</span>
+              <div className="flex flex-col min-w-0">
+                <div className="flex items-center gap-x-3">
+                  <span className="word inline-block">Automated</span>
+                </div>
+
+                <div className="typed-growth mt-2 inline-flex items-baseline text-transparent bg-clip-text bg-gradient-to-r from-vare-gold via-yellow-400 to-amber-500 overflow-hidden">
+                  <span className="inline-block align-baseline">{typedText}</span>
+                  <span className={`inline-block w-[4px] h-[0.9em] bg-vare-gold ml-[4px] align-baseline ${typingPhase === 'done' ? 'opacity-0' : 'animate-pulse'}`} />
+                </div>
+
+                <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 mt-4 min-w-0">
+                  <span className="word inline-block">Meets</span>
+                  <span className="word inline-block">Creative</span>
+                  <span className="word inline-block text-vare-purple-light">Design</span>
+                </div>
               </div>
             </h1>
 
@@ -875,6 +880,12 @@ function TrustedBySection() {
     let raf2 = 0;
     let isHovered1 = false;
     let isHovered2 = false;
+    // Pause auto-scroll when section isn't visible to reduce CPU usage
+    let isSectionVisible = false;
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => { isSectionVisible = entry.isIntersecting; });
+    }, { threshold: 0 });
+    if (sectionRef.current) io.observe(sectionRef.current);
 
     const getOneSetWidth = (track: HTMLElement) => {
       const firstCard = track.children[0] as HTMLElement;
@@ -891,7 +902,7 @@ function TrustedBySection() {
     gsap.set(track2, { x: -w2 });
 
     const animate1 = () => {
-      if (!isHovered1) {
+      if (!isHovered1 && isSectionVisible) {
         const cx = gsap.getProperty(track1, 'x') as number;
         let nx = cx - speed;
         if (nx <= -w1) nx += w1;
@@ -901,7 +912,7 @@ function TrustedBySection() {
     };
 
     const animate2 = () => {
-      if (!isHovered2) {
+      if (!isHovered2 && isSectionVisible) {
         const cx = gsap.getProperty(track2, 'x') as number;
         let nx = cx + speed;
         if (nx >= 0) nx -= w2;
@@ -926,6 +937,7 @@ function TrustedBySection() {
     return () => {
       cancelAnimationFrame(raf1);
       cancelAnimationFrame(raf2);
+      if (io) io.disconnect();
     };
   }, []);
 

@@ -190,19 +190,21 @@ export default function AboutPage() {
             );
           }
 
-          // Subtle glow pulse on visible items
-          gsap.to(item, {
-            boxShadow: '0 0 30px rgba(124, 77, 187, 0.08), 0 0 60px rgba(124, 77, 187, 0.04)',
-            duration: 0.6,
-            ease: 'power1.inOut',
-            scrollTrigger: {
-              trigger: item,
-              start: 'top 70%',
-              end: 'top 30%',
-              scrub: 1,
-              toggleActions: 'play reverse play reverse',
-            },
-          });
+          // Subtle glow pulse on visible items (apply to card only to avoid a full-width background box)
+          if (card) {
+            gsap.to(card, {
+              boxShadow: '0 0 30px rgba(124, 77, 187, 0.08), 0 0 60px rgba(124, 77, 187, 0.04)',
+              duration: 0.6,
+              ease: 'power1.inOut',
+              scrollTrigger: {
+                trigger: item,
+                start: 'top 70%',
+                end: 'top 30%',
+                scrub: 1,
+                toggleActions: 'play reverse play reverse',
+              },
+            });
+          }
         });
       }
 
