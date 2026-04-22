@@ -566,6 +566,7 @@ html {
   100% { transform: scaleY(0.25); opacity: 0.35; }
 }
 
+
 /* Browser preview frame (small demo) */
 .browser-frame {
   max-width: 380px;
@@ -596,44 +597,32 @@ html {
 /* Rotator stack: only active frame is visible */
 .browser-rotator {
   position: relative;
-  display: block;
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  width: 100%;
 }
 .browser-rotator .browser-frame {
-  position: absolute;
-  top: 0;
-  left: 0;
+  /* use grid overlay so the container keeps the height of the frames
+     while allowing frames to be centered and responsively sized */
+  position: relative;
+  grid-area: 1 / 1 / 2 / 2;
   opacity: 0;
-  transform: translateX(12px);
+  transform: translateY(12px) translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
   transition: opacity 900ms ease, transform 900ms ease;
   pointer-events: none;
-  width: 100%;
+  width: auto;
+  max-width: 100%;
+  box-sizing: border-box;
+  will-change: opacity, transform;
 }
 .browser-rotator .browser-frame.active {
   opacity: 1;
-  transform: translateX(0);
+  transform: translateY(0) translateZ(0);
   pointer-events: auto;
   z-index: 10;
-}
-
-/* Responsive behavior: stack frames on smaller screens instead of absolutely positioning them
-   so the rotator becomes fully responsive and visible within narrow containers. */
-@media (max-width: 1024px) {
-  .browser-rotator {
-    display: block;
-  }
-  .browser-rotator .browser-frame {
-    position: static;
-    transform: none;
-    pointer-events: auto;
-    width: 100%;
-    margin-bottom: 8px;
-    box-shadow: 0 8px 28px rgba(2,6,23,0.35);
-    display: none; /* hide non-active frames on small screens */
-  }
-  .browser-rotator .browser-frame.active {
-    display: block;
-    z-index: auto;
-  }
 }
 
 /* Rank bars used in SERP preview */

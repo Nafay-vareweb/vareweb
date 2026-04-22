@@ -36,9 +36,12 @@ function usePrefersReducedMotion(): boolean {
 }
 
 // Small browser frame preview component used in the hero
-function BrowserFrame({ width = 360, score = 98, active = false, index = 0 }: { width?: number; score?: number; active?: boolean; index?: number }) {
+function BrowserFrame({ width = 460, score = 98, active = false, index = 0 }: { width?: number; score?: number; active?: boolean; index?: number }) {
   return (
-    <div className={`browser-frame ${active ? 'active' : ''}`} style={{ width: '100%', maxWidth: width }}>
+    <div
+      className={`browser-frame ${active ? 'active' : ''}`}
+      style={{ width: '100%', maxWidth: width }}
+    >
       <div className="browser-bar">
         
         <div className="b-url">
@@ -296,11 +299,7 @@ function BrowserFramesRotator({ count = 3, width = 360, widths }: { count?: numb
     if (prefersReduced) {
       gsap.set(frames, { autoAlpha: 0, pointerEvents: 'none', y: 12, zIndex: 0 });
       const first = frames[0];
-      frames.forEach((fr) => fr.classList.remove('active'));
-      if (first) {
-        gsap.set(first, { autoAlpha: 1, pointerEvents: 'auto', y: 0, zIndex: 20 });
-        try { first.classList.add('active'); } catch (e) { /* ignore */ }
-      }
+      if (first) gsap.set(first, { autoAlpha: 1, pointerEvents: 'auto', y: 0, zIndex: 20 });
       return;
     }
 
@@ -310,13 +309,6 @@ function BrowserFramesRotator({ count = 3, width = 360, widths }: { count?: numb
       const visible = Math.max(0, 5 - fadeIn - fadeOut); // total cycle ≈ 5s per frame
 
       gsap.set(frames, { autoAlpha: 0, pointerEvents: 'none', y: 12, zIndex: 0 });
-
-      // make sure the first frame is visible immediately to avoid a blank flash
-      const firstFrame = frames[0];
-      if (firstFrame) {
-        gsap.set(firstFrame, { autoAlpha: 1, pointerEvents: 'auto', y: 0, zIndex: 20 });
-        try { firstFrame.classList.add('active'); } catch (e) { /* ignore */ }
-      }
 
       const tl = gsap.timeline({ repeat: -1 });
       frames.forEach((f) => {
@@ -328,7 +320,6 @@ function BrowserFramesRotator({ count = 3, width = 360, widths }: { count?: numb
           duration: fadeIn,
           ease: 'power2.out',
           onStart: () => {
-            try { f.classList.add('active'); } catch (e) { /* ignore */ }
             const fills = Array.from(f.querySelectorAll<HTMLElement>('.rank-fill'));
             if (!fills.length) return;
             fills.forEach((fill, i) => {
@@ -348,51 +339,48 @@ function BrowserFramesRotator({ count = 3, width = 360, widths }: { count?: numb
           duration: fadeOut,
           ease: 'power2.in',
           onComplete: () => {
-            try { f.classList.remove('active'); } catch (e) { /* ignore */ }
             const fills = Array.from(f.querySelectorAll<HTMLElement>('.rank-fill'));
             fills.forEach((fill) => gsap.set(fill, { width: '0%' }));
           },
         });
       });
 
-      // Pause/resume on hover for better UX
+      // Pause/resume on hover for better UX (only on devices that support hover)
       const handleEnter = () => tl.pause();
       const handleLeave = () => tl.resume();
-      el.addEventListener('mouseenter', handleEnter);
-      el.addEventListener('mouseleave', handleLeave);
+      const supportsHover = typeof window !== 'undefined' && window.matchMedia
+        ? window.matchMedia('(hover: hover) and (pointer: fine)').matches
+        : false;
+
+      if (supportsHover) {
+        el.addEventListener('mouseenter', handleEnter);
+        el.addEventListener('mouseleave', handleLeave);
+      }
 
       tl.play(0);
 
       return () => {
-        el.removeEventListener('mouseenter', handleEnter);
-        el.removeEventListener('mouseleave', handleLeave);
+        if (supportsHover) {
+          el.removeEventListener('mouseenter', handleEnter);
+          el.removeEventListener('mouseleave', handleLeave);
+        }
         if (tl && tl.kill) tl.kill();
-        // ensure classes are cleaned up
-        frames.forEach((fr) => {
-          try { fr.classList.remove('active'); } catch (e) { /* ignore */ }
-        });
       };
     }, el);
 
     return () => ctx.revert();
-  }, [count, width, widths]);
+  }, [count, width]);
 
   const getFrameWidth = (index: number) => {
     if (widths && widths[index]) return widths[index];
     return width;
   };
 
-  const maxFrameWidth = Math.max(...Array.from({ length: count }).map((_, i) => getFrameWidth(i)));
-
   return (
-    <div
-      className="browser-rotator flex justify-center items-center"
-      ref={containerRef}
-      style={{ width: '100%', maxWidth: maxFrameWidth }}
-    >
-      {Array.from({ length: count }).map((_, i) => (
-        <BrowserFrame key={i} width={getFrameWidth(i)} score={98 - i} active={false} index={i} />
-      ))}
+    <div className="browser-rotator flex justify-center items-center" ref={containerRef}>
+      {Array.from({ length: count }).map((_, i) => {
+        return <BrowserFrame key={i} width={getFrameWidth(i)} score={98 - i} active={false} index={i} />;
+      })}
     </div>
   );
 }
@@ -442,7 +430,7 @@ function DiscountModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center p-4"
+      className="fixed inset-0 z-1 flex items-start sm:items-center justify-center p-4 pt-28 sm:pt-0"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
