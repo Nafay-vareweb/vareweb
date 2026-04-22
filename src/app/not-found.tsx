@@ -88,14 +88,14 @@ export default function NotFound() {
       <div className="relative z-10 max-w-lg w-full text-center">
         {/* Skeleton Image */}
         <div className="skeleton-img mb-8 flex justify-center">
-          <div className="relative w-[280px] h-[320px] sm:w-[320px] sm:h-[360px]">
+          <div className="relative w-[380px] h-[320px] sm:w-[320px] sm:h-[360px]">
             <Image
               src="/404-skelly.webp"
               alt="Page not found skeleton illustration"
               fill
               priority
               className="object-contain drop-shadow-lg"
-              sizes="(max-width: 640px) 280px, 320px"
+              sizes="(max-width: 840px) 480px, 420px"
             />
           </div>
         </div>

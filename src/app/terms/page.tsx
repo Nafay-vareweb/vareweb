@@ -233,6 +233,13 @@ export default function TermsPage() {
                     <li key={section.id}>
                       <a
                         href={`#${section.id}`}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          const element = document.getElementById(section.id);
+                          if (element) {
+                            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                          }
+                        }}
                         className="block px-3 py-2 text-sm text-white/70 hover:text-[#a78bfa] hover:bg-white/[0.06] rounded-lg transition-all duration-200"
                       >
                         {section.title}

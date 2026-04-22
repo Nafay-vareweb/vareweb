@@ -4,21 +4,22 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import Link from 'next/link';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import ParticleBackground from '@/components/ParticleBackground';
 import VideoPopup from '@/components/VideoPopup';
 import {
   Smartphone, RefreshCw, Palette, Search, ShoppingCart,
-  Star, ArrowRight, ChevronLeft, ChevronRight, ChevronDown, Quote,
+  Star, MousePointer, Target, TrendingDown, ArrowRight, ChevronLeft, ChevronRight, ChevronDown, Quote,
   Code, Zap, Shield, Users, Clock, Award,
   CheckCircle2, Sparkles, TrendingUp, Layers,
   Layout, Monitor, Cpu, FileText,
   Briefcase, Heart, UserCircle, Globe, Play,
-  Rocket, ShoppingBag, Lock, X, MessageSquare,
+  Rocket, ShoppingBag, Lock, MoreHorizontal, X, MessageSquare, Bell, Send, Bookmark, Image,
 } from 'lucide-react';
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
 
 // ==================== REDUCED MOTION HOOK ====================
 function usePrefersReducedMotion(): boolean {
@@ -34,13 +35,372 @@ function usePrefersReducedMotion(): boolean {
   return prefersReduced;
 }
 
-// ==================== SECTION: HERO (4 Images with Smooth Fade Animation) ====================
-const heroImages = [
-  'https://res.cloudinary.com/dahmphiup/image/upload/v1775844618/side-banner-2_l9htej.webp',
-  'https://res.cloudinary.com/dahmphiup/image/upload/v1775844610/side-banner-3-1_ypxsdp.webp',
-  'https://res.cloudinary.com/dahmphiup/image/upload/v1775844609/side-banner-4_mlqohb.webp',
-  'https://res.cloudinary.com/dahmphiup/image/upload/v1775844829/side-banner-1_vns0fj.webp'
-];
+// Small browser frame preview component used in the hero
+function BrowserFrame({ width = 360, score = 98, active = false, index = 0 }: { width?: number; score?: number; active?: boolean; index?: number }) {
+  return (
+    <div className={`browser-frame ${active ? 'active' : ''}`} style={{ width: '100%', maxWidth: width }}>
+      <div className="browser-bar">
+        
+        <div className="b-url">
+          <Lock className="w-3 h-3 text-[#478ece]/40" />
+          <span className="ml-2 text-white/30 text-[10px] font-bold font-mono">vareweb.com</span>
+          <span className="ml-auto text-green-400/60 text-[9px] font-bold font-mono">● Live</span>
+        </div>
+        <div className="flex gap-4 ml-2">
+          <RefreshCw className="text-white/15 text-xs w-4 h-4" />
+          <MoreHorizontal className="text-white/15 text-xs w-4 h-4" />
+        </div>
+      </div>
+
+      {index === 1 ? (
+        <div className="bg-white/[.04] border border-white/10 rounded-[28px] overflow-hidden p-5">
+          <div className="flex items-center gap-2 px-4 py-3 bg-white/[.06] rounded-t-xl border-b border-white/10 mb-4">
+            <div className="g-logo w-4 h-4 flex items-center" aria-hidden="true" title="Google">
+              <svg viewBox="0 0 48 48" width="16" height="16" className="w-full h-full" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Google">
+                <path fill="#4285F4" d="M24 9.5c3.6 0 6.6 1.3 8.8 2.6l6.5-6.5C35.5 3.6 30.1 1.5 24 1.5 14.8 1.5 6.9 6.9 3 14.8l7.9 6.1C12.2 15 17.7 9.5 24 9.5z"/>
+                <path fill="#34A853" d="M46.5 24c0-1.5-.1-2.6-.4-3.8H24v7.2h12.9c-.6 3-2.8 5.2-5.9 6.7l9 7.1C43 39.5 46.5 32.4 46.5 24z"/>
+                <path fill="#FBBC05" d="M10.9 28.9C9.8 26.6 9.2 24.2 9.2 21.7s.6-4.9 1.7-7.2L3 8.3C1 12.8 0 18.1 0 24s1 11.2 3 15.7l7.9-6.8z"/>
+                <path fill="#EA4335" d="M24 46.5c6.1 0 11.5-2.1 15.8-5.7l-7.9-6.1c-2.2 1.5-4.9 2.4-7.9 2.4-6.3 0-11.7-4.5-13.1-10.6l-7.9 6.1C6.9 41.6 14.8 46.5 24 46.5z"/>
+              </svg>
+            </div>
+            <div className="flex-1 mx-2 bg-white/[.08] rounded-full px-4 py-1.5 flex items-center gap-2 border border-white/10">
+              <Search className="text-primary text-[10px] w-3 h-3" />
+              <span className="text-white/60 text-[11px] font-medium" id="searchTyped">seo service</span>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <div className="bg-primary/10 border border-primary/30 rounded-2xl p-4 relative overflow-hidden">
+              <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-primary rounded-l-2xl" />
+              <div className="pl-3">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-[9px] font-black uppercase tracking-wide text-green-400 bg-green-400/10 px-2 py-0.5 rounded-full border border-green-400/20">✓ Ad</span>
+                  <span className="text-[10px] text-white/40 truncate">vareweb.com › seo</span>
+                </div>
+                <p className="text-primary font-bold text-sm leading-snug mb-1">SEO Agency — #1 Organic Position</p>
+                <p className="text-white/40 text-[11px] leading-relaxed line-clamp-2">Technical SEO, content authority &amp; link building that compounds.</p>
+                <div className="flex items-center gap-3 mt-2">
+                  <span className="flex items-center gap-1 text-[9px] text-yellow-400">
+                    <Star className="w-3 h-3" /><Star className="w-3 h-3" /><Star className="w-3 h-3" /><Star className="w-3 h-3" /><Star className="w-3 h-3" /> 5.0
+                  </span>
+                  <span className="text-[9px] text-white/30">• 150+ Reviews</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="px-4 py-3 rounded-2xl hover:bg-white/[.02] transition-colors">
+              <p className="text-[10px] text-white/20 mb-1">competitor-seo.com</p>
+              <p className="text-white/50 text-sm font-semibold">Competitor SEO Agency</p>
+            </div>
+            <div className="px-4 py-3 rounded-2xl hover:bg-white/[.02] transition-colors">
+              <p className="text-[10px] text-white/20 mb-1">seo-specialist.net</p>
+              <p className="text-white/30 text-sm font-semibold">SEO Specialist</p>
+            </div>
+
+            <div className="pt-4 border-t border-white/10 mt-2">
+              <p className="text-[9px] font-black uppercase tracking-widest text-white/30 mb-3">Live Keyword Rankings</p>
+              <div className="space-y-2.5" id="rankBars">
+                <div>
+                  <div className="flex justify-between mb-1">
+                    <span className="text-[10px] font-semibold text-white/60">seo agency</span>
+                    <span className="text-[10px] font-black text-primary">#1</span>
+                  </div>
+                  <div className="rank-bar"><div className="rank-fill" data-target="98" /></div>
+                </div>
+                <div>
+                  <div className="flex justify-between mb-1">
+                    <span className="text-[10px] font-semibold text-white/60">technical seo</span>
+                    <span className="text-[10px] font-black text-primary">#1</span>
+                  </div>
+                  <div className="rank-bar"><div className="rank-fill" data-target="93" /></div>
+                </div>
+                <div>
+                  <div className="flex justify-between mb-1">
+                    <span className="text-[10px] font-semibold text-white/60">local seo expert</span>
+                    <span className="text-[10px] font-black text-primary">#2</span>
+                  </div>
+                  <div className="rank-bar"><div className="rank-fill" data-target="90" /></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : index === 2 ? (
+        <div style={{ padding: 0 }}>
+          <PhoneFloat frameWidth={width} />
+        </div>
+      ) : (
+        <div style={{ background: '#0a0f1e', padding: 0 }}>
+          <div style={{ background: 'rgba(71,142,206,.06)', borderBottom: '1px solid rgba(71,142,206,.1)', padding: '10px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ width: 80, height: 14, background: 'rgba(71,142,206,.35)', borderRadius: 4 }} />
+            <div style={{ display: 'flex', gap: 16 }}>
+              <div style={{ width: 40, height: 8, background: 'rgba(255,255,255,.1)', borderRadius: 3 }} />
+              <div style={{ width: 50, height: 8, background: 'rgba(255,255,255,.1)', borderRadius: 3 }} />
+              <div style={{ width: 36, height: 8, background: 'rgba(255,255,255,.1)', borderRadius: 3 }} />
+              <div style={{ width: 60, height: 24, background: 'rgba(71,142,206,.6)', borderRadius: 20 }} />
+            </div>
+          </div>
+
+          <div style={{ padding: '32px 20px 24px', position: 'relative', overflow: 'hidden' }}>
+            <div style={{ position: 'absolute', top: -40, right: -40, width: 200, height: 200, borderRadius: '50%', background: 'rgba(71,142,206,.06)', filter: 'blur(40px)' }} />
+            <div style={{ fontFamily: "'Barlow Condensed',sans-serif", fontStyle: 'italic', fontWeight: 900, fontSize: 'clamp(22px,4vw,34px)', color: '#fff', lineHeight: 1, marginBottom: 10 }}>
+              GROW YOUR<br /><span style={{ color: '#478ece' }}>REVENUE.</span>
+            </div>
+            <div style={{ width: 220, height: 8, background: 'rgba(255,255,255,.08)', borderRadius: 3, marginBottom: 6 }} />
+            <div style={{ width: 160, height: 8, background: 'rgba(255,255,255,.06)', borderRadius: 3, marginBottom: 18 }} />
+            <div style={{ display: 'flex', gap: 10 }}>
+              <div style={{ background: '#478ece', borderRadius: 20, padding: '8px 18px', fontSize: 9, fontWeight: 800, color: '#fff', letterSpacing: '.2em', textTransform: 'uppercase' }}>Get Started</div>
+              <div style={{ border: '1px solid rgba(255,255,255,.15)', borderRadius: 20, padding: '8px 16px', fontSize: 9, color: 'rgba(255,255,255,.5)', letterSpacing: '.15em', textTransform: 'uppercase' }}>Learn More</div>
+            </div>
+
+            <div style={{ position: 'absolute', top: 20, right: 20, background: 'rgba(15,23,42,.95)', border: '1px solid rgba(71,142,206,.3)', borderRadius: 12, padding: '10px 14px', textAlign: 'center' }}>
+              <div id="score-num" style={{ fontFamily: "'Barlow Condensed',sans-serif", fontStyle: 'italic', fontWeight: 900, fontSize: 28, color: '#478ece', lineHeight: 1 }}>{score}</div>
+              <div style={{ fontSize: 8, fontWeight: 800, color: 'rgba(255,255,255,.3)', textTransform: 'uppercase', letterSpacing: '.2em', marginTop: 2 }}>PageSpeed</div>
+              <div style={{ display: 'flex', gap: 2, justifyContent: 'center', marginTop: 4 }}>
+                <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e' }} />
+                <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e' }} />
+                <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e' }} />
+              </div>
+            </div>
+          </div>
+
+          <div style={{ padding: '0 20px', display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 8, marginBottom: 16 }}>
+            <div style={{ background: 'rgba(255,255,255,.03)', border: '1px solid rgba(71,142,206,.1)', borderRadius: 10, padding: 12 }}>
+              <div style={{ width: 20, height: 20, background: 'rgba(71,142,206,.25)', borderRadius: 6, marginBottom: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ width: 10, height: 10, background: '#478ece', borderRadius: 2 }} />
+              </div>
+              <div style={{ height: 7, background: 'rgba(255,255,255,.12)', borderRadius: 3, marginBottom: 4 }} />
+              <div style={{ height: 7, background: 'rgba(255,255,255,.07)', borderRadius: 3, width: '70%' }} />
+            </div>
+            <div style={{ background: 'rgba(71,142,206,.1)', border: '1px solid rgba(71,142,206,.25)', borderRadius: 10, padding: 12 }}>
+              <div style={{ width: 20, height: 20, background: 'rgba(71,142,206,.4)', borderRadius: 6, marginBottom: 8 }} />
+              <div style={{ height: 7, background: 'rgba(71,142,206,.4)', borderRadius: 3, marginBottom: 4 }} />
+              <div style={{ height: 7, background: 'rgba(71,142,206,.2)', borderRadius: 3, width: '60%' }} />
+            </div>
+            <div style={{ background: 'rgba(255,255,255,.03)', border: '1px solid rgba(71,142,206,.1)', borderRadius: 10, padding: 12 }}>
+              <div style={{ width: 20, height: 20, background: 'rgba(71,142,206,.15)', borderRadius: 6, marginBottom: 8 }} />
+              <div style={{ height: 7, background: 'rgba(255,255,255,.1)', borderRadius: 3, marginBottom: 4 }} />
+              <div style={{ height: 7, background: 'rgba(255,255,255,.06)', borderRadius: 3, width: '80%' }} />
+            </div>
+          </div>
+
+          <div style={{ margin: '0 20px 20px', background: 'rgba(71,142,206,.06)', border: '1px solid rgba(71,142,206,.12)', borderRadius: 10, padding: '12px 14px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10 }}>
+              <div style={{ width: 6, height: 6, borderRadius: '50%', background: 'rgba(71,142,206,.5)' }} />
+              <span style={{ fontFamily: "'Courier New',monospace", fontSize: 9, color: 'rgba(71,142,206,.5)' }}>index.html — 98/100</span>
+              <span style={{ marginLeft: 'auto', background: 'rgba(34,197,94,.15)', border: '1px solid rgba(34,197,94,.3)', borderRadius: 4, padding: '1px 6px', fontSize: 8, color: '#86efac', fontWeight: 700 }}>OPTIMIZED</span>
+            </div>
+            <div className="code-content">
+              <div className="code-line"><span className="ln">1</span><span className="c-tag">&lt;section</span> <span className="c-attr">class</span>=<span className="c-val">"hero"</span><span className="c-tag">&gt;</span></div>
+              <div className="code-line"><span className="ln">2</span><span style={{ paddingLeft: 16 }}><span className="c-tag">&lt;h1</span> <span className="c-attr">data-aos</span>=<span className="c-val">"fade-up"</span><span className="c-tag">&gt;</span></span></div>
+              <div className="code-line"><span className="ln">3</span><span style={{ paddingLeft: 32 }}><span className="c-str">Convert Every Visitor</span></span></div>
+              <div className="code-line"><span className="ln">4</span><span style={{ paddingLeft: 16 }}><span className="c-tag">&lt;/h1&gt;</span></span></div>
+              <div className="code-line"><span className="ln">5</span><span className="c-cmt">// PageSpeed: 98 ✓ Core Web Vitals: Pass ✓</span></div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Small phone mock used near the rotator
+function PhoneFloat({ frameWidth = 360 }: { frameWidth?: number }) {
+  const innerHeight = Math.round(frameWidth * 1.8); // proportional height for better aspect ratio
+  return (
+    <div className="phone-float relative z-10 mx-auto" style={{ width: frameWidth }}>
+      <div className="relative bg-[#111827] rounded-[36px] border-2 border-white/15 shadow-2xl shadow-black/60 overflow-hidden" style={{ padding: 10 }}>
+        <div className="absolute top-3 left-1/2 -translate-x-1/2 w-20 h-5 bg-black rounded-full z-30" />
+        <div className="bg-white rounded-[28px] overflow-hidden" style={{ minHeight: innerHeight }}>
+          {/* Header */}
+          <div className="flex items-center justify-between px-4 pt-8 pb-3 border-b border-gray-100">
+            <span className="font-display text-black text-base">@yourbrand</span>
+            <div className="flex gap-3 text-black/40">
+              <Bell className="w-4 h-4" />
+              <Send className="w-4 h-4" />
+            </div>
+          </div>
+
+          {/* Stories */}
+          <div className="flex gap-2 px-4 py-3">
+            <div className="flex-shrink-0">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-pink-400 to-primary p-[2px]">
+                <div className="w-full h-full rounded-full bg-white flex items-center justify-center">
+                  <span className="text-[9px] font-black text-black">You</span>
+                </div>
+              </div>
+            </div>
+            <div className="flex-shrink-0"><div className="w-10 h-10 rounded-full bg-gradient-to-tr from-yellow-400 to-pink-500 p-[2px]"><div className="w-full h-full rounded-full bg-gray-100" /></div></div>
+            <div className="flex-shrink-0"><div className="w-10 h-10 rounded-full bg-gradient-to-tr from-purple-500 to-pink-400 p-[2px]"><div className="w-full h-full rounded-full bg-gray-100" /></div></div>
+            <div className="flex-shrink-0"><div className="w-10 h-10 rounded-full bg-gradient-to-tr from-primary to-blue-300 p-[2px]"><div className="w-full h-full rounded-full bg-gray-100" /></div></div>
+          </div>
+
+          {/* Feed */}
+          <div className="px-4 space-y-4 pb-4">
+            <div className="feed-item">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-primary to-blue-300" />
+                <span className="text-[10px] font-black text-black">yourbrand</span>
+                <span className="text-[9px] text-black/30 ml-auto">2h</span>
+              </div>
+              <div className="w-full h-36 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 border border-primary/15 flex items-center justify-center mb-2">
+                <div className="text-center">
+                  <Image className="text-primary/30 text-2xl mb-1 w-6 h-6" />
+                  <p className="text-primary/40 text-[9px] font-black uppercase tracking-wider">Graphic Design</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-4 text-black/40 text-sm">
+                <Heart className="text-pink-400 like-beat w-4 h-4" />
+                <MessageSquare className="w-4 h-4" />
+                <Send className="w-4 h-4" />
+                <Bookmark className="ml-auto w-4 h-4" />
+              </div>
+              <p className="text-[10px] font-black text-black/60 mt-1">2,847 likes</p>
+            </div>
+
+            <div className="feed-item">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-primary to-blue-300" />
+                <span className="text-[10px] font-black text-black">yourbrand</span>
+                <span className="text-[9px] text-black/30 ml-auto">1d</span>
+              </div>
+              <div className="w-full h-28 rounded-2xl bg-gradient-to-br from-black to-black/80 flex items-center justify-center mb-2">
+                <p className="font-display text-white text-lg text-center px-4 leading-tight">"Consistency<br/>builds brands."</p>
+              </div>
+              <div className="flex items-center gap-4 text-black/40 text-sm">
+                <Heart className="w-4 h-4" />
+                <MessageSquare className="w-4 h-4" />
+                <Send className="w-4 h-4" />
+                <Bookmark className="ml-auto w-4 h-4" />
+              </div>
+              <p className="text-[10px] font-black text-black/60 mt-1">1,204 likes</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function BrowserFramesRotator({ count = 3, width = 360, widths }: { count?: number; width?: number; widths?: number[] }) {
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const prefersReduced = usePrefersReducedMotion();
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const frames = Array.from(el.querySelectorAll<HTMLElement>('.browser-frame'));
+    if (!frames.length) return;
+
+    if (prefersReduced) {
+      gsap.set(frames, { autoAlpha: 0, pointerEvents: 'none', y: 12, zIndex: 0 });
+      const first = frames[0];
+      frames.forEach((fr) => fr.classList.remove('active'));
+      if (first) {
+        gsap.set(first, { autoAlpha: 1, pointerEvents: 'auto', y: 0, zIndex: 20 });
+        try { first.classList.add('active'); } catch (e) { /* ignore */ }
+      }
+      return;
+    }
+
+    const ctx = gsap.context(() => {
+      const fadeIn = 0.9;
+      const fadeOut = 0.9;
+      const visible = Math.max(0, 5 - fadeIn - fadeOut); // total cycle ≈ 5s per frame
+
+      gsap.set(frames, { autoAlpha: 0, pointerEvents: 'none', y: 12, zIndex: 0 });
+
+      // make sure the first frame is visible immediately to avoid a blank flash
+      const firstFrame = frames[0];
+      if (firstFrame) {
+        gsap.set(firstFrame, { autoAlpha: 1, pointerEvents: 'auto', y: 0, zIndex: 20 });
+        try { firstFrame.classList.add('active'); } catch (e) { /* ignore */ }
+      }
+
+      const tl = gsap.timeline({ repeat: -1 });
+      frames.forEach((f) => {
+        tl.to(f, {
+          autoAlpha: 1,
+          pointerEvents: 'auto',
+          y: 0,
+          zIndex: 20,
+          duration: fadeIn,
+          ease: 'power2.out',
+          onStart: () => {
+            try { f.classList.add('active'); } catch (e) { /* ignore */ }
+            const fills = Array.from(f.querySelectorAll<HTMLElement>('.rank-fill'));
+            if (!fills.length) return;
+            fills.forEach((fill, i) => {
+              const target = fill.getAttribute('data-target') || '';
+              const pct = target ? `${target}%` : '0%';
+              gsap.set(fill, { width: '0%' });
+              gsap.to(fill, { width: pct, duration: 0.9, delay: i * 0.08, ease: 'power2.out' });
+            });
+          },
+        });
+        tl.to(f, { duration: visible });
+        tl.to(f, {
+          autoAlpha: 0,
+          pointerEvents: 'none',
+          y: -8,
+          zIndex: 0,
+          duration: fadeOut,
+          ease: 'power2.in',
+          onComplete: () => {
+            try { f.classList.remove('active'); } catch (e) { /* ignore */ }
+            const fills = Array.from(f.querySelectorAll<HTMLElement>('.rank-fill'));
+            fills.forEach((fill) => gsap.set(fill, { width: '0%' }));
+          },
+        });
+      });
+
+      // Pause/resume on hover for better UX
+      const handleEnter = () => tl.pause();
+      const handleLeave = () => tl.resume();
+      el.addEventListener('mouseenter', handleEnter);
+      el.addEventListener('mouseleave', handleLeave);
+
+      tl.play(0);
+
+      return () => {
+        el.removeEventListener('mouseenter', handleEnter);
+        el.removeEventListener('mouseleave', handleLeave);
+        if (tl && tl.kill) tl.kill();
+        // ensure classes are cleaned up
+        frames.forEach((fr) => {
+          try { fr.classList.remove('active'); } catch (e) { /* ignore */ }
+        });
+      };
+    }, el);
+
+    return () => ctx.revert();
+  }, [count, width, widths]);
+
+  const getFrameWidth = (index: number) => {
+    if (widths && widths[index]) return widths[index];
+    return width;
+  };
+
+  const maxFrameWidth = Math.max(...Array.from({ length: count }).map((_, i) => getFrameWidth(i)));
+
+  return (
+    <div
+      className="browser-rotator flex justify-center items-center"
+      ref={containerRef}
+      style={{ width: '100%', maxWidth: maxFrameWidth }}
+    >
+      {Array.from({ length: count }).map((_, i) => (
+        <BrowserFrame key={i} width={getFrameWidth(i)} score={98 - i} active={false} index={i} />
+      ))}
+    </div>
+  );
+}
+
+
+// ==================== SECTION: HERO (Technical Rotator) ====================
+// The right-side hero image carousel was replaced with a concise technical rotator component
+// that cycles through 3-4 highlighted services (Website, Mobile, GHL workflows, eCommerce).
 
 // ==================== DISCOUNT MODAL ====================
 function DiscountModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
@@ -210,7 +570,7 @@ function DiscountModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
               <select
                 required
                 defaultValue=""
-                className="w-full px-4 py-3 rounded-xl bg-white/[0.06] border border-white/[0.1] text-white/60 text-sm focus:outline-none focus:border-purple-500/50 focus:bg-white/[0.08] transition-all duration-200 appearance-none cursor-pointer"
+                className="w-full px-4 py-3 rounded-xl bg-white/[0.06] border border-white/[0.1] text-white/60 text-sm focus:outline-none focus:border-purple-500/50 focus:bg-black transition-all duration-200 appearance-none cursor-pointer"
                 style={{
                   backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.35)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E")`,
                   backgroundRepeat: 'no-repeat',
@@ -272,8 +632,6 @@ function HeroSection() {
   const [typedText, setTypedText] = useState('Growth');
   const [typingPhase, setTypingPhase] = useState<'idle' | 'typing' | 'done'>('idle');
   const [isDiscountOpen, setIsDiscountOpen] = useState(false);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [isFading, setIsFading] = useState(false);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -292,11 +650,13 @@ function HeroSection() {
       );
       if (headingRef.current) {
         const words = headingRef.current.querySelectorAll('.word');
-        gsap.fromTo(
-          words,
-          { y: 40, opacity: 0, rotateX: -40 },
-          { y: 0, opacity: 1, rotateX: 0, duration: 0.6, stagger: 0.05, ease: 'power3.out' }
-        );
+        if (words && words.length) {
+          gsap.fromTo(
+            words,
+            { y: 40, opacity: 0, rotateX: -40 },
+            { y: 0, opacity: 1, rotateX: 0, duration: 0.6, stagger: 0.05, ease: 'power3.out' }
+          );
+        }
         // Make typed-word span visible
         const typedEl = headingRef.current.querySelector('.typed-growth');
         if (typedEl) {
@@ -356,9 +716,33 @@ function HeroSection() {
           },
         });
       });
-    }, sectionRef);
+    });
 
     return () => ctx.revert();
+  }, []);
+
+  // Chart animation: draw the line and move dot along it continuously
+  useEffect(() => {
+    const container = slideContainerRef.current;
+    if (!container) return;
+
+    const line = container.querySelector<SVGPathElement>('#chart-line');
+    const dot = container.querySelector<SVGCircleElement>('#chart-dot');
+    if (!line || !dot) return;
+
+    let pathLength = 452.343;
+    try { pathLength = (line as SVGPathElement).getTotalLength(); } catch (e) { /* fallback */ }
+
+    gsap.set(line, { strokeDasharray: pathLength, strokeDashoffset: pathLength });
+
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: 0.9 });
+    tl.to(line, { strokeDashoffset: 0, duration: 2.4, ease: 'power2.inOut' }, 0)
+      .to(dot, { motionPath: { path: line, align: line, alignOrigin: [0.5, 0.5], autoRotate: false }, duration: 2.4, ease: 'power2.inOut' }, 0)
+      .to(line, { strokeDashoffset: pathLength, duration: 1.8, ease: 'power2.inOut' }, '+=0.6');
+
+    return () => {
+      if (tl && tl.kill) tl.kill();
+    };
   }, []);
 
   // Magnetic button effect
@@ -401,17 +785,7 @@ function HeroSection() {
     return () => cleanupFns.forEach((fn) => fn());
   }, []);
 
-  // Image fade cycle every 5 seconds with smooth transitions
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setIsFading(true);
-      setTimeout(() => {
-        setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
-        setIsFading(false);
-      }, 500); // Half of transition duration for smoother effect
-    }, 5000);
-    return () => clearInterval(interval);
-  }, []);
+  // The right-side hero previously rotated images; we now use a small TechRotator component.
 
   // Typing effect — cycle through multiple words
   useEffect(() => {
@@ -466,10 +840,47 @@ function HeroSection() {
   useEffect(() => {
     const el = slideContainerRef.current;
     if (!el) return;
-    gsap.fromTo(el,
-      { y: 15, opacity: 0, scale: 0.97 },
-      { y: 0, opacity: 1, scale: 1, duration: 0.45, ease: 'power2.out', force3D: true }
-    );
+      const blogHeader = sectionRef.current?.querySelector('.section-header');
+      if (blogHeader) {
+        gsap.fromTo(
+          blogHeader,
+          { y: 30, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.7, ease: 'power3.out', scrollTrigger: { trigger: sectionRef.current, start: 'top 75%' } }
+        );
+      }
+      const blogCards = sectionRef.current?.querySelectorAll('.blog-card');
+      if (blogCards && blogCards.length) {
+        gsap.fromTo(
+          blogCards,
+          { y: 60, opacity: 0, scale: 0.98 },
+          { y: 0, opacity: 1, scale: 1, duration: 0.75, stagger: 0.1, ease: 'power3.out', scrollTrigger: { trigger: sectionRef.current, start: 'top 80%' } }
+        );
+      }
+
+    const ctx = gsap.context(() => {
+      const bars = Array.from(el.querySelectorAll<HTMLElement>('.hero-bar'));
+      if (!bars.length) return;
+
+      bars.forEach((bar, i) => {
+        const base = parseFloat(bar.getAttribute('data-w') || '60');
+        // increase amplitude for more visible fluctuation and slightly faster tempo
+        const amp = Math.max(6, Math.min(18, Math.round(base * 0.12)));
+        const tl = gsap.timeline({ repeat: -1, yoyo: true });
+        tl.to(bar, { width: `${Math.min(100, base + amp)}%`, duration: 1.2 + (i % 3) * 0.35, ease: 'sine.inOut' })
+          .to(bar, { width: `${Math.max(4, base - amp)}%`, duration: 1.6 + ((i + 1) % 3) * 0.45, ease: 'sine.inOut' })
+          .to(bar, { width: `${base}%`, duration: 0.9, ease: 'power2.out' });
+        (bar as any).__heroTl = tl;
+      });
+    });
+
+    return () => {
+      ctx.revert();
+      const bars2 = Array.from(el.querySelectorAll<HTMLElement>('.hero-bar'));
+      bars2.forEach((b) => {
+        const tl = (b as any).__heroTl;
+        if (tl && tl.kill) tl.kill();
+      });
+    };
   }, []);
 
   return (
@@ -564,8 +975,8 @@ function HeroSection() {
       </button>
 
       {/* ========== Main Content — Split Layout ========== */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 md:pl-[72px] w-full pb-28 lg:pb-8">
-        <div className="grid grid-cols-1 xl:grid-cols-5 gap-10 xl:gap-16 items-center">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 md:pl-[72px] w-full pb-32 lg:pb-8">
+        <div className="grid grid-cols-1 xl:grid-cols-5 gap-10 xl:gap-16 items-start">
 
           {/* ===== LEFT COLUMN — Text Content (~60%) ===== */}
           <div className="xl:col-span-3 text-left">
@@ -588,9 +999,15 @@ function HeroSection() {
                   <span className="word inline-block">Automated</span>
                 </div>
 
-                <div className="typed-growth mt-2 inline-flex items-baseline text-transparent bg-clip-text bg-gradient-to-r from-vare-gold via-yellow-400 to-amber-500 overflow-hidden">
-                  <span className="inline-block align-baseline">{typedText}</span>
-                  <span className={`inline-block w-[4px] h-[0.9em] bg-vare-gold ml-[4px] align-baseline ${typingPhase === 'done' ? 'opacity-0' : 'animate-pulse'}`} />
+                <div className="typed-growth mt-2 relative inline-block align-baseline overflow-hidden">
+                  {/* invisible sizer reserves space using the longest word to prevent layout shifts */}
+                  <span className="invisible block whitespace-nowrap">Innovation</span>
+
+                  {/* overlay the visible typed text and cursor so changes don't affect document flow */}
+                  <span className="absolute left-0 top-0 inline-flex items-baseline text-transparent bg-clip-text bg-gradient-to-r from-vare-gold via-yellow-400 to-amber-500 whitespace-nowrap">
+                    <span className="inline-block align-baseline">{typedText}</span>
+                    <span className={`inline-block w-[4px] h-[0.9em] bg-vare-gold ml-[4px] align-baseline ${typingPhase === 'done' ? 'opacity-0' : 'animate-pulse'}`} />
+                  </span>
                 </div>
 
                 <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 mt-4 min-w-0">
@@ -634,59 +1051,38 @@ function HeroSection() {
             <div ref={trustBadgesRef} className="mt-10 sm:mt-14 opacity-0">
               <p className="text-xs sm:text-sm text-white/40 mb-3">Highly Recommended by</p>
               <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
-                {/* Trustpilot */}
-                <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/[0.06] border border-white/[0.08] hover:bg-white/[0.1] transition-colors duration-200">
-                  <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
-                  <div>
-                    <span className="text-[11px] sm:text-xs font-semibold text-white/80">Trustpilot</span>
-                    <span className="text-[11px] sm:text-xs text-white/50 ml-1">4.3</span>
-                  </div>
+                {/* Trustpilot (image badge) */}
+                <div className="flex items-center gap-3 px-3 py-2 rounded-lg bg-white/[0.06] border border-white/[0.08] hover:bg-white/[0.1] transition-colors duration-200">
+                <a href="https://www.trustpilot.com/review/vareweb.com" target="_blank" rel="noopener noreferrer">
+                  <img src="https://res.cloudinary.com/dahmphiup/image/upload/v1776812740/01B77B-3-1_aee4u3.webp" alt="Trustpilot 4.3" className="w-32 h-auto rounded-sm" />
+                </a>
                 </div>
-                {/* Google */}
-                <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/[0.06] border border-white/[0.08] hover:bg-white/[0.1] transition-colors duration-200">
-                  <Globe className="w-4 h-4 text-blue-400" />
-                  <div>
-                    <span className="text-[11px] sm:text-xs font-semibold text-white/80">Google</span>
-                    <span className="text-[11px] sm:text-xs text-white/50 ml-1">5.0</span>
-                  </div>
+                {/* Google (image badge) */}
+                <div className="flex items-center gap-3 px-3 py-2 rounded-lg bg-white/[0.06] border border-white/[0.08] hover:bg-white/[0.1] transition-colors duration-200">
+                  <a href="https://www.google.com/search?q=vareweb&oq=vareweb" target="_blank" rel="noopener noreferrer">
+                    <img src="https://res.cloudinary.com/dahmphiup/image/upload/v1776812740/01B77B-2-1_hkg5v7.webp" alt="Google 5.0" className="w-32 h-auto rounded-sm" />
+                  </a>
                 </div>
-                {/* Design Rush */}
-                <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/[0.06] border border-white/[0.08] hover:bg-white/[0.1] transition-colors duration-200">
-                  <Palette className="w-4 h-4 text-pink-400" />
-                  <span className="text-[11px] sm:text-xs font-semibold text-white/80">Design Rush</span>
+                {/* Design Rush (image badge) */}
+                <div className="flex items-center gap-3 px-3 py-2 rounded-lg bg-white/[0.06] border border-white/[0.08] hover:bg-white/[0.1] transition-colors duration-200">
+                  <a href="https://www.designrush.com/agency/profile/vareweb" target="_blank" rel="noopener noreferrer">
+                    <img src="https://res.cloudinary.com/dahmphiup/image/upload/v1776812740/01B77B-1_nqirtc.webp" alt="Design Rush" className="w-32 h-auto rounded-sm" />
+                  </a>
                 </div>
-                {/* Clutch */}
-                <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/[0.06] border border-white/[0.08] hover:bg-white/[0.1] transition-colors duration-200">
-                  <Award className="w-4 h-4 text-amber-400" />
-                  <span className="text-[11px] sm:text-xs font-semibold text-white/80">Clutch</span>
+                {/* Clutch (image badge) */}
+                <div className="flex items-center gap-3 px-3 py-2 rounded-lg bg-white/[0.06] border border-white/[0.08] hover:bg-white/[0.1] transition-colors duration-200">
+                  <a href="https://www.clutch.co/profile/vareweb" target="_blank" rel="noopener noreferrer">
+                    <img src="https://res.cloudinary.com/dahmphiup/image/upload/v1776812740/01B77B_yqigsn.webp" alt="Clutch" className="w-32 h-auto rounded-sm" />
+                  </a>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* ===== RIGHT COLUMN — 4 Images with Smooth Fade Animation (~40%) ===== */}
-          <div className="xl:col-span-2 flex items-start justify-center py-8 xl:py-0">
-            <div
-              ref={slideContainerRef}
-              className="relative w-full max-w-[420px] h-[400px] xs:max-w-[440px] sm:max-w-[460px] sm:h-[460px] lg:max-w-[500px] lg:h-[500px] xl:max-w-[520px] xl:h-[520px] rounded-[36px] overflow-hidden xl:-mt-8"
-            >
-              {heroImages.map((imageSrc, index) => (
-                <img
-                  key={index}
-                  src={imageSrc}
-                  alt={`VareWeb Hero Image ${index + 1}`}
-                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${
-                    index === currentImageIndex
-                      ? isFading
-                        ? 'opacity-0'
-                        : 'opacity-100'
-                      : 'opacity-0'
-                  }`}
-                />
-              ))}
-            </div>
+          {/* ===== RIGHT COLUMN — 4 Images with Smooth Fade Animation ===== */}
+          <div className="xl:col-span-2 flex justify-center items-center relative w-full h-auto">
+            <BrowserFramesRotator count={3} widths={[700, 360, 300]} />
           </div>
-
         </div>
       </div>
     </section>
@@ -709,12 +1105,12 @@ function CounterSection() {
     if (reduced) return;
     const ctx = gsap.context(() => {
       const counters = countersRef.current?.querySelectorAll('.counter-number');
-      if (!counters) return;
+      if (!counters || !counters.length) return;
 
       const counterData = [
-        { target: 15000, suffix: '+', decimals: 0 },
+        { target: 150, suffix: '+', decimals: 0 },
         { target: 98, suffix: '%', decimals: 0 },
-        { target: 8500, suffix: '+', decimals: 0 },
+        { target: 100, suffix: '+', decimals: 0 },
         { target: 50, suffix: '+', decimals: 0 },
       ];
 
@@ -772,7 +1168,7 @@ function CounterSection() {
           },
         });
       });
-    }, sectionRef);
+    });
 
     return () => ctx.revert();
   }, [reduced]);
@@ -854,7 +1250,7 @@ function TrustedBySection() {
     resumeScroll: () => void;
   } | null>(null);
 
-  const companies = [
+  const companiesTop = [
     { name: 'Google', icon: Globe },
     { name: 'Microsoft', icon: Monitor },
     { name: 'Amazon', icon: ShoppingCart },
@@ -865,7 +1261,19 @@ function TrustedBySection() {
     { name: 'Spotify', icon: Heart },
   ];
 
-  const allCompanies = [...companies, ...companies, ...companies, ...companies];
+  const companiesBottom = [
+    { name: 'Stripe', icon: ShoppingBag },
+    { name: 'Intel', icon: Cpu },
+    { name: 'GitHub', icon: Code },
+    { name: 'Notion', icon: FileText },
+    { name: 'Vercel', icon: Rocket },
+    { name: 'Upwork', icon: Briefcase },
+    { name: 'Cloud', icon: Globe },
+    { name: 'Dribbble', icon: Play },
+  ];
+
+  const allCompaniesTop = [...companiesTop, ...companiesTop, ...companiesTop, ...companiesTop];
+  const allCompaniesBottom = [...companiesBottom, ...companiesBottom, ...companiesBottom, ...companiesBottom];
 
   // GSAP-powered auto-scroll + snap-to-hover
   useEffect(() => {
@@ -887,16 +1295,16 @@ function TrustedBySection() {
     }, { threshold: 0 });
     if (sectionRef.current) io.observe(sectionRef.current);
 
-    const getOneSetWidth = (track: HTMLElement) => {
+    const getOneSetWidth = (track: HTMLElement, setCount: number) => {
       const firstCard = track.children[0] as HTMLElement;
       if (!firstCard) return 1;
       const style = window.getComputedStyle(track);
       const gap = parseFloat(style.gap) || 16;
-      return (firstCard.offsetWidth + gap) * companies.length;
+      return (firstCard.offsetWidth + gap) * setCount;
     };
 
-    const w1 = getOneSetWidth(track1);
-    const w2 = getOneSetWidth(track2);
+    const w1 = getOneSetWidth(track1, companiesTop.length);
+    const w2 = getOneSetWidth(track2, companiesBottom.length);
 
     gsap.set(track1, { x: 0 });
     gsap.set(track2, { x: -w2 });
@@ -1019,7 +1427,7 @@ function TrustedBySection() {
         onMouseLeave={() => row1Controls.current?.resumeScroll()}
       >
         <div ref={row1TrackRef} className="flex gap-4 w-max" style={{ willChange: 'transform' }}>
-          {allCompanies.map((company, i) => (
+          {allCompaniesTop.map((company, i) => (
             <div
               key={`r1-${i}`}
               onMouseEnter={() => row1Controls.current?.pauseScroll()}
@@ -1050,7 +1458,7 @@ function TrustedBySection() {
         onMouseLeave={() => row2Controls.current?.resumeScroll()}
       >
         <div ref={row2TrackRef} className="flex gap-4 w-max" style={{ willChange: 'transform' }}>
-          {allCompanies.map((company, i) => (
+          {allCompaniesBottom.map((company, i) => (
             <div
               key={`r2-${i}`}
               onMouseEnter={() => row2Controls.current?.pauseScroll()}
@@ -1223,26 +1631,33 @@ function ServicesSection() {
   useEffect(() => {
     const ctx = gsap.context(() => {
       // Premium Section Header Animation
-      gsap.fromTo(
-        sectionRef.current!.querySelector('.svc-header'),
-        { y: 60, opacity: 0 },
-        { 
-          y: 0, opacity: 1, duration: 1, ease: 'power4.out',
-          scrollTrigger: { trigger: sectionRef.current, start: 'top 80%' }
-        }
-      );
+      const svcHeader = sectionRef.current?.querySelector('.svc-header');
+      if (svcHeader) {
+        gsap.fromTo(
+          svcHeader,
+          { y: 60, opacity: 0 },
+          { 
+            y: 0, opacity: 1, duration: 1, ease: 'power4.out',
+            scrollTrigger: { trigger: sectionRef.current, start: 'top 80%' }
+          }
+        );
+      }
 
       // Bento Grid Item Staggered Animation
-      gsap.fromTo(
-        sectionRef.current!.querySelectorAll('.svc-card'),
-        { y: 80, opacity: 0, scale: 0.95 },
-        {
-          y: 0, opacity: 1, scale: 1,
-          duration: 0.8, stagger: 0.1, ease: 'power3.out',
-          scrollTrigger: { trigger: sectionRef.current!.querySelector('.svc-grid'), start: 'top 85%' },
-        }
-      );
-    }, sectionRef);
+      const svcCards = sectionRef.current?.querySelectorAll('.svc-card');
+      const svcGrid = sectionRef.current?.querySelector('.svc-grid');
+      if (svcCards && svcCards.length && svcGrid) {
+        gsap.fromTo(
+          svcCards,
+          { y: 80, opacity: 0, scale: 0.95 },
+          {
+            y: 0, opacity: 1, scale: 1,
+            duration: 0.8, stagger: 0.1, ease: 'power3.out',
+            scrollTrigger: { trigger: svcGrid, start: 'top 85%' },
+          }
+        );
+      }
+    }, sectionRef.current!);
     return () => ctx.revert();
   }, []);
 
@@ -1391,25 +1806,32 @@ function PortfolioSection() {
   useEffect(() => {
     const ctx = gsap.context(() => {
       // Premium Section Header Animation
-      gsap.fromTo(
-        sectionRef.current!.querySelector('.section-header'),
-        { y: 60, opacity: 0 },
-        { 
-          y: 0, opacity: 1, duration: 1, ease: 'power4.out',
-          scrollTrigger: { trigger: sectionRef.current, start: 'top 80%' }
-        }
-      );
+      const ph = sectionRef.current?.querySelector('.section-header');
+      if (ph) {
+        gsap.fromTo(
+          ph,
+          { y: 60, opacity: 0 },
+          { 
+            y: 0, opacity: 1, duration: 1, ease: 'power4.out',
+            scrollTrigger: { trigger: sectionRef.current, start: 'top 80%' }
+          }
+        );
+      }
 
       // Staggered Case Study Card Animation
-      gsap.fromTo(
-        sectionRef.current!.querySelectorAll('.portfolio-card'),
-        { y: 100, opacity: 0, scale: 0.95 },
-        {
-          y: 0, opacity: 1, scale: 1,
-          duration: 0.8, stagger: 0.15, ease: 'power3.out',
-          scrollTrigger: { trigger: sectionRef.current!.querySelector('.portfolio-scroll'), start: 'top 85%' },
-        }
-      );
+      const portfolioCards = sectionRef.current?.querySelectorAll('.portfolio-card');
+      const portfolioScroll = sectionRef.current?.querySelector('.portfolio-scroll');
+      if (portfolioCards && portfolioCards.length && portfolioScroll) {
+        gsap.fromTo(
+          portfolioCards,
+          { y: 100, opacity: 0, scale: 0.95 },
+          {
+            y: 0, opacity: 1, scale: 1,
+            duration: 0.8, stagger: 0.15, ease: 'power3.out',
+            scrollTrigger: { trigger: portfolioScroll, start: 'top 85%' },
+          }
+        );
+      }
 
       if (reduced) return;
 
@@ -1428,7 +1850,7 @@ function PortfolioSection() {
           },
         });
       });
-    }, sectionRef);
+    });
     return () => ctx.revert();
   }, [reduced]);
 
@@ -1658,7 +2080,7 @@ function ProcessSection() {
           });
         }
       });
-    }, sectionRef);
+    });
     return () => ctx.revert();
   }, [reduced]);
 
@@ -1835,22 +2257,33 @@ function TestimonialsAndFAQSection() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.fromTo(
-        sectionRef.current!.querySelector('.section-header'),
-        { y: 30, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.7, ease: 'power3.out', scrollTrigger: { trigger: sectionRef.current, start: 'top 75%' } }
-      );
-      gsap.fromTo(
-        sectionRef.current!.querySelectorAll('.faq-item'),
-        { x: -30, opacity: 0 },
-        { x: 0, opacity: 1, duration: 0.5, stagger: 0.1, ease: 'power3.out', scrollTrigger: { trigger: sectionRef.current, start: 'top 70%' } }
-      );
-      gsap.fromTo(
-        sectionRef.current!.querySelector('.testimonial-card-wrapper'),
-        { y: 50, opacity: 0, scale: 0.95 },
-        { y: 0, opacity: 1, scale: 1, duration: 0.8, ease: 'power3.out', delay: 0.2, scrollTrigger: { trigger: sectionRef.current, start: 'top 75%' } }
-      );
-    }, sectionRef);
+      const faqHeader = sectionRef.current?.querySelector('.section-header');
+      if (faqHeader) {
+        gsap.fromTo(
+          faqHeader,
+          { y: 30, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.7, ease: 'power3.out', scrollTrigger: { trigger: sectionRef.current, start: 'top 75%' } }
+        );
+      }
+
+      const faqItems = sectionRef.current?.querySelectorAll('.faq-item');
+      if (faqItems && faqItems.length) {
+        gsap.fromTo(
+          faqItems,
+          { x: -30, opacity: 0 },
+          { x: 0, opacity: 1, duration: 0.5, stagger: 0.1, ease: 'power3.out', scrollTrigger: { trigger: sectionRef.current, start: 'top 70%' } }
+        );
+      }
+
+      const testimonialWrapper = sectionRef.current?.querySelector('.testimonial-card-wrapper');
+      if (testimonialWrapper) {
+        gsap.fromTo(
+          testimonialWrapper,
+          { y: 50, opacity: 0, scale: 0.95 },
+          { y: 0, opacity: 1, scale: 1, duration: 0.8, ease: 'power3.out', delay: 0.2, scrollTrigger: { trigger: sectionRef.current, start: 'top 75%' } }
+        );
+      }
+    }, sectionRef.current!);
     return () => ctx.revert();
   }, []);
 
@@ -2140,16 +2573,19 @@ function ClientVideoReviewsSection() {
       }
 
       // Video cards stagger in from bottom
-      gsap.fromTo(
-        sectionRef.current!.querySelectorAll('.video-card'),
-        { y: 40, opacity: 0, scale: 0.95 },
-        {
-          y: 0, opacity: 1, scale: 1,
-          duration: 0.6, stagger: 0.1, ease: 'power3.out',
-          scrollTrigger: { trigger: sectionRef.current, start: 'top 70%' },
-        }
-      );
-    }, sectionRef);
+      const videoCards = sectionRef.current?.querySelectorAll('.video-card');
+      if (videoCards && videoCards.length) {
+        gsap.fromTo(
+          videoCards,
+          { y: 40, opacity: 0, scale: 0.95 },
+          {
+            y: 0, opacity: 1, scale: 1,
+            duration: 0.6, stagger: 0.1, ease: 'power3.out',
+            scrollTrigger: { trigger: sectionRef.current, start: 'top 70%' },
+          }
+        );
+      }
+    }, sectionRef.current!);
 
     return () => ctx.revert();
   }, []);
@@ -2272,11 +2708,14 @@ function WhyChooseUsSection() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.fromTo(
-        sectionRef.current!.querySelectorAll('.reason-card'),
-        { y: 40, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.5, stagger: 0.1, ease: 'power3.out', scrollTrigger: { trigger: sectionRef.current, start: 'top 75%' } }
-      );
+      const reasonCards = sectionRef.current?.querySelectorAll('.reason-card');
+      if (reasonCards && reasonCards.length) {
+        gsap.fromTo(
+          reasonCards,
+          { y: 40, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.5, stagger: 0.1, ease: 'power3.out', scrollTrigger: { trigger: sectionRef.current, start: 'top 75%' } }
+        );
+      }
 
       if (reduced) return;
 
@@ -2320,7 +2759,7 @@ function WhyChooseUsSection() {
           });
         });
       });
-    }, sectionRef);
+    });
     return () => ctx.revert();
   }, [reduced]);
 
@@ -2408,16 +2847,23 @@ function LatestBlogSection() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.fromTo(
-        sectionRef.current!.querySelector('.section-header'),
-        { y: 30, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.7, ease: 'power3.out', scrollTrigger: { trigger: sectionRef.current, start: 'top 75%' } }
-      );
-      gsap.fromTo(
-        sectionRef.current!.querySelectorAll('.blog-card'),
-        { y: 50, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.5, stagger: 0.15, ease: 'power3.out', scrollTrigger: { trigger: sectionRef.current!.querySelector('.blog-grid'), start: 'top 80%' } }
-      );
+      const blogHeader = sectionRef.current?.querySelector('.section-header');
+      if (blogHeader) {
+        gsap.fromTo(
+          blogHeader,
+          { y: 30, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.7, ease: 'power3.out', scrollTrigger: { trigger: sectionRef.current, start: 'top 75%' } }
+        );
+      }
+      const blogCards = sectionRef.current?.querySelectorAll('.blog-card');
+      const blogGrid = sectionRef.current?.querySelector('.blog-grid');
+      if (blogCards && blogCards.length && blogGrid) {
+        gsap.fromTo(
+          blogCards,
+          { y: 50, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.5, stagger: 0.15, ease: 'power3.out', scrollTrigger: { trigger: blogGrid, start: 'top 80%' } }
+        );
+      }
 
       if (reduced) return;
 
@@ -2447,7 +2893,7 @@ function LatestBlogSection() {
           });
         });
       });
-    }, sectionRef);
+    });
     return () => ctx.revert();
   }, [reduced]);
 

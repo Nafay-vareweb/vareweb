@@ -1,6 +1,7 @@
-'use client';
+"use client";
 
 import { useEffect, useRef } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -85,29 +86,24 @@ export default function Footer() {
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-vare-purple-light/30 to-transparent" />
 
       {/* Main Footer */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8">
+      <div className="relative z-10 max-w-8xl mx-auto px-12 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-5 gap-y-6 gap-x-4">
           
           {/* Column 1: Brand & Socials */}
-          <div className="lg:col-span-4 footer-animate">
-            <Link href="/" className="flex items-center space-x-2 mb-8 group">
-              <div className="w-12 h-12 gradient-purple rounded-xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-500 shadow-lg shadow-purple-500/20">
-                <span className="text-white font-black text-2xl">V</span>
-              </div>
-              <span className="text-2xl font-black tracking-tighter">
-                Vare<span className="text-vare-purple-light">Web</span>
-              </span>
+          <div className="footer-animate">
+            <Link href="/" className="mb-8 inline-block group">
+              <Image src="/logo.png" alt="VareWeb logo" width={100} height={100} className="object-contain" />
             </Link>
-            <p className="text-white/50 text-base leading-relaxed mb-8 max-w-sm">
+              <p className="text-white/50 text-sm leading-relaxed mb-6 max-w-sm">
               Award-winning digital agency delivering creative branding, stunning websites,
               and automated growth solutions that drive real results for businesses worldwide.
             </p>
-            <div className="flex space-x-4">
+            <div className="flex space-x-3">
               {[Facebook, Twitter, Linkedin, Instagram].map((Icon, i) => (
                 <a
                   key={i}
                   href="#"
-                  className="w-11 h-11 rounded-xl bg-white/[0.03] border border-white/5 flex items-center justify-center text-white/40 hover:text-white hover:bg-vare-purple transition-all duration-500 hover:shadow-[0_0_20px_rgba(91,45,158,0.3)]"
+                  className="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/5 flex items-center justify-center text-white/40 hover:text-white hover:bg-vare-purple transition-all duration-500 hover:shadow-[0_0_16px_rgba(91,45,158,0.3)]"
                 >
                   <Icon className="w-5 h-5" />
                 </a>
@@ -116,16 +112,16 @@ export default function Footer() {
           </div>
 
           {/* Column 2: Build */}
-          <div className="lg:col-span-2 md:col-span-1 footer-animate">
-            <h3 className="text-xs font-black uppercase tracking-[0.2em] text-white/30 mb-8">
+          <div className="footer-animate">
+            <h3 className="text-xs font-black uppercase tracking-[0.2em] text-white/30 mb-6">
                Core Services
             </h3>
-            <ul className="space-y-4">
+            <ul className="space-y-3">
               {footerLinks.coreServices.map((link) => (
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className="text-white/50 hover:text-vare-purple-light text-sm font-medium transition-all duration-300 hover:translate-x-1 inline-block"
+                    className="text-white/50 hover:text-vare-purple-light text-xs font-medium transition-all duration-300 hover:translate-x-1 inline-block"
                   >
                     {link.name}
                   </Link>
@@ -135,26 +131,30 @@ export default function Footer() {
           </div>
 
           {/* Column 3: Growth & Info */}
-          <div className="lg:col-span-2 md:col-span-1 footer-animate">
-            <h3 className="text-xs font-black uppercase tracking-[0.2em] text-white/30 mb-8">
+          <div className="footer-animate">
+            <h3 className="text-xs font-black uppercase tracking-[0.2em] text-white/30 mb-6">
                Growth Hub
             </h3>
-            <ul className="space-y-4 mb-10">
+            <ul className="space-y-3 mb-6">
               {footerLinks.growthHub.map((link) => (
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className="text-white/50 hover:text-vare-purple-light text-sm font-medium transition-all duration-300 hover:translate-x-1 inline-block"
+                    className="text-white/50 hover:text-vare-purple-light text-xs font-medium transition-all duration-300 hover:translate-x-1 inline-block"
                   >
                     {link.name}
                   </Link>
                 </li>
               ))}
             </ul>
-            <h3 className="text-xs font-black uppercase tracking-[0.2em] text-white/30 mb-6">
+          </div>
+
+          {/* Column 4: Resources */}
+          <div className="footer-animate">
+              <h3 className="text-xs font-black uppercase tracking-[0.2em] text-white/30 mb-6">
                Resources
             </h3>
-            <ul className="space-y-3">
+            <ul className="space-y-3 mb-6">
               {footerLinks.company.map((link) => (
                 <li key={link.name}>
                   <Link
@@ -168,44 +168,52 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Column 4: Newsletter & Contact */}
-          <div className="lg:col-span-4 footer-animate">
-            <h3 className="text-xs font-black uppercase tracking-[0.2em] text-white/30 mb-8">
+          {/* Column 5: Newsletter & Contact */}
+          <div className="footer-animate">
+            <h3 className="text-xs font-black uppercase tracking-[0.2em] text-white/30 mb-6">
                Reach Our HQ
             </h3>
             <ul className="space-y-5 mb-10">
               <li className="flex items-start space-x-4">
-                <div className="w-10 h-10 rounded-lg bg-white/[0.03] flex items-center justify-center flex-shrink-0 border border-white/5">
+                <div className="w-10 h-10 rounded-full bg-white/[0.03] flex items-center justify-center flex-shrink-0 border border-white/5 circle-icon">
                   <MapPin className="w-4 h-4 text-vare-purple-light" />
                 </div>
                 <span className="text-white/60 text-sm leading-relaxed">5400 Preston Oaks Rd, Dallas, TX 75254, USA</span>
               </li>
               <li className="flex items-center space-x-4">
-                <div className="w-10 h-10 rounded-lg bg-white/[0.03] flex items-center justify-center flex-shrink-0 border border-white/5">
+                <div className="w-10 h-10 rounded-full bg-white/[0.03] flex items-center justify-center flex-shrink-0 border border-white/5 circle-icon">
                   <Mail className="w-4 h-4 text-vare-purple-light" />
                 </div>
                 <a href="mailto:contact@vareweb.com" className="text-white/60 hover:text-white text-sm font-medium transition-colors">
                   contact@vareweb.com
                 </a>
               </li>
+              <li className="flex items-center space-x-4">
+                <div className="w-10 h-10 rounded-full bg-white/[0.03] flex items-center justify-center flex-shrink-0 border border-white/5 circle-icon">
+                  <Phone className="w-4 h-4 text-vare-purple-light" />
+                </div>
+                <a href="tel:+1234567890" className="text-white/60 hover:text-white text-sm font-medium transition-colors">
+                  +1 (234) 567-890
+                </a>
+              </li>
             </ul>
 
-            <div className="p-6 rounded-2xl glass-card border border-white/10 relative overflow-hidden group">
+            <div className="p-4 rounded-2xl glass-card border border-white/10 relative overflow-hidden group">
                <div className="absolute inset-0 bg-gradient-to-br from-vare-purple/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-               <h4 className="text-white font-bold text-sm mb-4 flex items-center gap-2">
+               <h4 className="text-white font-bold text-sm mb-3 flex items-center gap-2">
                  <Sparkles className="w-4 h-4 text-vare-gold" />
                  Stay Informed
                </h4>
-               <p className="text-white/40 text-xs mb-6 leading-relaxed">
+               <p className="text-white/40 text-xs mb-4 leading-relaxed">
                  Join our newsletter to receive the latest updates and digital insights.
                </p>
-               <form className="relative" onSubmit={(e) => e.preventDefault()}>
-                 <input 
-                   type="email" 
-                   placeholder="Enter email" 
-                   className="w-full bg-[#0a0612] border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-vare-purple-light transition-all placeholder:text-white/20"
+               <form className="flex items-center" onSubmit={(e) => e.preventDefault()}>
+                 <input
+                   type="email"
+                   placeholder="Enter email"
+                   className="flex-1 bg-[#0a0612] border border-white/10 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-vare-purple-light transition-all placeholder:text-white/20"
                  />
-                 <button className="absolute right-2 top-1.5 p-1.5 rounded-lg bg-vare-purple hover:bg-vare-purple-light text-white transition-all shadow-lg active:scale-95">
+                 <button className="ml-3 p-2 rounded-lg bg-vare-purple hover:bg-vare-purple-light text-white transition-all shadow-lg active:scale-95">
                    <Send className="w-4 h-4" />
                  </button>
                </form>

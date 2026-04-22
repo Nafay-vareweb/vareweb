@@ -1,37 +1,40 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import gsap from 'gsap';
-import { Menu, X, ChevronDown } from 'lucide-react';
+import { Menu, X, ChevronDown, Home, User, Layers, Grid, Tag, FileText, Briefcase, Monitor, Smartphone, Search, Zap, ShoppingCart, Megaphone, Globe, PenTool } from 'lucide-react';
 
 const navLinks = [
-  { name: 'Home', href: '/' },
-  { name: 'About', href: '/about' },
+  { name: 'Home', href: '/', icon: Home },
+  { name: 'About', href: '/about', icon: User },
   {
     name: 'Services',
     href: '/services',
+    icon: Layers,
     children: [
-      { name: 'Web Design', href: '/services/custom-web-design' },
-      { name: 'Mobile Apps', href: '/services/mobile-app-development' },
-      { name: 'SEO Optimization', href: '/services/search-engine-optimization' },
-      { name: 'GHL Automation', href: '/services/ghl-development' },
-      { name: 'eCommerce', href: '/services/ecommerce-development' },
-      { name: 'Digital Marketing', href: '/services/digital-marketing' },
+      { name: 'Web Design', href: '/services/custom-web-design', icon: Monitor },
+      { name: 'Mobile Apps', href: '/services/mobile-app-development', icon: Smartphone },
+      { name: 'SEO Optimization', href: '/services/search-engine-optimization', icon: Search },
+      { name: 'GHL Automation', href: '/services/ghl-development', icon: Zap },
+      { name: 'eCommerce', href: '/services/ecommerce-development', icon: ShoppingCart },
+      { name: 'Digital Marketing', href: '/services/digital-marketing', icon: Megaphone },
     ],
   },
   {
     name: 'Portfolio',
     href: '/portfolio',
+    icon: Grid,
     children: [
-      { name: 'Websites', href: '/portfolio?filter=Web Design' },
-      { name: 'Branding', href: '/portfolio?filter=Branding' },
-      { name: 'eCommerce', href: '/portfolio?filter=eCommerce' },
+      { name: 'Websites', href: '/portfolio?filter=Web Design', icon: Globe },
+      { name: 'Branding', href: '/portfolio?filter=Branding', icon: PenTool },
+      { name: 'eCommerce', href: '/portfolio?filter=eCommerce', icon: ShoppingCart },
     ],
   },
-  { name: 'Pricing', href: '/pricing' },
-  { name: 'Blog', href: '/blog' },
-  { name: 'Careers', href: '/careers' },
+  { name: 'Pricing', href: '/pricing', icon: Tag },
+  { name: 'Blog', href: '/blog', icon: FileText },
+  { name: 'Careers', href: '/careers', icon: Briefcase },
 ];
 
 export default function Navigation() {
@@ -85,22 +88,14 @@ export default function Navigation() {
       >
         <div className={`absolute inset-0 transition-all duration-500 pointer-events-none ${
           scrolled 
-            ? 'bg-[#0a0612]/70 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.4)] border-b border-white/5' 
+            ? 'bg-[#fff]/20 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.25)] border-b border-white/5' 
             : 'bg-transparent'
         }`} />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 pointer-events-auto">
           <div className="flex items-center justify-between h-20">
-            {/* Logo */}
-            <Link href="/" className="flex items-center space-x-2 group">
-              <div className="relative w-10 h-10 gradient-purple rounded-lg flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
-                <span className="text-white font-bold text-xl">V</span>
-                <div className="absolute inset-0 gradient-purple rounded-lg opacity-0 group-hover:opacity-50 blur-lg transition-opacity duration-300" />
-              </div>
-              <div>
-                <span className={`text-xl font-bold tracking-tight transition-colors duration-300 ${scrolled ? 'text-white' : 'text-white'}`}>
-                  Vare<span className={scrolled ? 'text-vare-purple-light' : 'text-vare-purple-light'}>Web</span>
-                </span>
-              </div>
+            {/* Logo (bare image) */}
+            <Link href="/" className="group">
+              <Image src="/logo.png" alt="VareWeb logo" width={80} height={80} className="object-contain" />
             </Link>
 
             {/* Desktop Navigation */}
@@ -114,12 +109,13 @@ export default function Navigation() {
                 >
                   <Link
                     href={link.href}
-                    className={`px-4 py-2 text-sm font-medium rounded-lg flex items-center space-x-1 transition-all duration-200 hover:bg-white/10 ${
+                    className={`px-4 py-2 text-sm font-medium rounded-lg flex items-center space-x-1 transition-all duration-200 hover:bg-white/10 decoration-vare-purple ${
                       scrolled
-                        ? 'text-white/80 hover:text-vare-purple-light hover:bg-white/[0.06]'
+                        ? 'text-white hover:text-vare-purple-dark hover:bg-white/[0.06]'
                         : 'text-white/90 hover:text-white'
                     }`}
                   >
+                    {link.icon && React.createElement(link.icon, { className: 'w-4 h-4 text-white/80' })}
                     <span>{link.name}</span>
                     {link.children && <ChevronDown className="w-3 h-3" />}
                   </Link>
@@ -129,9 +125,10 @@ export default function Navigation() {
                         <Link
                           key={child.name}
                           href={child.href}
-                          className="block px-4 py-3 text-sm text-white/80 hover:bg-white/[0.06] hover:text-vare-purple-light transition-colors duration-200"
+                          className="flex items-center gap-3 px-4 py-3 text-sm text-white/80 hover:bg-white/[0.06] hover:text-vare-purple-light transition-colors duration-200 hover:underline underline-offset-4 decoration-vare-purple"
                         >
-                          {child.name}
+                          {child.icon && React.createElement(child.icon, { className: 'w-4 h-4 text-white/70' })}
+                          <span>{child.name}</span>
                         </Link>
                       ))}
                     </div>
@@ -143,7 +140,7 @@ export default function Navigation() {
             {/* CTA Button */}
             <Link
               href="/contact"
-              className="hidden lg:inline-flex px-6 py-2.5 text-xs font-bold uppercase tracking-widest text-white gradient-purple rounded-xl hover:shadow-[0_0_30px_rgba(124,77,187,0.4)] transform hover:-translate-y-1 transition-all duration-300 items-center justify-center border border-white/10"
+              className="hidden lg:inline-flex px-6 py-2.5 text-xs font-bold uppercase tracking-widest text-white gradient-purple rounded-xl hover:shadow-[0_0_30px_rgba(124,77,187,0.4)] transform hover:-translate-y-1 transition-all duration-300 items-center justify-center border border-white/100"
             >
               Get a Quote
             </Link>
@@ -180,7 +177,10 @@ export default function Navigation() {
                           : 'text-white/80 hover:text-white hover:bg-white/[0.06]'
                       }`}
                     >
-                      <span>{link.name}</span>
+                      <div className="flex items-center gap-3">
+                        {link.icon && React.createElement(link.icon, { className: 'w-5 h-5' })}
+                        <span>{link.name}</span>
+                      </div>
                       <ChevronDown
                         className={`w-5 h-5 transition-transform duration-300 ${
                           mobileAccordion === link.name ? 'rotate-180' : ''
@@ -196,7 +196,10 @@ export default function Navigation() {
                         animationDelay: `${index * 0.05}s`,
                       }}
                     >
-                      {link.name}
+                      <div className="flex items-center gap-3">
+                        {link.icon && React.createElement(link.icon, { className: 'w-5 h-5' })}
+                        <span>{link.name}</span>
+                      </div>
                     </Link>
                   )}
                   {link.children && mobileAccordion === link.name && (
@@ -206,16 +209,17 @@ export default function Navigation() {
                         onClick={() => setIsOpen(false)}
                         className="block px-4 py-2.5 text-sm font-medium text-vare-purple hover:bg-vare-purple/10 rounded-lg transition-colors duration-200"
                       >
-                        All Services →
+                        {link.name === 'Portfolio' ? 'View Portfolio →' : 'All Services →'}
                       </Link>
                       {link.children.map((child) => (
                         <Link
                           key={child.name}
                           href={child.href}
                           onClick={() => setIsOpen(false)}
-                          className="block px-4 py-2.5 text-sm text-white/60 hover:text-white hover:bg-white/[0.06] rounded-lg transition-colors duration-200"
+                          className="flex items-center gap-3 px-4 py-2.5 text-sm text-white/60 hover:text-white hover:bg-white/[0.06] rounded-lg transition-colors duration-200"
                         >
-                          {child.name}
+                          {child.icon && React.createElement(child.icon, { className: 'w-4 h-4 text-white/60' })}
+                          <span>{child.name}</span>
                         </Link>
                       ))}
                     </div>

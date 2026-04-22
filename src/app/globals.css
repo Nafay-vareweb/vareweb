@@ -541,9 +541,128 @@ html {
   animation-play-state: running;
 }
 
+@media (max-width: 640px) {
+  .waveform-bars { gap: 4px; padding: 6px; }
+  .waveform-bars .wave-bar { width: 3px; }
+}
+@media (max-width: 420px) {
+  .waveform-bars { gap: 3px; padding: 4px; }
+  .waveform-bars .wave-bar { width: 2px; }
+}
+
+/* Utility: enforce perfect circular icon backgrounds */
+.circle-icon {
+  aspect-ratio: 1 / 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
 @keyframes bar-pulse {
   0% { transform: scaleY(0.25); opacity: 0.35; }
   50% { transform: scaleY(1.0); opacity: 1; }
   100% { transform: scaleY(0.25); opacity: 0.35; }
 }
+
+/* Browser preview frame (small demo) */
+.browser-frame {
+  max-width: 380px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.06);
+  overflow: hidden;
+  background: #071024;
+  box-shadow: 0 12px 40px rgba(2,6,23,0.6);
+}
+.browser-frame .browser-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  background: rgba(255,255,255,0.01);
+}
+.browser-frame .b-dot { width: 8px; height: 8px; border-radius: 9999px; display: inline-block; }
+.browser-frame .b-url { display: flex; align-items: center; gap: 8px; flex: 1; font-size: 10px; color: rgba(255,255,255,0.45); font-weight: 700; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, 'Roboto Mono', 'Courier New', monospace; }
+.browser-frame .code-content { font-family: 'Courier New', monospace; font-size: 11px; color: rgba(255,255,255,0.85); }
+
+@keyframes fadeRight {
+  from { opacity: 0; transform: translateX(18px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.fade-right-5s { animation: fadeRight 5s ease both; }
+
+/* Rotator stack: only active frame is visible */
+.browser-rotator {
+  position: relative;
+  display: block;
+}
+.browser-rotator .browser-frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  transform: translateX(12px);
+  transition: opacity 900ms ease, transform 900ms ease;
+  pointer-events: none;
+  width: 100%;
+}
+.browser-rotator .browser-frame.active {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+  z-index: 10;
+}
+
+/* Responsive behavior: stack frames on smaller screens instead of absolutely positioning them
+   so the rotator becomes fully responsive and visible within narrow containers. */
+@media (max-width: 1024px) {
+  .browser-rotator {
+    display: block;
+  }
+  .browser-rotator .browser-frame {
+    position: static;
+    transform: none;
+    pointer-events: auto;
+    width: 100%;
+    margin-bottom: 8px;
+    box-shadow: 0 8px 28px rgba(2,6,23,0.35);
+    display: none; /* hide non-active frames on small screens */
+  }
+  .browser-rotator .browser-frame.active {
+    display: block;
+    z-index: auto;
+  }
+}
+
+/* Rank bars used in SERP preview */
+.rank-bar {
+  height: 8px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 9999px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.03);
+}
+.rank-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #22c55e, #16a34a);
+  border-radius: 9999px;
+  transition: width 900ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Phone mock - like / heart beat */
+.like-beat {
+  display: inline-flex;
+  transform-origin: center;
+  animation: like-beat 1.15s infinite;
+}
+@keyframes like-beat {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.18); }
+  60% { transform: scale(1); }
+  100% { transform: scale(1); }
+}
+
 

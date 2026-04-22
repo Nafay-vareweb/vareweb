@@ -12,9 +12,65 @@ export default function AIChatBotLayout({ service }: { service: ServiceData }) {
   const [typing, setTyping] = useState(false);
   const [typingRole, setTypingRole] = useState<'user' | 'bot' | null>(null);
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
   const counter = useRef(0);
+  const messagesRef = useRef<Msg[]>(messages);
+  useEffect(() => { messagesRef.current = messages; }, [messages]);
+
+  // Speech recognition / mic states (mobile support)
+  const [isRecording, setIsRecording] = useState(false);
+  const [recognitionSupported, setRecognitionSupported] = useState(false);
+  const recognitionRef = useRef<any>(null);
+  const [interimTranscript, setInterimTranscript] = useState('');
+
+  // MediaRecorder fallback for phones without WebSpeech support
+  const [isAudioRecording, setIsAudioRecording] = useState(false);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
+  const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const streamRef = useRef<MediaStream | null>(null);
+  const mediaSupported = typeof navigator !== 'undefined' && !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
+
+  const isPausedRef = useRef(false);
+  const playbackIndexRef = useRef(0);
+  const playbackCharRef = useRef(0);
+  const playbackScriptRef = useRef<Msg[] | null>(null);
+  const playbackLoopRunningRef = useRef(false);
+
+  useEffect(() => {
+    // detect SpeechRecognition support (webkit prefixed on some browsers)
+    const Rec = (typeof window !== 'undefined') ? ((window as any).SpeechRecognition || (window as any).webkitSpeechRecognition) : undefined;
+    setRecognitionSupported(!!Rec);
+  }, []);
+
+  // responsive waveform bar count
+  const [barsCount, setBarsCount] = useState(36);
+  useEffect(() => {
+    function updateBars() {
+      const w = typeof window !== 'undefined' ? window.innerWidth : 1024;
+      if (w < 420) setBarsCount(12);
+      else if (w < 640) setBarsCount(20);
+      else if (w < 1024) setBarsCount(28);
+      else setBarsCount(36);
+    }
+    updateBars();
+    window.addEventListener('resize', updateBars);
+    return () => window.removeEventListener('resize', updateBars);
+  }, []);
+
+  // cleanup media streams / recognition on unmount
+  useEffect(() => {
+    return () => {
+      if (streamRef.current) {
+        try { streamRef.current.getTracks().forEach((t) => t.stop()); } catch (e) {}
+      }
+      if (recognitionRef.current) {
+        try { recognitionRef.current.stop(); } catch (e) {}
+      }
+    };
+  }, []);
 
   const chatScript: Msg[] = [
     { id: 1, role: 'user', text: "Hi — I need help booking an appointment." },
@@ -52,6 +108,7 @@ export default function AIChatBotLayout({ service }: { service: ServiceData }) {
       u.onstart = () => {
         setIsSpeaking(true);
         setIsPaused(false);
+        isPausedRef.current = false;
         utteranceRef.current = u;
       };
       u.onend = () => {
@@ -112,7 +169,7 @@ export default function AIChatBotLayout({ service }: { service: ServiceData }) {
     }
 
     if (tab === 'chat') runSequence(chatScript);
-    else runSequence(voiceScript);
+    // Do not auto-run voice sequence; voice starts when user presses Play
 
     return () => {
       cancelled = true;
@@ -124,27 +181,41 @@ export default function AIChatBotLayout({ service }: { service: ServiceData }) {
 
   // playback controls for voice tab
   function togglePlayPause() {
-    if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
-    const synth = window.speechSynthesis;
-    if (synth.speaking) {
-      if (synth.paused) {
-        synth.resume();
-        setIsPaused(false);
-      } else {
-        synth.pause();
-        setIsPaused(true);
+    // only control playback in voice tab
+    if (tab !== 'voice') {
+      setTab('voice');
+      return;
+    }
+
+    // if currently playing -> pause
+    if (isPlaying && !isPaused) {
+      setIsPaused(true);
+      isPausedRef.current = true;
+      setIsPlaying(false);
+      if (typeof window !== 'undefined' && 'speechSynthesis' in window && window.speechSynthesis.speaking) {
+        try { window.speechSynthesis.pause(); } catch (e) {}
       }
       return;
     }
 
-    // start playback: if messages already typed, play them; otherwise type+play the voice script
-    playbackCancelledRef.current = false;
-    if (tab === 'voice') {
-      if (messages.length >= voiceScript.length) {
-        playConversationFromMessages();
-      } else {
-        playAndTypeScript(voiceScript);
+    // if paused -> resume
+    if (!isPlaying && isPaused) {
+      setIsPaused(false);
+      isPausedRef.current = false;
+      setIsPlaying(true);
+      if (typeof window !== 'undefined' && 'speechSynthesis' in window && window.speechSynthesis.paused) {
+        try { window.speechSynthesis.resume(); } catch (e) {}
       }
+      return;
+    }
+
+    // otherwise start playback from beginning
+    if (!playbackLoopRunningRef.current) {
+      playbackCancelledRef.current = false;
+      setIsPaused(false);
+      isPausedRef.current = false;
+      setIsPlaying(true);
+      startPlayback(voiceScript);
     }
   }
 
@@ -154,14 +225,39 @@ export default function AIChatBotLayout({ service }: { service: ServiceData }) {
     window.speechSynthesis.cancel();
     setIsSpeaking(false);
     setIsPaused(false);
+    isPausedRef.current = false;
+    setIsPlaying(false);
     utteranceRef.current = null;
+    // reset playback position and clear messages
+    playbackIndexRef.current = 0;
+    playbackCharRef.current = 0;
+    playbackScriptRef.current = null;
+    playbackLoopRunningRef.current = false;
+    setMessages([]);
+    messagesRef.current = [];
   }
 
   const playbackCancelledRef = useRef(false);
 
-  function pickVoices() {
+  async function getVoicesAsync() {
     if (typeof window === 'undefined' || !('speechSynthesis' in window)) return { botVoice: undefined as SpeechSynthesisVoice | undefined, userVoice: undefined as SpeechSynthesisVoice | undefined };
-    const voices = window.speechSynthesis.getVoices() || [];
+    let voices = window.speechSynthesis.getVoices() || [];
+    // some browsers populate voices asynchronously
+    if (!voices.length) {
+      voices = await new Promise<SpeechSynthesisVoice[]>((resolve) => {
+        const handler = () => {
+          const v = window.speechSynthesis.getVoices() || [];
+          window.speechSynthesis.removeEventListener('voiceschanged', handler);
+          resolve(v);
+        };
+        window.speechSynthesis.addEventListener('voiceschanged', handler);
+        // fallback timeout
+        setTimeout(() => {
+          window.speechSynthesis.removeEventListener('voiceschanged', handler);
+          resolve(window.speechSynthesis.getVoices() || []);
+        }, 700);
+      });
+    }
     const en = voices.filter((v) => v.lang && v.lang.toLowerCase().startsWith('en'));
     const femaleRegex = /female|zira|samantha|amy|salli|joanna|kendra|emma|zira|alloy/i;
     let botVoice = en.find((v) => femaleRegex.test(v.name)) || en[0] || voices[0];
@@ -177,6 +273,7 @@ export default function AIChatBotLayout({ service }: { service: ServiceData }) {
       u.onstart = () => {
         setIsSpeaking(true);
         setIsPaused(false);
+        isPausedRef.current = false;
         utteranceRef.current = u;
       };
       u.onend = () => {
@@ -197,53 +294,219 @@ export default function AIChatBotLayout({ service }: { service: ServiceData }) {
     });
   }
 
-  async function playConversationFromMessages() {
-    if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
-    playbackCancelledRef.current = false;
-    const { botVoice, userVoice } = pickVoices();
-    for (let i = 0; i < messages.length; i++) {
-      if (playbackCancelledRef.current) break;
-      const m = messages[i];
-      const voice = m.role === 'bot' ? botVoice : userVoice;
-      await speakUtteranceAndWait(m.text, voice);
+    // SpeechRecognition helpers (for live mic input on supporting browsers)
+    async function startRecognition() {
+      if (typeof window === 'undefined') return;
+      const RecClass = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      if (!RecClass) {
+        setRecognitionSupported(false);
+        return;
+      }
+      try {
+        const rec = new RecClass();
+        rec.lang = 'en-US';
+        rec.interimResults = true;
+        rec.continuous = false;
+        rec.maxAlternatives = 1;
+        rec.onstart = () => {
+          setIsRecording(true);
+          setInterimTranscript('');
+          recognitionRef.current = rec;
+        };
+        rec.onresult = async (e: any) => {
+          let interim = '';
+          let final = '';
+          for (let i = e.resultIndex; i < e.results.length; ++i) {
+            const t = e.results[i][0].transcript;
+            if (e.results[i].isFinal) final += t;
+            else interim += t;
+          }
+          setInterimTranscript(interim);
+          if (final) {
+            setInterimTranscript('');
+            setMessages((prev) => {
+              const id1 = ++counter.current;
+              const id2 = ++counter.current;
+              return [...prev, { id: id1, role: 'user', text: final }, { id: id2, role: 'bot', text: `I heard: ${final}` }];
+            });
+            const botResp = `I heard: ${final}`;
+            const { botVoice } = await getVoicesAsync();
+            await speakUtteranceAndWait(botResp, botVoice);
+          }
+        };
+        rec.onerror = () => {
+          setIsRecording(false);
+          setInterimTranscript('');
+        };
+        rec.onend = () => {
+          setIsRecording(false);
+          setInterimTranscript('');
+          recognitionRef.current = null;
+        };
+        rec.start();
+        recognitionRef.current = rec;
+      } catch (e) {
+        setIsRecording(false);
+        setInterimTranscript('');
+      }
     }
-    setIsSpeaking(false);
+
+    function stopRecognition() {
+      if (recognitionRef.current) {
+        try { recognitionRef.current.stop(); } catch (e) {}
+        recognitionRef.current = null;
+      }
+      setIsRecording(false);
+      setInterimTranscript('');
+    }
+
+    // MediaRecorder audio capture fallback (records audio blob locally)
+    async function startAudioCapture() {
+      if (!mediaSupported) return;
+      try {
+        const s = await navigator.mediaDevices.getUserMedia({ audio: true });
+        streamRef.current = s;
+        audioChunksRef.current = [];
+        const mr = new MediaRecorder(s);
+        mediaRecorderRef.current = mr;
+        mr.ondataavailable = (ev) => {
+          if (ev.data && ev.data.size) audioChunksRef.current.push(ev.data);
+        };
+        mr.onstop = () => {
+          const blob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+          const url = URL.createObjectURL(blob);
+          setAudioUrl(url);
+          setMessages((prev) => [...prev, { id: ++counter.current, role: 'user', text: '[Recorded audio]' }]);
+          try { if (streamRef.current) streamRef.current.getTracks().forEach((t) => t.stop()); } catch (e) {}
+          streamRef.current = null;
+          mediaRecorderRef.current = null;
+          setIsAudioRecording(false);
+        };
+        mr.start();
+        setIsAudioRecording(true);
+      } catch (e) {
+        setIsAudioRecording(false);
+      }
+    }
+
+    function stopAudioCapture() {
+      try {
+        if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') mediaRecorderRef.current.stop();
+      } catch (e) {}
+      setIsAudioRecording(false);
+    }
+
+  // helpers for pause-aware waits
+  function waitMs(ms: number) {
+    return new Promise<void>((resolve) => {
+      const id = window.setTimeout(() => resolve(), ms);
+      // not tracking ids here since playbackCancelledRef handles cancellation
+    });
   }
 
-  async function playAndTypeScript(script: Msg[]) {
-    if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
-    playbackCancelledRef.current = false;
-    setMessages([]);
-    counter.current = 0;
-    const { botVoice, userVoice } = pickVoices();
-    for (const m of script) {
+  async function waitWithPause(ms: number) {
+    const step = 80;
+    let elapsed = 0;
+    while (elapsed < ms) {
       if (playbackCancelledRef.current) break;
+      if (isPausedRef.current) {
+        await new Promise((r) => setTimeout(r, step));
+        continue;
+      }
+      const t = Math.min(step, ms - elapsed);
+      await new Promise((r) => setTimeout(r, t));
+      elapsed += t;
+    }
+  }
+
+  async function startPlayback(script: Msg[]) {
+    playbackCancelledRef.current = false;
+    playbackScriptRef.current = script;
+    playbackLoopRunningRef.current = true;
+    setIsPlaying(true);
+    setIsPaused(false);
+    isPausedRef.current = false;
+
+    // reset to start
+    setMessages([]);
+    messagesRef.current = [];
+    playbackIndexRef.current = 0;
+    playbackCharRef.current = 0;
+    counter.current = 0;
+
+    const { botVoice, userVoice } = await getVoicesAsync();
+
+    while (playbackIndexRef.current < script.length) {
+      if (playbackCancelledRef.current) break;
+      const m = script[playbackIndexRef.current];
+
+      // ensure message object exists
+      if (messagesRef.current.length <= playbackIndexRef.current) {
+        const id = ++counter.current;
+        setMessages((prev) => {
+          const next = [...prev, { id, role: m.role, text: '' }];
+          messagesRef.current = next;
+          return next;
+        });
+        playbackCharRef.current = 0;
+      } else {
+        playbackCharRef.current = messagesRef.current[playbackIndexRef.current].text.length;
+      }
+
       setTyping(true);
       setTypingRole(m.role);
-      const newId = ++counter.current;
-      setMessages((p) => [...p, { id: newId, role: m.role, text: '' }] as Msg[]);
-
-      await new Promise<void>((res) => setTimeout(res, 350));
 
       const chars = Array.from(m.text);
-      const charDelay = m.role === 'user' ? 40 : 60;
-      for (let i = 0; i < chars.length; i++) {
+      let i = playbackCharRef.current;
+      while (i < chars.length) {
         if (playbackCancelledRef.current) break;
-        await new Promise<void>((res) => setTimeout(res, charDelay + (Math.floor(Math.random() * 25) - 12)));
-        setMessages((prev) => prev.map((msg) => (msg.id === newId ? { ...msg, text: msg.text + chars[i] } : msg)));
+        // pause handling
+        while (isPausedRef.current && !playbackCancelledRef.current) {
+          await new Promise((r) => setTimeout(r, 120));
+        }
+        if (playbackCancelledRef.current) break;
+
+        const jitter = Math.floor(Math.random() * 25) - 12;
+        const delay = (m.role === 'user' ? 40 : 60) + jitter;
+        await waitWithPause(delay);
+        if (playbackCancelledRef.current) break;
+
+        setMessages((prev) => {
+          const next = prev.map((msg, idx) => (idx === playbackIndexRef.current ? { ...msg, text: msg.text + chars[i] } : msg));
+          messagesRef.current = next;
+          return next;
+        });
+        i += 1;
+        playbackCharRef.current = i;
       }
 
       setTyping(false);
       setTypingRole(null);
 
-      // speak the message and wait
-      if (!playbackCancelledRef.current) {
+      if (playbackCancelledRef.current) break;
+
+      // speak the message if in voice tab
+      if (tab === 'voice') {
+        // wait while paused before speaking
+        while (isPausedRef.current && !playbackCancelledRef.current) {
+          await new Promise((r) => setTimeout(r, 120));
+        }
+        if (playbackCancelledRef.current) break;
         const voice = m.role === 'bot' ? botVoice : userVoice;
         await speakUtteranceAndWait(m.text, voice);
       }
 
-      await new Promise<void>((res) => setTimeout(res, 250));
+      // inter-message gap
+      await waitWithPause(250);
+
+      playbackIndexRef.current += 1;
+      playbackCharRef.current = 0;
     }
+
+    setIsPlaying(false);
+    setIsPaused(false);
+    isPausedRef.current = false;
+    playbackLoopRunningRef.current = false;
     setIsSpeaking(false);
   }
 
@@ -260,7 +523,7 @@ export default function AIChatBotLayout({ service }: { service: ServiceData }) {
               {service.features.slice(0, 4).map((f, i) => (
                 <div key={i} className="glass-card p-4 rounded-2xl border border-white/6 bg-white/[0.02]">
                   <div className="flex items-start gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center">
+                    <div className="w-34 h-12 rounded-full bg-white/5 flex items-center justify-center circle-icon">
                       <f.icon className="w-5 h-5 text-vare-purple-light" />
                     </div>
                     <div>
@@ -300,12 +563,12 @@ export default function AIChatBotLayout({ service }: { service: ServiceData }) {
                   </div>
                 </div>
 
-                <div className="p-4 h-[320px] overflow-auto">
+                <div className="p-4 h-[40vh] md:h-[320px] overflow-auto">
                   {tab === 'chat' ? (
                     <div className="space-y-3">
                       {messages.map((m) => (
                         <div key={m.id} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                          <div className={`p-3 rounded-2xl max-w-[80%] ${m.role === 'user' ? 'bg-vare-purple text-white' : 'bg-white/[0.03] text-white/90'}`}>
+                          <div className={`p-3 rounded-2xl max-w-[85%] md:max-w-[70%] ${m.role === 'user' ? 'bg-vare-purple text-white' : 'bg-white/[0.03] text-white/90'}`}>
                             {m.text}
                           </div>
                         </div>
@@ -333,10 +596,10 @@ export default function AIChatBotLayout({ service }: { service: ServiceData }) {
                         </div>
                       </div>
 
-                      <div className="rounded-xl p-4 bg-white/[0.02] border border-white/6">
+                      <div className="rounded-xl p-3 md:p-4 bg-white/[0.02] border border-white/6">
                           <div className="h-28 relative overflow-hidden flex items-center">
-                            <div className={`waveform-bars w-full ${isSpeaking ? 'playing' : ''}`}>
-                              {Array.from({ length: 36 }).map((_, i) => (
+                            <div className={`waveform-bars w-full ${isPlaying ? 'playing' : ''}`}>
+                              {Array.from({ length: barsCount }).map((_, i) => (
                                 <div
                                   key={i}
                                   className="wave-bar"
@@ -350,6 +613,14 @@ export default function AIChatBotLayout({ service }: { service: ServiceData }) {
                           {messages.map((m) => (
                             <div key={m.id} className="text-sm text-white/90">{m.role === 'user' ? <><strong className="text-white">You:</strong> {m.text}</> : <><strong className="text-white">Aria:</strong> {m.text}</>}</div>
                           ))}
+                          {isRecording && (
+                            <div className="text-sm text-white/60 italic mt-2">{interimTranscript || 'Listening...'}</div>
+                          )}
+                          {audioUrl && (
+                            <div className="mt-3">
+                              <audio controls src={audioUrl} className="w-full" />
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -357,18 +628,41 @@ export default function AIChatBotLayout({ service }: { service: ServiceData }) {
                 </div>
 
                 <div className="p-4 border-t border-white/6 bg-[#061019]/40">
-                  <div className="flex items-center gap-3">
-                    <input readOnly value={tab === 'chat' ? 'Ask me about bookings, pricing, or integrations...' : 'Speak to try the voice demo...'} className="flex-1 p-3 rounded-2xl bg-transparent border border-white/6 text-white/50" />
+                  <div className="flex flex-wrap items-center gap-3">
+                    <input
+                      readOnly
+                      value={tab === 'chat' ? 'Ask me about bookings, pricing, or integrations...' : (isRecording ? (interimTranscript || 'Listening...') : 'Speak to try the voice demo...')}
+                      className="flex-1 min-w-0 p-3 rounded-2xl bg-transparent border border-white/6 text-white/50"
+                    />
                     {tab === 'voice' ? (
-                      <div className="flex items-center gap-2">
+                      <div className="flex flex-wrap items-center gap-2">
                         <button onClick={togglePlayPause} className="px-3 py-2 rounded-lg bg-white/6 text-white flex items-center gap-2">
-                          {isSpeaking && !isPaused ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-                          <span className="text-[12px]">{isSpeaking && !isPaused ? 'Pause' : 'Play'}</span>
+                          {isPlaying && !isPaused ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+                          <span className="text-[12px]">{isPlaying && !isPaused ? 'Pause' : 'Play'}</span>
                         </button>
                         <button onClick={stopSpeech} className="px-3 py-2 rounded-lg bg-white/6 text-white flex items-center gap-2">
                           <Square className="w-4 h-4" />
                           <span className="text-[12px]">Stop</span>
                         </button>
+                        {recognitionSupported ? (
+                          <button
+                            onClick={() => isRecording ? stopRecognition() : startRecognition()}
+                            className={`px-3 py-2 rounded-lg bg-white/6 text-white flex items-center gap-2`}
+                          >
+                            <Mic className="w-4 h-4" />
+                            <span className="text-[12px]">{isRecording ? 'Listening' : 'Speak'}</span>
+                          </button>
+                        ) : mediaSupported ? (
+                          <button
+                            onClick={() => isAudioRecording ? stopAudioCapture() : startAudioCapture()}
+                            className={`px-3 py-2 rounded-lg bg-white/6 text-white flex items-center gap-2`}
+                          >
+                            <Mic className="w-4 h-4" />
+                            <span className="text-[12px]">{isAudioRecording ? 'Recording' : 'Record'}</span>
+                          </button>
+                        ) : (
+                          <div className="text-xs text-white/40">Mic unsupported</div>
+                        )}
                       </div>
                     ) : (
                       <button onClick={() => setTab('chat')} className="px-3 py-2 rounded-lg bg-vare-purple text-white">Demo</button>

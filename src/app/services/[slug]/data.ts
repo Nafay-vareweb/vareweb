@@ -452,6 +452,7 @@ export const servicesData: ServiceData[] = [
   {
     slug: 'social-media-management',
     title: 'Social Media Management',
+    layoutVariant: 'social',
     badge: 'Brand Building',
     icon: Share2,
     color: 'from-fuchsia-500 to-purple-500',

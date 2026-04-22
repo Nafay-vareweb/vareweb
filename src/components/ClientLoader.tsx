@@ -21,7 +21,8 @@ export default function ClientLoader({ children }: { children: React.ReactNode }
   const pathname = usePathname();
   const router = useRouter();
   const isAdminPath = pathname?.startsWith('/admin');
-  const [showLoader, setShowLoader] = useState<boolean>(() => !isAdminPath);
+  const [loaderVariant, setLoaderVariant] = useState<'page' | 'simple'>(() => pathname === '/' ? 'page' : 'simple');
+  const [showLoader, setShowLoader] = useState<boolean>(() => pathname === '/' && !isAdminPath);
   const prevPathRef = useRef(pathname);
   const isNavigating = useRef(false);
   // Store pathname in a ref so click handler always has the latest value (no stale closure)
@@ -33,6 +34,14 @@ export default function ClientLoader({ children }: { children: React.ReactNode }
     pathnameRef.current = pathname;
   }, [pathname]);
 
+  const handleLoaderComplete = useCallback(() => {
+    // Ensure overflow is always restored
+    document.body.style.overflow = '';
+    document.documentElement.style.overflow = '';
+    setShowLoader(false);
+    initialLoadDone.current = true;
+  }, []);
+
   // Ensure admin routes never show the global page loader
   useEffect(() => {
     if (!pathname) return;
@@ -41,13 +50,14 @@ export default function ClientLoader({ children }: { children: React.ReactNode }
     }
   }, [pathname]);
 
-  const handleLoaderComplete = useCallback(() => {
-    // Ensure overflow is always restored
-    document.body.style.overflow = '';
-    document.documentElement.style.overflow = '';
-    setShowLoader(false);
-    initialLoadDone.current = true;
-  }, []);
+  // Hide simple spinner when navigation finishes (path changes)
+  useEffect(() => {
+    if (prevPathRef.current === pathname) return;
+    // If we were showing a simple loader (non-home), hide it now
+    if (showLoader && loaderVariant === 'simple') {
+      handleLoaderComplete();
+    }
+  }, [pathname, showLoader, loaderVariant, handleLoaderComplete]);
 
   // Clean up path changes (no manual timeouts to kill loader)
   useEffect(() => {
@@ -66,7 +76,7 @@ export default function ClientLoader({ children }: { children: React.ReactNode }
 
   // Intercept all link clicks globally
   useEffect(() => {
-    const handleClick = (e: MouseEvent) => {
+      const handleClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
       const anchor = target.closest('a');
       if (!anchor) return;
@@ -91,6 +101,10 @@ export default function ClientLoader({ children }: { children: React.ReactNode }
         return;
       }
 
+      // Determine loader variant for the target route and show loader
+      const variant = href === '/' ? 'page' : 'simple';
+      setLoaderVariant(variant);
+
       // Mark as navigating and show loader
       e.preventDefault();
       isNavigating.current = true;
@@ -111,10 +125,13 @@ export default function ClientLoader({ children }: { children: React.ReactNode }
   useEffect(() => {
     const handlePopState = () => {
       // Avoid showing loader for admin routes on history navigation
-      if (window.location.pathname.startsWith('/admin')) {
+      const p = window.location.pathname;
+      if (p.startsWith('/admin')) {
         window.scrollTo({ top: 0 });
         return;
       }
+      // Choose variant based on destination
+      setLoaderVariant(p === '/' ? 'page' : 'simple');
       // Show loader immediately on popstate
       setShowLoader(true);
       window.scrollTo({ top: 0 });
@@ -144,6 +161,10 @@ export default function ClientLoader({ children }: { children: React.ReactNode }
       return;
     }
 
+    // Choose variant for target route
+    const variant = href === '/' ? 'page' : 'simple';
+    setLoaderVariant(variant);
+
     isNavigating.current = true;
     window.scrollTo({ top: 0 });
     setShowLoader(true);
@@ -155,7 +176,13 @@ export default function ClientLoader({ children }: { children: React.ReactNode }
   return (
     <NavigationContext.Provider value={{ navigateWithLoader }}>
       {showLoader && (
-        <PageLoader onComplete={handleLoaderComplete} />
+        loaderVariant === 'page' ? (
+          <PageLoader onComplete={handleLoaderComplete} />
+        ) : (
+          <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/30">
+            <div className="w-12 h-12 border-4 border-white/20 border-t-white rounded-full animate-spin" />
+          </div>
+        )
       )}
       <div style={{ opacity: showLoader ? 0 : 1, transition: 'opacity 0.2s ease' }}>
         {children}
