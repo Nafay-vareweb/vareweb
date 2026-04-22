@@ -1614,11 +1614,14 @@ const services = [
 // ==================== SECTION: SERVICES (Cinematic Bento Grid Display) ====================
 function ServicesSection() {
   const sectionRef = useRef<HTMLElement>(null);
-  const gridRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const previewRef = useRef<HTMLDivElement>(null);
+  const barsRef = useRef<(HTMLDivElement | null)[]>([]);
+  const reduced = usePrefersReducedMotion();
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Premium Section Header Animation
+      // Header animation
       const svcHeader = sectionRef.current?.querySelector('.svc-header');
       if (svcHeader) {
         gsap.fromTo(
@@ -1631,17 +1634,29 @@ function ServicesSection() {
         );
       }
 
-      // Bento Grid Item Staggered Animation
-      const svcCards = sectionRef.current?.querySelectorAll('.svc-card');
-      const svcGrid = sectionRef.current?.querySelector('.svc-grid');
-      if (svcCards && svcCards.length && svcGrid) {
+      // Bars entrance animation
+      const bars = sectionRef.current?.querySelectorAll('.service-bar');
+      if (bars && bars.length) {
         gsap.fromTo(
-          svcCards,
-          { y: 80, opacity: 0, scale: 0.95 },
+          bars,
+          { x: -60, opacity: 0 },
           {
-            y: 0, opacity: 1, scale: 1,
+            x: 0, opacity: 1,
             duration: 0.8, stagger: 0.1, ease: 'power3.out',
-            scrollTrigger: { trigger: svcGrid, start: 'top 85%' },
+            scrollTrigger: { trigger: sectionRef.current, start: 'top 75%' },
+          }
+        );
+      }
+
+      // Preview entrance
+      if (previewRef.current) {
+        gsap.fromTo(
+          previewRef.current,
+          { x: 60, opacity: 0 },
+          {
+            x: 0, opacity: 1,
+            duration: 1, delay: 0.2, ease: 'power3.out',
+            scrollTrigger: { trigger: sectionRef.current, start: 'top 75%' },
           }
         );
       }
@@ -1649,18 +1664,51 @@ function ServicesSection() {
     return () => ctx.revert();
   }, []);
 
+  const handleBarHover = (index: number) => {
+    setActiveIndex(index);
+    
+    // Animate the preview image
+    if (previewRef.current) {
+      gsap.to(previewRef.current, {
+        opacity: 0.7,
+        duration: 0.3,
+        ease: 'power2.out',
+      });
+      gsap.to(previewRef.current, {
+        opacity: 1,
+        duration: 0.5,
+        ease: 'power2.out',
+        delay: 0.1,
+      });
+    }
+
+    // Highlight animation
+    barsRef.current.forEach((bar, i) => {
+      if (bar) {
+        gsap.to(bar, {
+          opacity: i === index ? 1 : 0.4,
+          scale: i === index ? 1.02 : 1,
+          duration: 0.4,
+          ease: 'power2.out',
+          overwrite: 'auto',
+        });
+      }
+    });
+  };
+
   return (
     <section id="services" ref={sectionRef} className="py-32 bg-[#090510] relative overflow-hidden">
-      {/* Cinematic Backdrop */}
-      <div className="absolute inset-0 mesh-gradient-dark opacity-40" />
-      <div className="absolute inset-0 bg-[#090510]/60 backdrop-blur-3xl" />
+      {/* Background */}
+      <div className="absolute inset-0 mesh-gradient-dark opacity-20" />
+      <div className="absolute inset-0 bg-[#090510]/30 backdrop-blur-3xl" />
       
-      {/* Atmospheric Glows */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-vare-purple/10 rounded-full blur-[160px] pointer-events-none" />
+      {/* Animated Orbs */}
+      <div className="absolute top-1/4 left-1/4 w-[700px] h-[700px] bg-vare-purple/15 rounded-full blur-[180px] animate-pulse-slow" />
+      <div className="absolute bottom-1/4 right-1/4 w-[600px] h-[600px] bg-blue-500/12 rounded-full blur-[160px] animate-pulse-slow" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header */}
-        <div className="svc-header text-center mb-24">
+        <div className="svc-header text-center mb-20">
           <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-vare-purple-light text-xs font-bold uppercase tracking-widest mb-8">
             Core Infrastructure
           </span>
@@ -1672,55 +1720,288 @@ function ServicesSection() {
           </p>
         </div>
 
-        {/* High-Impact Bento Grid */}
-        <div className="svc-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 xs:gap-6 auto-rows-[240px] xs:auto-rows-[260px] sm:auto-rows-[280px] md:auto-rows-[300px]">
-          {services.slice(0, 6).map((service, i) => (
-            <Link
-              key={i}
-              href={`/services/${service.slug || ''}`}
-              className={`svc-card group relative glass-card-accent p-6 xs:p-8 rounded-[2.5rem] border border-white/5 overflow-hidden transition-all duration-700 flex flex-col justify-between ${
-                i === 0 ? 'lg:col-span-2' : 
-                i === 3 ? 'lg:row-span-2' : ''
-              }`}
-            >
-              {/* Dynamic Accent Glow */}
-              <div className={`absolute -top-24 -right-24 w-48 h-48 bg-gradient-to-br ${service.color} opacity-0 group-hover:opacity-20 blur-[60px] transition-opacity duration-700`} />
-              
-              <div className="relative z-10">
-                <div className="flex items-start justify-between mb-8">
-                  <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${service.color} flex items-center justify-center shadow-[0_10px_30px_rgba(0,0,0,0.5)] group-hover:scale-110 group-hover:rotate-6 transition-all duration-500`}>
-                    <service.icon className="w-6 h-6 text-white" />
+        {/* Services Grid - Left Bars & Right Preview */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+          {/* Left: Service Bars */}
+          <div className="space-y-4 flex flex-col">
+            {services.slice(0, 6).map((service, i) => (
+              <div
+                key={i}
+                ref={(el) => {
+                  barsRef.current[i] = el;
+                }}
+                className="service-bar group cursor-pointer"
+                onMouseEnter={() => handleBarHover(i)}
+                onClick={() => handleBarHover(i)}
+              >
+                <Link
+                  href={`/services/${service.slug || ''}`}
+                  className="block relative overflow-hidden"
+                >
+                  {/* Bar Background */}
+                  <div
+                    className={`relative p-6 rounded-2xl border transition-all duration-500 ${
+                      activeIndex === i
+                        ? 'bg-gradient-to-r from-white/10 to-white/5 border-white/30 shadow-[0_0_40px_rgba(124,77,187,0.3)]'
+                        : 'bg-white/[0.03] border-white/10 hover:border-white/20'
+                    }`}
+                    style={{
+                      background: activeIndex === i 
+                        ? 'linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%)'
+                        : 'rgba(255,255,255,0.02)'
+                    }}
+                  >
+                    {/* Active Indicator Line */}
+                    <div
+                      className={`absolute left-0 top-0 bottom-0 w-1 rounded-full transition-all duration-500 ${
+                        activeIndex === i
+                          ? `bg-gradient-to-b ${service.color}`
+                          : 'bg-white/10'
+                      }`}
+                    />
+
+                    {/* Content */}
+                    <div className="flex items-start justify-between gap-4 pl-4">
+                      {/* Icon & Text */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-4 mb-3">
+                          <div
+                            className={`w-10 h-10 rounded-lg bg-gradient-to-br ${service.color} flex items-center justify-center flex-shrink-0 shadow-lg group-hover:scale-110 transition-all duration-500 ${
+                              activeIndex === i ? 'scale-110 shadow-[0_10px_30px_rgba(0,0,0,0.5)]' : ''
+                            }`}
+                          >
+                            <service.icon className="w-5 h-5 text-white" />
+                          </div>
+                          <h3 className={`font-black tracking-tight transition-colors duration-500 truncate ${
+                            activeIndex === i ? 'text-vare-gold text-lg' : 'text-white text-base group-hover:text-vare-purple-light'
+                          }`}>
+                            {service.title}
+                          </h3>
+                        </div>
+                        <p className={`text-sm font-medium leading-relaxed line-clamp-2 transition-all duration-500 ${
+                          activeIndex === i ? 'text-white/70' : 'text-white/50 group-hover:text-white/60'
+                        }`}>
+                          {service.desc}
+                        </p>
+                      </div>
+
+                      {/* Arrow */}
+                      <ArrowRight className={`w-5 h-5 flex-shrink-0 transition-all duration-500 ${
+                        activeIndex === i
+                          ? 'text-vare-gold translate-x-1 opacity-100'
+                          : 'text-white/30 -translate-x-2 opacity-0 group-hover:opacity-60 group-hover:translate-x-0'
+                      }`} />
+                    </div>
+
+                    {/* Shine Effect */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.05] to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 pointer-events-none" />
                   </div>
-                  <span className="text-[10px] font-black text-white/30 tracking-[0.2em] uppercase">
-                    {service.catNum} • {service.category}
-                  </span>
+                </Link>
+              </div>
+            ))}
+          </div>
+
+          {/* Right: Preview Image */}
+          <div ref={previewRef} className="hidden lg:block sticky top-32">
+            <div className="relative rounded-3xl overflow-hidden border border-white/10 h-[700px] bg-gradient-to-br from-white/5 to-white/[0.02]">
+              {/* Animated Background */}
+              <div className="absolute inset-0 bg-gradient-to-br from-vare-purple/20 via-transparent to-blue-500/10" />
+
+              {/* Service Preview */}
+              <div className="relative w-full h-full flex flex-col items-center justify-center p-8" style={{ perspective: '1200px' }}>
+                {/* 0: Web Development - Browser Window */}
+                {activeIndex === 0 && (
+                  <div className="w-80 h-48 relative" style={{ transformStyle: 'preserve-3d', transform: 'rotateX(5deg) rotateY(-5deg)' }}>
+                    <div className="absolute inset-0 bg-white/5 border border-white/20 rounded-xl overflow-hidden shadow-2xl backdrop-blur-sm">
+                      {/* Browser Header */}
+                      <div className="bg-white/8 border-b border-white/10 px-4 py-3 flex items-center gap-2">
+                        <div className="flex gap-2">
+                          <div className="w-3 h-3 rounded-full bg-red-500/60" />
+                          <div className="w-3 h-3 rounded-full bg-yellow-500/60" />
+                          <div className="w-3 h-3 rounded-full bg-green-500/60" />
+                        </div>
+                        <div className="flex-1 mx-4 px-3 py-1 bg-white/5 border border-white/10 rounded text-xs text-white/40">example.com</div>
+                      </div>
+                      {/* Browser Content */}
+                      <div className="p-4 space-y-2">
+                        <div className="h-3 bg-gradient-to-r from-green-400/40 to-transparent rounded w-3/4" />
+                        <div className="h-2 bg-gradient-to-r from-green-400/20 to-transparent rounded w-full" />
+                        <div className="h-2 bg-gradient-to-r from-green-400/20 to-transparent rounded w-5/6" />
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* 1: E-commerce - Product Card */}
+                {activeIndex === 1 && (
+                  <div className="w-72 h-56 relative" style={{ transformStyle: 'preserve-3d', transform: 'rotateX(-5deg) rotateY(8deg) rotateZ(2deg)' }}>
+                    <div className="absolute inset-0 bg-gradient-to-br from-orange-500/20 via-white/5 to-white/[0.02] border border-white/20 rounded-2xl overflow-hidden shadow-2xl">
+                      {/* Product Image */}
+                      <div className="h-32 bg-gradient-to-br from-orange-400/30 to-orange-600/20 flex items-center justify-center border-b border-white/10">
+                        <div className="w-20 h-20 rounded-lg bg-gradient-to-br from-orange-300 to-orange-600 shadow-lg" style={{ transform: 'rotateZ(-15deg)' }} />
+                      </div>
+                      {/* Product Info */}
+                      <div className="p-4">
+                        <div className="h-3 bg-white/20 rounded w-2/3 mb-3" />
+                        <div className="flex items-center justify-between">
+                          <div className="h-3 bg-gradient-to-r from-orange-400/40 to-transparent rounded w-1/3" />
+                          <div className="px-2 py-1 bg-orange-500/20 border border-orange-400/30 rounded text-xs text-orange-300">Add to Cart</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* 2: UI/UX - Design Mockup */}
+                {activeIndex === 2 && (
+                  <div className="space-y-3">
+                    <div className="w-72 h-40 relative" style={{ transformStyle: 'preserve-3d', transform: 'rotateX(8deg) rotateY(-8deg)' }}>
+                      <div className="absolute inset-0 bg-white/5 border border-white/20 rounded-xl overflow-hidden shadow-2xl p-4 space-y-3">
+                        <div className="flex gap-2">
+                          <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-purple-400/40 to-blue-500/30" />
+                          <div className="flex-1 space-y-2">
+                            <div className="h-3 bg-white/15 rounded w-3/4" />
+                            <div className="h-2 bg-white/10 rounded w-1/2" />
+                          </div>
+                        </div>
+                        <div className="h-2 bg-white/10 rounded w-full" />
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* 3: AI Chatbots - Chat Interface */}
+                {activeIndex === 3 && (
+                  <div className="w-72 h-56 relative" style={{ transformStyle: 'preserve-3d', transform: 'rotateX(-5deg) rotateY(6deg)' }}>
+                    <div className="absolute inset-0 bg-white/5 border border-white/20 rounded-2xl overflow-hidden shadow-2xl flex flex-col">
+                      {/* Chat Header */}
+                      <div className="bg-gradient-to-r from-cyan-500/20 to-blue-500/10 border-b border-white/10 px-4 py-3">
+                        <div className="h-2 bg-white/15 rounded w-20" />
+                      </div>
+                      {/* Messages */}
+                      <div className="flex-1 p-3 space-y-3 overflow-hidden">
+                        <div className="flex justify-start">
+                          <div className="bg-white/10 rounded-lg px-3 py-2 max-w-xs">
+                            <div className="h-2 bg-white/15 rounded w-24" />
+                          </div>
+                        </div>
+                        <div className="flex justify-end">
+                          <div className="bg-cyan-500/20 rounded-lg px-3 py-2 max-w-xs">
+                            <div className="h-2 bg-cyan-300/40 rounded w-20" />
+                          </div>
+                        </div>
+                        <div className="flex justify-start">
+                          <div className="bg-white/10 rounded-lg px-3 py-2 max-w-xs">
+                            <div className="h-2 bg-white/15 rounded w-28" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* 4: SEO - Analytics Dashboard */}
+                {activeIndex === 4 && (
+                  <div className="w-80 h-48 relative" style={{ transformStyle: 'preserve-3d', transform: 'rotateX(6deg) rotateY(-6deg)' }}>
+                    <div className="absolute inset-0 bg-white/5 border border-white/20 rounded-xl overflow-hidden shadow-2xl p-4">
+                      <div className="grid grid-cols-2 gap-2 h-full">
+                        {/* Metric Cards */}
+                        <div className="bg-gradient-to-br from-blue-400/20 to-blue-600/10 rounded-lg p-3 border border-white/10">
+                          <div className="text-2xl font-black text-blue-300">#1</div>
+                          <div className="h-1 bg-blue-400/30 rounded w-3/4 mt-2" />
+                        </div>
+                        <div className="bg-gradient-to-br from-green-400/20 to-green-600/10 rounded-lg p-3 border border-white/10">
+                          <div className="text-2xl font-black text-green-300">+45%</div>
+                          <div className="h-1 bg-green-400/30 rounded w-3/4 mt-2" />
+                        </div>
+                        {/* Chart */}
+                        <div className="col-span-2 bg-white/5 rounded-lg p-3 border border-white/10 flex items-end gap-1">
+                          {[2, 4, 3, 5, 4, 6].map((h, i) => (
+                            <div key={i} className="flex-1 bg-gradient-to-t from-blue-400 to-blue-600 rounded-sm" style={{ height: `${h * 8}px`, opacity: 0.6 + i * 0.1 }} />
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* 5: Mobile Apps - iPhone */}
+                {activeIndex === 5 && (
+                  <div className="relative" style={{ transformStyle: 'preserve-3d', transform: 'rotateX(-8deg) rotateY(0deg)' }}>
+                    <div className="w-40 h-72 bg-black rounded-[3rem] border-[8px] border-black shadow-2xl overflow-hidden relative">
+                      {/* Notch */}
+                      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-28 h-6 bg-black rounded-b-3xl z-10" />
+                      
+                      {/* Screen */}
+                      <div className="w-full h-full bg-gradient-to-b from-white/20 via-white/5 to-white/10 pt-8 px-2 overflow-hidden">
+                        {/* Status Bar */}
+                        <div className="h-4 flex justify-between items-center px-2 mb-2 text-xs text-white/60">
+                          <span>9:41</span>
+                          <div className="flex gap-1">
+                            <div className="w-3 h-2 border border-white/40 rounded-sm" />
+                          </div>
+                        </div>
+
+                        {/* App Content */}
+                        <div className="space-y-3">
+                          <div className="bg-gradient-to-r from-blue-500/30 to-purple-600/30 rounded-2xl p-3">
+                            <div className="h-3 bg-white/20 rounded w-2/3 mb-2" />
+                            <div className="h-2 bg-white/15 rounded w-full" />
+                          </div>
+                          <div className="grid grid-cols-2 gap-2">
+                            <div className="bg-gradient-to-br from-cyan-400/30 to-blue-500/20 rounded-lg p-2 h-20 flex items-end">
+                              <div className="w-full h-1/3 bg-cyan-400/40 rounded" />
+                            </div>
+                            <div className="bg-gradient-to-br from-purple-400/30 to-pink-500/20 rounded-lg p-2 h-20 flex items-end">
+                              <div className="w-full h-1/2 bg-purple-400/40 rounded" />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Home Indicator */}
+                      <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-24 h-1 bg-black rounded-full" />
+                    </div>
+                  </div>
+                )}
+
+                {/* Service Info */}
+                <div className="mt-8">
+                  <h3 className="text-3xl font-black text-white text-center mb-4 tracking-tight">
+                    {services[activeIndex].title}
+                  </h3>
+                  <p className="text-white/60 text-center text-lg leading-relaxed mb-8 max-w-sm">
+                    {services[activeIndex].desc}
+                  </p>
+
+                {/* Tags */}
+                <div className="flex flex-wrap gap-3 justify-center">
+                  {services[activeIndex].tag.split(' • ').map((tag, i) => (
+                    <span
+                      key={i}
+                      className="px-4 py-2 rounded-full bg-white/10 border border-white/20 text-white/70 text-xs font-bold uppercase tracking-wider hover:bg-white/15 transition-colors"
+                    >
+                      {tag}
+                    </span>
+                  ))}
                 </div>
 
-                <h3 className="text-2xl font-black text-white tracking-tighter group-hover:text-vare-purple-light transition-colors duration-500 mb-4">
-                  {service.title}
-                </h3>
-                <p className={`text-white/40 text-sm font-medium leading-relaxed ${i === 0 ? 'max-w-md' : 'line-clamp-3'}`}>
-                  {service.desc}
-                </p>
+                {/* Category Badge */}
+                <div className="absolute top-6 right-6 px-4 py-2 rounded-full bg-gradient-to-r from-white/10 to-white/5 border border-white/20 backdrop-blur">
+                  <span className={`text-xs font-black uppercase tracking-widest text-transparent bg-clip-text bg-gradient-to-r ${services[activeIndex].color}`}>
+                    {services[activeIndex].category}
+                  </span>
+                </div>
               </div>
-
-              <div className="relative z-10 pt-6 border-t border-white/5 flex items-center justify-between">
-                <span className="text-[10px] font-black tracking-[0.15em] uppercase text-white/20 group-hover:text-white/60 transition-colors duration-500">
-                  {service.tag}
-                </span>
-                <ArrowRight className="w-5 h-5 text-vare-purple-light opacity-0 group-hover:opacity-100 transform -translate-x-4 group-hover:translate-x-0 transition-all duration-500" />
-              </div>
-
-              {/* Glass Shine Effect */}
-              <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.03] to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 pointer-events-none" />
-            </Link>
-          ))}
+            </div>
+          </div>
         </div>
 
+        {/* View All Button */}
         <div className="text-center mt-20">
           <Link
             href="/services"
-            className="group relative px-12 py-5 gradient-purple text-white font-black text-xs uppercase tracking-[0.2em] rounded-2xl hover:shadow-[0_20px_50px_rgba(124,77,187,0.3)] transition-all transform hover:-translate-y-1 overflow-hidden inline-flex items-center gap-4"
+            className="group relative px-12 py-5 gradient-purple text-white font-black text-xs uppercase tracking-[0.2em] rounded-2xl hover:shadow-[0_30px_60px_rgba(124,77,187,0.4)] transition-all transform hover:-translate-y-2 overflow-hidden inline-flex items-center gap-4"
           >
             <span className="relative z-10">Explore Full Suite</span>
             <ArrowRight className="w-4 h-4 relative z-10 group-hover:translate-x-1 transition-transform" />
@@ -1728,8 +2009,9 @@ function ServicesSection() {
           </Link>
         </div>
       </div>
+      </div>
     </section>
-  );
+);
 }
 
 // ==================== SECTION: PORTFOLIO DATA ====================
@@ -1842,13 +2124,6 @@ function PortfolioSection() {
     return () => ctx.revert();
   }, [reduced]);
 
-  const scroll = (direction: 'left' | 'right') => {
-    if (scrollContainerRef.current) {
-      const amount = direction === 'left' ? -400 : 400;
-      gsap.to(scrollContainerRef.current, { scrollLeft: scrollContainerRef.current.scrollLeft + amount, duration: 0.8, ease: 'power4.out' });
-    }
-  };
-
   const handlePointerDown = useCallback((e: React.MouseEvent | React.TouchEvent) => {
     isDragging.current = true;
     const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
@@ -1863,11 +2138,16 @@ function PortfolioSection() {
     }
   }, []);
 
-  const handlePointerMove = useCallback((e: React.MouseEvent | React.TouchEvent) => {
+  const handlePointerMove = useCallback((e: React.MouseEvent | React.TouchEvent | MouseEvent) => {
     if (!isDragging.current || !scrollContainerRef.current) return;
-    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+    
+    const clientX = e instanceof MouseEvent 
+      ? e.clientX 
+      : 'touches' in e ? e.touches[0].clientX : e.clientX;
+    
     const diff = startX.current - clientX;
     scrollContainerRef.current.scrollLeft = scrollStart.current + diff;
+    
     const now = Date.now();
     const dt = now - lastTime.current;
     if (dt > 0) velocity.current = (lastX.current - clientX) / dt;
@@ -1890,6 +2170,44 @@ function PortfolioSection() {
       }
     }
   }, []);
+
+  const handleWheel = useCallback((e: React.WheelEvent<HTMLDivElement>) => {
+    if (!scrollContainerRef.current) return;
+    // Allow natural vertical scroll, only handle horizontal wheel
+    if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+      e.preventDefault();
+      scrollContainerRef.current.scrollLeft += e.deltaX > 0 ? 50 : -50;
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!isDragging.current) return;
+    
+    const handleDocMouseMove = (e: MouseEvent) => {
+      handlePointerMove(e);
+    };
+
+    const handleDocMouseUp = () => {
+      handlePointerUp();
+      document.removeEventListener('mousemove', handleDocMouseMove);
+      document.removeEventListener('mouseup', handleDocMouseUp);
+    };
+
+    document.addEventListener('mousemove', handleDocMouseMove);
+    document.addEventListener('mouseup', handleDocMouseUp);
+
+    return () => {
+      document.removeEventListener('mousemove', handleDocMouseMove);
+      document.removeEventListener('mouseup', handleDocMouseUp);
+    };
+  }, [handlePointerMove, handlePointerUp]);
+
+  const scroll = (direction: 'left' | 'right') => {
+    if (scrollContainerRef.current) {
+      const amount = direction === 'left' ? -400 : 400;
+      gsap.to(scrollContainerRef.current, { scrollLeft: scrollContainerRef.current.scrollLeft + amount, duration: 0.8, ease: 'power4.out' });
+    }
+  };
 
   return (
     <section id="portfolio" ref={sectionRef} className="py-32 bg-[#0a0612] relative overflow-hidden mesh-gradient-dark">
@@ -1938,6 +2256,7 @@ function PortfolioSection() {
           onTouchStart={handlePointerDown}
           onTouchMove={handlePointerMove}
           onTouchEnd={handlePointerUp}
+          onWheel={handleWheel}
         >
           {portfolioItems.map((item, i) => (
             <div key={i} className="portfolio-card flex-shrink-0 w-[280px] xs:w-[300px] sm:w-[320px] md:w-[380px] lg:w-[420px] group transition-all duration-700">
