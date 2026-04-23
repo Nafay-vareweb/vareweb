@@ -9,6 +9,7 @@ import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import ParticleBackground from '@/components/ParticleBackground';
 import VideoPopup from '@/components/VideoPopup';
+import PerformanceMetrics from '@/components/PerformanceMetrics';
 import {
   Smartphone, RefreshCw, Palette, Search, ShoppingCart,
   Star, MousePointer, Target, TrendingDown, ArrowRight, ChevronLeft, ChevronRight, ChevronDown, Quote,
@@ -17,6 +18,7 @@ import {
   Layout, Monitor, Cpu, FileText,
   Briefcase, Heart, UserCircle, Globe, Play,
   Rocket, ShoppingBag, Lock, MoreHorizontal, X, MessageSquare, Bell, Send, Bookmark, Image,
+  Route, ArrowDown,
 } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
@@ -963,7 +965,7 @@ function HeroSection() {
       </button>
 
       {/* ========== Main Content — Split Layout ========== */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 md:pl-[72px] w-full pb-32 lg:pb-8">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 md:pl-[88px] lg:pl-[96px] w-full pb-32 lg:pb-8">
         <div className="grid grid-cols-1 xl:grid-cols-5 gap-10 xl:gap-16 items-start">
 
           {/* ===== LEFT COLUMN — Text Content (~60%) ===== */}
@@ -1081,146 +1083,6 @@ function HeroSection() {
   );
 }
 
-// ==================== SECTION: COUNTERS ====================
-function CounterSection() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const countersRef = useRef<HTMLDivElement>(null);
-  const shapesRef = useRef<(HTMLDivElement | null)[]>([]);
-  const hasAnimated = useRef(false);
-  const reduced = usePrefersReducedMotion();
-
-  useEffect(() => {
-    if (reduced) return;
-    const ctx = gsap.context(() => {
-      const counters = countersRef.current?.querySelectorAll('.counter-number');
-      if (!counters || !counters.length) return;
-
-      const counterData = [
-        { target: 150, suffix: '+', decimals: 0 },
-        { target: 98, suffix: '%', decimals: 0 },
-        { target: 100, suffix: '+', decimals: 0 },
-        { target: 50, suffix: '+', decimals: 0 },
-      ];
-
-      const objs = counterData.map(() => ({ val: 0 }));
-
-      ScrollTrigger.create({
-        trigger: sectionRef.current,
-        start: 'top 80%',
-        onEnter: () => {
-          if (hasAnimated.current) return;
-          hasAnimated.current = true;
-
-          counterData.forEach((data, i) => {
-            gsap.to(objs[i], {
-              val: data.target,
-              duration: 2.5,
-              ease: 'power2.out',
-              onUpdate: () => {
-                if (counters[i]) {
-                  const formatted = data.decimals > 0
-                    ? objs[i].val.toFixed(data.decimals)
-                    : Math.floor(objs[i].val).toLocaleString();
-                  counters[i].textContent = formatted + data.suffix;
-                }
-              },
-            });
-          });
-        },
-      });
-
-      // 3D floating shapes: rotate slowly as user scrolls
-      const rotations = [
-        { x: 360, y: 180, z: 90 },
-        { x: 180, y: 360, z: 180 },
-        { x: 90, y: 90, z: 360 },
-        { x: 270, y: 270, z: 180 },
-        { x: 180, y: 90, z: 270 },
-        { x: 360, y: 360, z: 360 },
-        { x: 120, y: 240, z: 60 },
-        { x: 240, y: 60, z: 300 },
-      ];
-      shapesRef.current.forEach((shape, i) => {
-        if (!shape) return;
-        gsap.to(shape, {
-          rotationX: rotations[i]?.x || 360,
-          rotationY: rotations[i]?.y || 180,
-          rotationZ: rotations[i]?.z || 90,
-          ease: 'none',
-          force3D: true,
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: 1.5,
-          },
-        });
-      });
-    });
-
-    return () => ctx.revert();
-  }, [reduced]);
-
-  const counters = [
-    { icon: Briefcase, label: 'Projects Delivered' },
-    { icon: Heart, label: 'Client Satisfaction' },
-    { icon: UserCircle, label: 'Happy Clients' },
-    { icon: Users, label: 'Team Members' },
-  ];
-
-  return (
-    <section ref={sectionRef} className="py-24 sm:py-32 bg-[#0a0612] relative overflow-hidden" style={{ perspective: '800px' }}>
-      {/* Background Glow */}
-      <div className="absolute inset-0 mesh-gradient-dark opacity-30" />
-      <div className="absolute inset-0 bg-[#0a0612]/40 backdrop-blur-3xl" />
-      {/* Radial gradient glow behind counters */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] rounded-full bg-[radial-gradient(ellipse,rgba(124,77,187,0.08),transparent_70%)] pointer-events-none" />
-
-      {/* Floating 3D geometric shapes */}
-      {!reduced && (
-        <>
-          {/* Wireframe cube - top left */}
-          <div ref={(el) => { shapesRef.current[0] = el; }} className="absolute top-[10%] left-[5%] w-10 h-10 border-2 border-vare-purple/15 pointer-events-none" style={{ transformStyle: 'preserve-3d' }} />
-          {/* Sphere - top right */}
-          <div ref={(el) => { shapesRef.current[1] = el; }} className="absolute top-[15%] right-[8%] w-8 h-8 rounded-full border-2 border-vare-gold/15 pointer-events-none" style={{ transformStyle: 'preserve-3d' }} />
-          {/* Triangle - middle left */}
-          <div ref={(el) => { shapesRef.current[2] = el; }} className="absolute top-[40%] left-[3%] w-0 h-0 pointer-events-none" style={{ borderLeft: '14px solid transparent', borderRight: '14px solid transparent', borderBottom: '24px solid rgba(124,77,187,0.1)', transformStyle: 'preserve-3d' }} />
-          {/* Cube - middle right */}
-          <div ref={(el) => { shapesRef.current[3] = el; }} className="absolute top-[55%] right-[6%] w-12 h-12 border-2 border-vare-purple/10 pointer-events-none" style={{ transformStyle: 'preserve-3d' }} />
-          {/* Sphere - bottom left */}
-          <div ref={(el) => { shapesRef.current[4] = el; }} className="absolute bottom-[10%] left-[10%] w-6 h-6 rounded-full border-2 border-vare-gold/12 pointer-events-none" style={{ transformStyle: 'preserve-3d' }} />
-          {/* Triangle - bottom right */}
-          <div ref={(el) => { shapesRef.current[5] = el; }} className="absolute bottom-[15%] right-[12%] w-0 h-0 pointer-events-none" style={{ borderLeft: '10px solid transparent', borderRight: '10px solid transparent', borderBottom: '18px solid rgba(124,77,187,0.08)', transformStyle: 'preserve-3d' }} />
-          {/* Hexagonal wireframe */}
-          <div ref={(el) => { shapesRef.current[6] = el; }} className="absolute top-[25%] right-[15%] w-16 h-16 pointer-events-none" style={{ transformStyle: 'preserve-3d' }}>
-            <div className="absolute inset-0 border-2 border-vare-purple/10 rotate-[30deg] rounded-sm" />
-            <div className="absolute inset-2 border-2 border-vare-purple/[0.07] rotate-[60deg] rounded-sm" />
-            <div className="absolute inset-4 border-2 border-vare-gold/[0.07] rotate-[90deg] rounded-sm" />
-          </div>
-          {/* Diamond shape */}
-          <div ref={(el) => { shapesRef.current[7] = el; }} className="absolute bottom-[25%] right-[20%] w-10 h-10 pointer-events-none" style={{ transformStyle: 'preserve-3d' }}>
-            <div className="absolute inset-0 border-2 border-vare-purple/10 rotate-45" />
-            <div className="absolute inset-2 border-2 border-vare-purple/[0.07]" />
-          </div>
-        </>
-      )}
-
-      <div ref={countersRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
-          {counters.map((item, i) => (
-            <div key={i} className="text-center group">
-              <div className="w-16 h-16 rounded-2xl bg-white/[0.03] flex items-center justify-center mx-auto mb-6 group-hover:bg-vare-purple transition-all duration-300 border border-white/5 group-hover:border-vare-purple-light shadow-2xl">
-                <item.icon className="w-8 h-8 text-vare-purple-light group-hover:text-white transition-colors duration-300" />
-              </div>
-              <div className="counter-number text-3xl xs:text-4xl sm:text-4xl md:text-5xl font-black text-white">0</div>
-              <div className="text-xs font-bold text-white/30 mt-2 uppercase tracking-widest">{item.label}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
 
 // ==================== SECTION: TRUSTED BY (Horizontal Continuous Scrolling) ====================
 function TrustedBySection() {
@@ -1802,7 +1664,7 @@ function ServicesSection() {
           </div>
 
           {/* Right: Preview Image */}
-          <div ref={previewRef} className="hidden lg:block sticky top-32">
+          <div ref={previewRef} className="hidden lg:block self-start sticky top-32">
             <div className="relative rounded-3xl overflow-hidden border border-white/10 h-[700px] bg-gradient-to-br from-white/5 to-white/[0.02]">
               {/* Animated Background */}
               <div className="absolute inset-0 bg-gradient-to-br from-vare-purple/20 via-transparent to-blue-500/10" />
@@ -2311,8 +2173,6 @@ function PortfolioSection() {
 // ==================== SECTION: PROCESS (Cinematic Zig-Zag Narrative) ====================
 function ProcessSection() {
   const sectionRef = useRef<HTMLElement>(null);
-  const stepCardRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const lineRef = useRef<HTMLDivElement>(null);
   const reduced = usePrefersReducedMotion();
 
   const steps = [
@@ -2323,161 +2183,241 @@ function ProcessSection() {
   ];
 
   useEffect(() => {
+    if (reduced) return;
+
     const ctx = gsap.context(() => {
-      // Premium Section Header Animation
+      // Section header animation
       gsap.fromTo(
-        sectionRef.current!.querySelector('.section-header'),
-        { y: 60, opacity: 0 },
-        { 
-          y: 0, opacity: 1, duration: 1, ease: 'power4.out',
+        '.section-header',
+        { y: 50, opacity: 0 },
+        {
+          y: 0, opacity: 1, duration: 0.8, ease: 'power3.out',
           scrollTrigger: { trigger: sectionRef.current, start: 'top 80%' }
         }
       );
 
-      // Neon Logic Line Drawing Animation
-      if (lineRef.current) {
-        gsap.fromTo(
-          lineRef.current,
-          { scaleY: 0 },
-          {
-            scaleY: 1, duration: 2, ease: 'none',
-            scrollTrigger: {
-              trigger: sectionRef.current!.querySelector('.process-container'),
-              start: 'top 70%',
-              end: 'bottom 80%',
-              scrub: 1,
-            }
-          }
-        );
-      }
+      // Progress timeline animation
+      gsap.fromTo(
+        '.progress-timeline',
+        { y: 30, opacity: 0 },
+        {
+          y: 0, opacity: 1, duration: 0.6, ease: 'power3.out',
+          scrollTrigger: { trigger: '.progress-timeline', start: 'top 85%' }
+        }
+      );
 
-      // Step Cards Staggered Logic Sequence
-      stepCardRefs.current.forEach((card, i) => {
-        if (!card) return;
-        const isEven = i % 2 === 0;
-        gsap.fromTo(
-          card,
-          { x: isEven ? -100 : 100, opacity: 0, scale: 0.9 },
-          {
-            x: 0, opacity: 1, scale: 1,
-            duration: 1, ease: 'power3.out',
-            scrollTrigger: {
-              trigger: card,
-              start: 'top 85%',
-              toggleActions: 'play none none none',
-            }
-          }
-        );
-
-        // Glass Shine / Tilt Hover Logic
-        if (!reduced) {
-          card.addEventListener('mousemove', (e: MouseEvent) => {
-            const rect = card.getBoundingClientRect();
-            const x = (e.clientX - rect.left) / rect.width - 0.5;
-            const y = (e.clientY - rect.top) / rect.height - 0.5;
-            gsap.to(card, {
-              rotateY: x * 10,
-              rotateX: -y * 10,
-              duration: 0.4,
-              ease: 'power2.out',
-            });
-          });
-          card.addEventListener('mouseleave', () => {
-            gsap.to(card, { rotateY: 0, rotateX: 0, duration: 0.6, ease: 'power4.out' });
-          });
+      // Neural nodes sequential animation
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: '.neural-nodes-grid',
+          start: 'top 85%',
+          toggleActions: 'play none none reverse'
         }
       });
-    });
+
+      // First node
+      tl.fromTo('.neural-node:nth-child(1)',
+        { y: 40, opacity: 0, scale: 0.9 },
+        {
+          y: 0, opacity: 1, scale: 1, duration: 0.4, ease: 'power2.out'
+        }
+      )
+      // Second node starts after first completes
+      .fromTo('.neural-node:nth-child(2)',
+        { y: 40, opacity: 0, scale: 0.9 },
+        {
+          y: 0, opacity: 1, scale: 1, duration: 0.4, ease: 'power2.out'
+        },
+        '+=0.1'
+      )
+      // Third node starts after second completes
+      .fromTo('.neural-node:nth-child(3)',
+        { y: 40, opacity: 0, scale: 0.9 },
+        {
+          y: 0, opacity: 1, scale: 1, duration: 0.4, ease: 'power2.out'
+        },
+        '+=0.1'
+      )
+      // Fourth node starts after third completes
+      .fromTo('.neural-node:nth-child(4)',
+        { y: 40, opacity: 0, scale: 0.9 },
+        {
+          y: 0, opacity: 1, scale: 1, duration: 0.4, ease: 'power2.out'
+        },
+        '+=0.1'
+      );
+
+      // Connection lines animation - removed to prevent overlay issues
+      // gsap.fromTo(
+      //   '.connection-lines',
+      //   { opacity: 0 },
+      //   {
+      //     opacity: 0.3, duration: 1, ease: 'power2.out',
+      //     scrollTrigger: { trigger: '.neural-nodes-grid', start: 'top 80%' }
+      //   }
+      // );
+
+    }, sectionRef);
+
     return () => ctx.revert();
   }, [reduced]);
 
   return (
-    <section id="process" ref={sectionRef} className="py-32 bg-[#0a0612] relative overflow-hidden">
-      {/* Immersive Background Decor */}
-      <div className="absolute inset-0 mesh-gradient-purple opacity-20" />
-      <div className="absolute inset-0 bg-[#0a0612]/60 backdrop-blur-3xl" />
-      
-      {/* Pulsing Atmosphere */}
-      <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-96 h-96 bg-vare-purple/10 rounded-full blur-[140px] animate-pulse-slow" />
-      <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-vare-gold/5 rounded-full blur-[120px] animate-pulse-slow" />
+    <section id="process" ref={sectionRef} className="py-20 md:py-32 lg:py-40 bg-[#0a0612] relative overflow-hidden">
+      {/* Simple Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-vare-purple/5 to-blue-500/5" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="section-header text-center mb-24">
-          <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-vare-purple-light text-xs font-bold uppercase tracking-widest mb-8">
-             System Protocol
+        {/* Section Header */}
+        <div className="section-header text-center mb-16 md:mb-24 lg:mb-32">
+          <span className="inline-flex items-center gap-2 px-3 py-1 md:px-4 md:py-1.5 rounded-full bg-white/5 border border-white/10 text-vare-purple-light text-xs font-bold uppercase tracking-widest mb-4">
+            <Route className="w-3 h-3 md:w-4 md:h-4" />
+            Project Roadmap
           </span>
-          <h2 className="text-5xl md:text-7xl lg:text-8xl font-black text-white mb-8 tracking-tighter leading-tight">
-            Execution <span className="text-transparent bg-clip-text bg-gradient-to-r from-vare-purple-light to-blue-400">Roadmap</span>
+          <div className="text-xs md:text-sm font-medium text-white/60 uppercase tracking-[0.2em] mb-6 md:mb-8">
+            Neural Protocol
+          </div>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl xl:text-8xl font-black text-white mb-6 md:mb-8 tracking-tighter leading-tight">
+            Intelligence <span className="text-transparent bg-clip-text bg-gradient-to-r from-vare-purple-light to-blue-400">Flow</span>
           </h2>
-          <p className="text-white/40 max-w-2xl mx-auto text-lg md:text-xl font-medium">
-            A precision-engineered lifecycle designed to deliver technical dominance at scale.
+          <p className="text-white/40 max-w-2xl mx-auto text-base md:text-lg lg:text-xl font-medium px-4">
+            A synaptic roadmap where each phase connects and evolves through intelligent data pathways.
           </p>
+
+          {/* Progress Timeline Visual - Responsive */}
+          <div className="progress-timeline flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mt-8 md:mt-12 mb-6 md:mb-8">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-blue-500 border-2 border-blue-400/50"></div>
+              <span className="text-xs font-bold text-white/60 uppercase tracking-widest">Planning</span>
+            </div>
+            <div className="hidden sm:block h-px w-6 sm:w-8 bg-gradient-to-r from-blue-500/50 to-purple-500/50"></div>
+            <div className="sm:hidden w-px h-4 bg-gradient-to-b from-blue-500/50 to-purple-500/50"></div>
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-purple-500 border-2 border-purple-400/50"></div>
+              <span className="text-xs font-bold text-white/60 uppercase tracking-widest">Design</span>
+            </div>
+            <div className="hidden sm:block h-px w-6 sm:w-8 bg-gradient-to-r from-purple-500/50 to-orange-500/50"></div>
+            <div className="sm:hidden w-px h-4 bg-gradient-to-b from-purple-500/50 to-orange-500/50"></div>
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-orange-500 border-2 border-orange-400/50"></div>
+              <span className="text-xs font-bold text-white/60 uppercase tracking-widest">Testing</span>
+            </div>
+            <div className="hidden sm:block h-px w-6 sm:w-8 bg-gradient-to-r from-orange-500/50 to-green-500/50"></div>
+            <div className="sm:hidden w-px h-4 bg-gradient-to-b from-orange-500/50 to-green-500/50"></div>
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-green-500 border-2 border-green-400/50"></div>
+              <span className="text-xs font-bold text-white/60 uppercase tracking-widest">Launch</span>
+            </div>
+          </div>
         </div>
 
-        {/* Narrative Narrative Flow Container */}
-        <div className="process-container relative min-h-[1200px] md:min-h-0">
-          {/* Central Pulsing Neon Line (Desktop) */}
-          <div className="hidden md:block absolute left-1/2 top-10 bottom-10 -translate-x-1/2 w-0.5 bg-white/10 overflow-hidden">
-            <div ref={lineRef} className="w-full h-full bg-gradient-to-b from-vare-purple via-vare-purple-light to-transparent origin-top" />
+        {/* Neural Network Grid - With subtle grid and 3D elements */}
+        <div className="relative">
+          {/* Subtle Purple Grid Background */}
+          <div className="absolute inset-0 opacity-15 pointer-events-none">
+            <div className="w-full h-full" style={{
+              backgroundImage: `
+                linear-gradient(to right, rgba(139,92,246,0.3) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(139,92,246,0.3) 1px, transparent 1px)
+              `,
+              backgroundSize: '40px 40px'
+            }} />
           </div>
 
-          <div className="space-y-16 xs:space-y-20 sm:space-y-24 md:space-y-32 lg:space-y-48">
-            {steps.map((step, i) => (
-              <div key={i} className={`flex flex-col md:flex-row items-center gap-12 md:gap-0 ${i % 2 === 1 ? 'md:flex-row-reverse' : ''}`}>
-                
-                {/* Visual Step Card */}
-                <div className="w-full md:w-[42%]">
-                  <div 
-                    ref={(el) => { stepCardRefs.current[i] = el; }}
-                    className="group glass-card-accent p-8 md:p-12 rounded-[3.5rem] border border-white/5 relative transform preserve-3d"
-                  >
-                    {/* Atmospheric Glow */}
-                    <div className="absolute -top-12 -right-12 w-48 h-48 bg-vare-purple/10 rounded-full blur-[60px] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                    
-                    <div className="relative z-10">
-                      <div className="flex items-center justify-between mb-8">
-                        <span className="text-3xl xs:text-4xl sm:text-5xl font-black text-white/5 tracking-tighter uppercase group-hover:text-vare-purple-light/20 transition-colors duration-500">
-                          {step.num}
-                        </span>
-                        <div className="px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-vare-gold text-[10px] font-black uppercase tracking-[0.2em]">
-                          {step.indicator}
-                        </div>
+          {/* 3D Side Elements - Left */}
+          <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 lg:-translate-x-12 w-16 lg:w-24 h-64 lg:h-80 opacity-40 pointer-events-none hidden md:block">
+            <div className="w-full h-full bg-gradient-to-r from-vare-purple/20 to-transparent rounded-l-3xl transform perspective-lg rotate-y-12" />
+            <div className="absolute top-1/4 -right-2 w-3 h-3 bg-vare-purple rounded-full animate-pulse" />
+            <div className="absolute top-1/2 -right-2 w-2 h-2 bg-vare-purple-light rounded-full animate-pulse" style={{animationDelay:'0.5s'}} />
+            <div className="absolute top-3/4 -right-2 w-3 h-3 bg-blue-500 rounded-full animate-pulse" style={{animationDelay:'1s'}} />
+          </div>
+
+          {/* 3D Side Elements - Right */}
+          <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 lg:translate-x-12 w-16 lg:w-24 h-64 lg:h-80 opacity-40 pointer-events-none hidden md:block">
+            <div className="w-full h-full bg-gradient-to-l from-blue-500/20 to-transparent rounded-r-3xl transform perspective-lg -rotate-y-12" />
+            <div className="absolute top-1/4 -left-2 w-3 h-3 bg-green-500 rounded-full animate-pulse" />
+            <div className="absolute top-1/2 -left-2 w-2 h-2 bg-orange-500 rounded-full animate-pulse" style={{animationDelay:'0.5s'}} />
+            <div className="absolute top-3/4 -left-2 w-3 h-3 bg-vare-purple rounded-full animate-pulse" style={{animationDelay:'1s'}} />
+          </div>
+
+          {/* Neural Nodes Grid */}
+          <div className="neural-nodes-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 lg:gap-12">
+            {steps.map((step, i) => {
+              const colors = [
+                { node: 'bg-blue-500', glow: 'shadow-blue-500/30', border: 'border-blue-400/30' },
+                { node: 'bg-purple-500', glow: 'shadow-purple-500/30', border: 'border-purple-400/30' },
+                { node: 'bg-orange-500', glow: 'shadow-orange-500/30', border: 'border-orange-400/30' },
+                { node: 'bg-green-500', glow: 'shadow-green-500/30', border: 'border-green-400/30' },
+              ];
+              const color = colors[i % 4];
+
+              return (
+                <div key={i} className="neural-node relative group">
+                  {/* Neural Node */}
+                  <div className={`w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 rounded-full ${color.node} border-2 ${color.border} shadow-lg ${color.glow} flex items-center justify-center mx-auto mb-4 sm:mb-6 transition-all duration-300 group-hover:scale-105 group-hover:shadow-xl`}>
+                    <span className="text-sm sm:text-lg lg:text-xl font-black text-white">{step.num}</span>
+                  </div>
+
+                  {/* Directional Arrow - Responsive for all devices */}
+                  {i < steps.length - 1 && (
+                    <>
+                      {/* Mobile: Vertical arrow below */}
+                      <div className="block sm:hidden absolute -bottom-6 left-1/2 -translate-x-1/2 z-20">
+                        <ArrowDown className="w-6 h-6 text-vare-purple drop-shadow-lg filter" style={{filter:'drop-shadow(0 0 6px #a78bfa)'}} />
                       </div>
-                      
-                      <h3 className="text-3xl md:text-4xl font-black text-white mb-6 tracking-tighter leading-none">
-                        {step.title}
-                      </h3>
-                      <p className="text-white/40 text-lg leading-relaxed font-medium">
-                        {step.desc}
-                      </p>
+                      {/* Tablet: Horizontal arrow */}
+                      <div className="hidden sm:block lg:hidden absolute top-1/2 -right-5 -translate-y-1/2 z-20">
+                        <ArrowRight className="w-6 h-6 text-vare-purple drop-shadow-lg filter" style={{filter:'drop-shadow(0 0 6px #a78bfa)'}} />
+                      </div>
+                      {/* Desktop: Larger horizontal arrow */}
+                      <div className="hidden lg:block absolute top-1/2 -right-6 z-20">
+                        <ArrowRight className="w-8 h-8 text-vare-purple drop-shadow-lg filter" style={{filter:'drop-shadow(0 0 8px #a78bfa)'}} />
+                      </div>
+                    </>
+                  )}
+
+                  {/* Card - Semi-transparent to show subtle grid behind */}
+                  <div className="glass-card p-4 sm:p-6 lg:p-8 rounded-2xl border border-white/10 bg-[#0a0612]/60 backdrop-blur-md group-hover:border-white/20 transition-all duration-300 group-hover:bg-[#0d0820]/80 group-hover:transform group-hover:-translate-y-1">
+                    {/* Icon */}
+                    <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br ${color.node}/20 border border-white/10 flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-105 transition-transform duration-300`}>
+                      <step.icon className="w-5 h-5 sm:w-6 sm:h-6 text-white/70 group-hover:text-white transition-colors duration-300" />
                     </div>
 
-                    {/* Glass Shine Effect */}
-                    <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.03] to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 pointer-events-none rounded-[3.5rem]" />
+                    {/* Title */}
+                    <h3 className="text-base sm:text-lg lg:text-xl font-black text-white mb-2 sm:mb-3 tracking-tight group-hover:text-vare-purple-light transition-colors duration-300">
+                      {step.title}
+                    </h3>
+
+                    {/* Description */}
+                    <p className="text-white/50 text-xs sm:text-sm leading-relaxed font-medium group-hover:text-white/70 transition-colors duration-300 mb-3 sm:mb-4">
+                      {step.desc}
+                    </p>
+
+                    {/* Indicator */}
+                    <div className="flex items-center gap-1.5 sm:gap-2 text-xs font-bold uppercase tracking-widest">
+                      <div className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full ${color.node}`} />
+                      <span className="text-white/40 group-hover:text-white/60 transition-colors duration-300">{step.indicator}</span>
+                    </div>
                   </div>
                 </div>
-
-                {/* Central Connector Node */}
-                <div className="hidden md:flex relative z-20 w-[16%] justify-center items-center">
-                   <div className="w-6 h-6 rounded-full bg-vare-purple border-[4px] border-[#0a0612] shadow-[0_0_20px_#5b2d9e] z-10" />
-                   <div className="absolute w-12 h-12 bg-vare-purple/30 rounded-full animate-ping" />
-                </div>
-
-                {/* Empty Space for Zig-Zag */}
-                <div className="hidden md:block w-[42%]" />
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
-        {/* Final Meta Link */}
+        {/* Final CTA */}
         <div className="text-center mt-32">
-          <Link
-            href="/about"
-            className="inline-flex items-center gap-3 text-white/40 hover:text-vare-purple-light font-black text-xs uppercase tracking-[0.2em] transition-all"
-          >
-            Detailed Operational Protocol <ArrowRight className="w-4 h-4" />
-          </Link>
+          <div className="inline-flex items-center gap-4">
+            <div className="h-px w-16 bg-gradient-to-r from-transparent to-vare-purple" />
+            <Link
+              href="/about"
+              className="group inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/5 border border-white/10 text-white/60 hover:text-vare-purple-light hover:border-vare-purple/50 font-black text-xs uppercase tracking-[0.2em] transition-all duration-300"
+            >
+              Neural Architecture
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+            </Link>
+            <div className="h-px w-16 bg-gradient-to-l from-transparent to-vare-purple" />
+          </div>
         </div>
       </div>
     </section>
@@ -3009,123 +2949,167 @@ function ClientVideoReviewsSection() {
 // ==================== SECTION: WHY CHOOSE US (UNCHANGED) ====================
 function WhyChooseUsSection() {
   const sectionRef = useRef<HTMLElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const iconRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const [activeIndex, setActiveIndex] = useState(0);
   const reduced = usePrefersReducedMotion();
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      const reasonCards = sectionRef.current?.querySelectorAll('.reason-card');
-      if (reasonCards && reasonCards.length) {
-        gsap.fromTo(
-          reasonCards,
-          { y: 40, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.5, stagger: 0.1, ease: 'power3.out', scrollTrigger: { trigger: sectionRef.current, start: 'top 75%' } }
-        );
-      }
-
       if (reduced) return;
 
-      // Floating icon bobbing animation
-      iconRefs.current.forEach((icon, i) => {
-        if (!icon) return;
-        gsap.to(icon, {
-          y: -8,
-          duration: 2 + i * 0.3,
-          ease: 'sine.inOut',
-          yoyo: true,
-          repeat: -1,
-          delay: i * 0.2,
-          force3D: true,
-        });
+      const cards = cardRefs.current;
+      const totalCards = cards.length;
+
+      // Pin the section and animate cards horizontally
+      gsap.to(containerRef.current, {
+        x: () => -(containerRef.current?.scrollWidth || 0) + window.innerWidth * 0.8,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top top',
+          end: () => `+=${containerRef.current?.scrollWidth || 2000}`,
+          scrub: 1,
+          pin: true,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+          onUpdate: (self) => {
+            const progress = self.progress;
+            // Calculate which card is "active" based on scroll position
+            const newIndex = Math.min(
+              Math.floor(progress * totalCards * 1.1),
+              totalCards - 1
+            );
+            setActiveIndex(newIndex);
+
+            // Dynamic opacity and scale for sequential entrance
+            cards.forEach((card, i) => {
+              if (!card) return;
+              const cardProgress = (progress * (totalCards - 1));
+              const distance = Math.abs(i - cardProgress);
+              
+              // Only the "active" or "coming" card gets full treatment
+              let opacity = 0.3;
+              let scale = 0.9;
+              
+              if (distance < 0.5) {
+                opacity = 1;
+                scale = 1;
+              } else if (distance < 1.5) {
+                opacity = 0.5; // Half opacity for the next card
+                scale = 0.95;
+              }
+
+              gsap.to(card, {
+                opacity,
+                scale,
+                duration: 0.4,
+                overwrite: 'auto'
+              });
+            });
+          }
+        }
       });
 
-      // 3D perspective tilt on hover for each card
-      cardRefs.current.forEach((card) => {
-        if (!card) return;
-        card.addEventListener('mousemove', (e: Event) => {
-          const me = e as MouseEvent;
-          const rect = card.getBoundingClientRect();
-          const x = (me.clientX - rect.left) / rect.width - 0.5;
-          const y = (me.clientY - rect.top) / rect.height - 0.5;
-          gsap.to(card, {
-            rotateY: x * 10,
-            rotateX: -y * 6,
-            duration: 0.3,
-            ease: 'power2.out',
-            force3D: true,
-          });
-        });
-        card.addEventListener('mouseleave', () => {
-          gsap.to(card, {
-            rotateY: 0,
-            rotateX: 0,
-            duration: 0.5,
-            ease: 'power2.out',
-            force3D: true,
-          });
-        });
-      });
-    });
+    }, sectionRef.current!);
     return () => ctx.revert();
   }, [reduced]);
 
   const reasons = [
-    { icon: Shield, title: 'Proven Results', desc: '15,000+ successful projects with measurable business impact across diverse industries.' },
-    { icon: Users, title: 'Expert Team', desc: '50+ skilled professionals specializing in design, development, and digital strategy.' },
-    { icon: Clock, title: 'Fast Delivery', desc: 'Website delivery in as little as 24 hours without compromising on quality standards.' },
-    { icon: Zap, title: 'Innovative Design', desc: 'Cutting-edge designs that push boundaries while maintaining usability and conversion focus.' },
+    { 
+      id: '01',
+      icon: Shield, 
+      title: 'Proven Results', 
+      desc: '15,000+ successful projects engineered for digital dominance and global scale.',
+      color: 'from-vare-purple to-blue-600'
+    },
+    { 
+      id: '02',
+      icon: Users, 
+      title: 'Expert Team', 
+      desc: 'Elite professionals specializing in high-stakes architecture and cinematic design.',
+      color: 'from-blue-600 to-cyan-500'
+    },
+    { 
+      id: '03',
+      icon: Clock, 
+      title: 'Fast Delivery', 
+      desc: 'Deployment cycles in as little as 24 hours without compromising quality.',
+      color: 'from-cyan-500 to-emerald-500'
+    },
+    { 
+      id: '04',
+      icon: Zap, 
+      title: 'Innovative Design', 
+      desc: 'Pioneering aesthetic boundaries with relentless conversion-focused strategies.',
+      color: 'from-emerald-500 to-fuchsia-500'
+    },
+    { 
+      id: '05',
+      icon: Globe, 
+      title: 'Global Presence', 
+      desc: 'Scale your vision across borders with localized technical strategies and infrastructure.',
+      color: 'from-fuchsia-500 to-vare-purple'
+    }
   ];
 
   return (
-    <section ref={sectionRef} className="py-24 sm:py-32 bg-[#0a0612] relative overflow-hidden" style={{ perspective: '1000px' }}>
-      {/* Background patterns */}
-      <div className="absolute inset-0 mesh-gradient-dark opacity-30" />
-      <div className="absolute inset-0 bg-[#0a0612]/30 backdrop-blur-3xl" />
-      {/* Background grid pattern with perspective */}
-      {!reduced && (
-        <div
-          className="absolute inset-0 pointer-events-none opacity-[0.03]"
-          style={{
-            backgroundImage: `
-              linear-gradient(rgba(124,77,187,0.3) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(124,77,187,0.3) 1px, transparent 1px)
-            `,
-            backgroundSize: '50px 50px',
-            transform: 'perspective(600px) rotateX(15deg)',
-            transformOrigin: 'center top',
-          }}
-        />
-      )}
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="text-center mb-16 sm:mb-20">
-          <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/[0.03] text-vare-purple-light text-xs font-bold uppercase tracking-widest mb-6 border border-white/[0.08]">
-             The Vare Difference
-          </span>
-          <h2 className="text-4xl md:text-6xl font-black text-white">
-            Why Brands Choose <span className="text-transparent bg-clip-text bg-gradient-to-r from-vare-purple-light to-blue-400">VareWeb</span>
-          </h2>
+    <section 
+      ref={sectionRef} 
+      className="min-h-screen bg-[#0a0612] flex flex-col justify-center overflow-hidden"
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full mb-16 sm:mb-24">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+          <div className="max-w-2xl">
+            <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/[0.03] text-vare-purple-light text-xs font-bold uppercase tracking-widest mb-6 border border-white/[0.08] backdrop-blur-sm">
+               The Vare Difference
+            </span>
+            <h2 className="text-5xl md:text-8xl font-black text-white tracking-tighter leading-none">
+              Success<br /><span className="text-transparent bg-clip-text bg-gradient-to-r from-vare-purple-light to-blue-400">Pillars</span>
+            </h2>
+          </div>
+          <div className="max-w-md">
+            <p className="text-white/40 text-lg sm:text-xl leading-relaxed border-l-2 border-vare-purple/30 pl-6">
+              We don't just build websites. We engineer digital experiences that push boundaries and redefine industry standards.
+            </p>
+          </div>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {reasons.map((reason, i) => (
-              <div
-                key={i}
-                ref={(el) => { if(cardRefs.current) cardRefs.current[i] = el; }}
-                className="reason-card glass-card rounded-[32px] p-6 xs:p-8 border border-white/5 hover:border-white/20 transition-all duration-300 text-center group"
-                style={{ transformStyle: 'preserve-3d' }}
-              >
-                <div
-                  ref={(el) => { if(iconRefs.current) iconRefs.current[i] = el; }}
-                  className="w-16 h-16 rounded-2xl bg-white/[0.03] flex items-center justify-center mx-auto mb-6 group-hover:bg-vare-purple transition-all duration-300 shadow-2xl border border-white/5"
-                  style={{ transformStyle: 'preserve-3d' }}
-                >
-                  <reason.icon className="w-8 h-8 text-vare-purple-light group-hover:text-white transition-colors duration-300" />
+      </div>
+
+      <div className="relative">
+        <div 
+          ref={containerRef}
+          className="flex gap-8 px-4 sm:px-[10vw] pb-20 items-center"
+        >
+          {reasons.map((reason, i) => (
+            <div
+              key={i}
+              ref={(el) => { cardRefs.current[i] = el; }}
+              className="relative shrink-0 w-[85vw] sm:w-[500px] h-[400px] sm:h-[500px] rounded-[3rem] overflow-hidden group border border-white/5"
+            >
+              {/* Card Background Gradient */}
+              <div className={`absolute inset-0 bg-gradient-to-br ${reason.color} opacity-10 group-hover:opacity-20 transition-opacity duration-700`} />
+              
+              <div className="relative h-full p-10 flex flex-col justify-between z-10">
+                <div className="flex justify-between items-start">
+                  <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center backdrop-blur-md">
+                    <reason.icon className="w-8 h-8 text-white" />
+                  </div>
+                  <span className="text-5xl font-black text-white/10 tracking-tighter">{reason.id}</span>
                 </div>
-                <h3 className="text-xl font-bold text-white mb-4">{reason.title}</h3>
-                <p className="text-white/40 text-sm leading-relaxed">{reason.desc}</p>
+
+                <div>
+                  <h3 className="text-3xl sm:text-4xl font-black text-white mb-4 tracking-tight">{reason.title}</h3>
+                  <p className="text-white/50 text-lg leading-relaxed">
+                    {reason.desc}
+                  </p>
+                </div>
               </div>
-            ))}
+              
+              {/* Decorative Glow */}
+              <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-white/5 rounded-full blur-[80px] group-hover:bg-white/10 transition-all duration-700" />
+            </div>
+          ))}
         </div>
       </div>
     </section>
@@ -3435,10 +3419,10 @@ export default function HomePage() {
     <main>
       <FloatingElements />
       <Navigation />
-      <div className="relative z-10">
+      <div className="relative z-10 overflow-x-hidden">
       <HeroSection />
 
-      <CounterSection />
+      <PerformanceMetrics/>
 
       <TrustedBySection />
 

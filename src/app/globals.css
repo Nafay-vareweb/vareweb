@@ -111,6 +111,12 @@
     @apply border-border outline-ring/50;
   }
 
+  html {
+    overflow-x: hidden;
+    width: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
+
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-outfit), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -118,6 +124,9 @@
     line-height: 1.7;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+    width: 100%;
+    position: relative;
   }
 
   h1,
@@ -929,19 +938,164 @@ html {
 }
 
 @keyframes like-beat {
-  0% {
-    transform: scale(1);
-  }
+  0% { transform: scale(1); }
+  30% { transform: scale(1.18); }
+  60% { transform: scale(1); }
+  100% { transform: scale(1); }
+}
 
-  30% {
-    transform: scale(1.18);
-  }
+/* --- Artistic Matrix Section Styles --- */
+.matrix-card {
+  @apply relative overflow-hidden transition-all duration-700;
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+}
 
-  60% {
-    transform: scale(1);
-  }
+.matrix-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(124, 77, 187, 0.15), transparent 60%);
+  opacity: 0;
+  transition: opacity 0.5s;
+}
 
-  100% {
-    transform: scale(1);
+.matrix-card:hover::before {
+  opacity: 1;
+}
+
+.matrix-card:hover {
+  border-color: rgba(124, 77, 187, 0.3);
+  box-shadow: 0 12px 48px 0 rgba(124, 77, 187, 0.15);
+}
+
+.matrix-glow {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(circle, rgba(124, 77, 187, 0.4), transparent 70%);
+  filter: blur(40px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes float-artistic {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  33% { transform: translate(20px, -30px) rotate(5deg); }
+  66% { transform: translate(-20px, 20px) rotate(-5deg); }
+}
+
+.animate-float-artistic {
+  animation: float-artistic 15s ease-in-out infinite;
+}
+
+@keyframes matrix-shimmer {
+  0% { transform: translateX(-100%) skewX(-15deg); }
+  100% { transform: translateX(200%) skewX(-15deg); }
+}
+
+.matrix-shimmer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.05),
+    transparent
+  );
+  animation: matrix-shimmer 6s infinite;
+}
+
+/* --- Orbital Filmstrip Section Styles --- */
+.orbital-wrapper {
+  perspective: 2000px;
+  overflow: hidden !important;
+  position: relative;
+}
+
+.orbital-container {
+  display: flex;
+  gap: 2rem;
+  padding: 4rem 5vw;
+  transform-style: preserve-3d;
+  will-change: transform;
+  overflow-x: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@media (min-width: 1024px) {
+  .orbital-container {
+    overflow-x: visible;
   }
 }
+
+.orbital-container::-webkit-scrollbar {
+  display: none;
+}
+
+.filmstrip-card {
+  @apply relative shrink-0 w-[300px] md:w-[450px] aspect-[16/10] rounded-[2rem] overflow-hidden transition-all duration-500;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transform-style: preserve-3d;
+}
+
+.filmstrip-card.active {
+  border-color: rgba(124, 77, 187, 0.4);
+  box-shadow: 0 0 50px rgba(124, 77, 187, 0.2);
+}
+
+.filmstrip-card .card-content {
+  @apply relative z-20 h-full p-8 flex flex-col justify-end;
+  background: linear-gradient(to top, rgba(10, 6, 18, 0.9) 0%, transparent 60%);
+}
+
+.lens-flare {
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  top: -50%;
+  left: -50%;
+  background: radial-gradient(circle at var(--flare-x, 50%) var(--flare-y, 50%), rgba(255, 255, 255, 0.08) 0%, transparent 40%);
+  pointer-events: none;
+  z-index: 10;
+  mix-blend-mode: overlay;
+}
+
+.depth-blur {
+  filter: blur(var(--blur-amount, 0px));
+  opacity: var(--opacity-amount, 1);
+  transition: filter 0.5s ease, opacity 0.5s ease;
+}
+
+.indicator-text {
+  position: absolute;
+  top: -2rem;
+  left: 2rem;
+  font-size: 8rem;
+  font-weight: 900;
+  color: white;
+  opacity: 0.03;
+  pointer-events: none;
+  line-height: 1;
+  z-index: 0;
+}
+
+@keyframes orbit-float {
+  0%, 100% { transform: translateY(0) rotateX(0); }
+  50% { transform: translateY(-20px) rotateX(2deg); }
+}
+
+.animate-orbit {
+  animation: orbit-float 8s ease-in-out infinite;
+}
+

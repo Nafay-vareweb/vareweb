@@ -184,7 +184,12 @@ export default function ClientLoader({ children }: { children: React.ReactNode }
           </div>
         )
       )}
-      <div style={{ opacity: showLoader ? 0 : 1, transition: 'opacity 0.2s ease' }}>
+      <div style={{
+        opacity: showLoader ? 0 : 1,
+        transform: showLoader ? 'translateY(20px)' : 'translateY(0)',
+        transition: 'opacity 0.8s ease-in-out, transform 0.8s ease-in-out',
+        willChange: 'opacity, transform'
+      }}>
         {children}
       </div>
     </NavigationContext.Provider>
