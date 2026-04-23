@@ -193,7 +193,7 @@ export default function PricingPage() {
       <main>
         {/* Hero */}
         <section ref={heroRef} className="relative pt-32 pb-24 lg:pt-48 lg:pb-36 overflow-hidden mesh-gradient-purple">
-          <div className="absolute inset-0 bg-[#0a0612]/60 backdrop-blur-[2px]" />
+          <div className="absolute inset-0 bg-background/60 backdrop-blur-[2px]" />
           <div className="absolute inset-0">
              <div className="absolute top-20 left-10 w-96 h-96 bg-vare-purple/20 rounded-full blur-[120px] animate-pulse" />
              <div className="absolute bottom-20 right-10 w-[500px] h-[500px] bg-vare-gold/10 rounded-full blur-[150px]" />
@@ -214,7 +214,7 @@ export default function PricingPage() {
         </section>
 
         {/* Pricing Cards */}
-        <section ref={pricingRef} className="py-24 sm:py-32 bg-[#0a0612] relative overflow-hidden">
+        <section ref={pricingRef} className="py-24 sm:py-32 bg-background relative overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="section-header text-center mb-20 px-4">
               <h2 className="text-4xl md:text-5xl font-black text-white mb-6 tracking-tight">
@@ -358,7 +358,7 @@ export default function PricingPage() {
         </section>
 
         {/* Satisfaction Guarantee Banner */}
-        <section ref={guaranteeRef} className="py-24 sm:py-32 relative overflow-hidden bg-[#0a0612]">
+        <section ref={guaranteeRef} className="py-24 sm:py-32 relative overflow-hidden bg-background">
           <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
              <div className="glass-card rounded-[3rem] p-8 md:p-16 border border-white/5 relative overflow-hidden flex flex-col lg:flex-row items-center gap-16">
@@ -397,7 +397,7 @@ export default function PricingPage() {
         </section>
 
         {/* Enterprise Custom Solutions */}
-        <section ref={enterpriseRef} className="py-24 sm:py-32 bg-[#0a0612] relative overflow-hidden">
+        <section ref={enterpriseRef} className="py-24 sm:py-32 bg-background relative overflow-hidden">
           {/* Subtle Background Elements */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-vare-purple/5 blur-[120px] rounded-full pointer-events-none" />
           
@@ -557,7 +557,7 @@ export default function PricingPage() {
           </div>
         </section>
 
-        <section className="py-24 sm:py-32 bg-[#0a0612] relative overflow-hidden">
+        <section className="py-24 sm:py-32 bg-background relative overflow-hidden">
            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
               <div className="glass-card rounded-[3rem] p-10 sm:p-20 border border-white/5 relative overflow-hidden">
                  <div className="absolute inset-0 bg-gradient-to-br from-vare-purple/5 to-transparent pointer-events-none" />

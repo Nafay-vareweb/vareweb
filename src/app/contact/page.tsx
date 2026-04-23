@@ -252,7 +252,7 @@ export default function ContactPage() {
 
         {/* ─── Contact Content ─── */}
         <section ref={contentRef} className="py-24 sm:py-32 mesh-gradient-dark relative overflow-hidden">
-          <div className="absolute inset-0 bg-[#0a0612]/50 backdrop-blur-3xl" />
+          <div className="absolute inset-0 bg-background/50 backdrop-blur-3xl" />
 
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 xl:gap-24">
@@ -372,7 +372,7 @@ export default function ContactPage() {
         </section>
 
         {/* Calendar Booking Section */}
-        <section ref={calendarRef} className="py-24 sm:py-32 bg-[#0a0612] relative overflow-hidden">
+        <section ref={calendarRef} className="py-24 sm:py-32 bg-background relative overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="cal-anim text-center mb-16 opacity-0">
@@ -478,7 +478,7 @@ export default function ContactPage() {
                 {/* Confirm Booking Form */}
                 <div className="cal-anim glass-card rounded-3xl p-8 border border-white/10 opacity-0 relative overflow-hidden">
                   {!selectedDate || !selectedTime ? (
-                    <div className="absolute inset-0 z-10 bg-[#0a0612]/80 backdrop-blur-sm flex items-center justify-center p-8 text-center">
+                    <div className="absolute inset-0 z-10 bg-background/80 backdrop-blur-sm flex items-center justify-center p-8 text-center">
                       <p className="text-white/60 font-medium">Select a date and time slot first to continue booking.</p>
                     </div>
                   ) : null}
@@ -708,7 +708,7 @@ export default function ContactPage() {
 
         {/* What Happens Next Section */}
         <section className="py-24 relative overflow-hidden mesh-gradient-gold">
-          <div className="absolute inset-0 bg-[#0a0612]/40" />
+          <div className="absolute inset-0 bg-background/40" />
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-16">What Happens <span className="text-vare-gold">Next?</span></h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

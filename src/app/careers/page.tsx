@@ -217,7 +217,7 @@ export default function CareersPage() {
 
       {/* Hero */}
       <section ref={heroRef} className="relative min-h-[90vh] flex items-center mesh-gradient-purple overflow-hidden">
-        <div className="absolute inset-0 bg-[#0a0612]/60 backdrop-blur-[2px]" />
+        <div className="absolute inset-0 bg-background/60 backdrop-blur-[2px]" />
         <div className="absolute inset-0">
           <div className="absolute top-20 right-20 w-[600px] h-[600px] rounded-full bg-vare-purple/20 blur-[150px] animate-pulse" />
           <div className="absolute bottom-20 left-20 w-[500px] h-[500px] rounded-full bg-vare-gold/10 blur-[120px]" />
@@ -305,7 +305,7 @@ export default function CareersPage() {
       </section>
 
       {/* Open Positions */}
-      <section id="openings" className="py-24 sm:py-32 bg-[#0a0612] relative overflow-hidden">
+      <section id="openings" className="py-24 sm:py-32 bg-background relative overflow-hidden">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-24">
             <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-vare-purple-light text-xs font-bold uppercase tracking-widest mb-6">
@@ -398,7 +398,7 @@ export default function CareersPage() {
       </section>
 
       {/* Employee Testimonials */}
-      <section id="testimonials" className="py-24 sm:py-32 bg-[#0a0612] relative overflow-hidden">
+      <section id="testimonials" className="py-24 sm:py-32 bg-background relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="testimonials-header text-center mb-20">
             <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-vare-purple-light text-xs font-bold uppercase tracking-widest mb-6">
@@ -461,7 +461,7 @@ export default function CareersPage() {
                 className="gallery-card group relative rounded-[2.5rem] overflow-hidden aspect-[4/3] cursor-pointer glass-card border-white/5"
               >
                 <div className={`absolute inset-0 bg-gradient-to-br ${item.gradient} opacity-20 transition-transform duration-700 group-hover:scale-110 group-hover:opacity-40`} />
-                <div className="absolute inset-0 bg-[#0a0612]/40" />
+                <div className="absolute inset-0 bg-background/40" />
                 <div className="absolute inset-0 flex items-center justify-center opacity-20 group-hover:opacity-0 transition-opacity duration-500">
                   <Camera className="w-16 h-16 text-white" />
                 </div>
@@ -481,7 +481,7 @@ export default function CareersPage() {
       </section>
 
       {/* Final CTA */}
-      <section className="py-24 sm:py-32 bg-[#0a0612] relative overflow-hidden">
+      <section className="py-24 sm:py-32 bg-background relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <div className="glass-card-accent rounded-[4rem] p-12 sm:p-24 border border-white/5 relative overflow-hidden group">
             <div className="absolute inset-0 bg-gradient-to-br from-vare-purple/10 via-transparent to-vare-gold/5 pointer-events-none opacity-50 group-hover:opacity-100 transition-opacity duration-700" />

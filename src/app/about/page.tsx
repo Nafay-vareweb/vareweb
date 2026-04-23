@@ -246,7 +246,7 @@ export default function AboutPage() {
 
         {/* Hero */}
         <section ref={heroRef} className="relative pt-32 pb-24 lg:pt-48 lg:pb-36 overflow-hidden mesh-gradient-purple">
-          <div className="absolute inset-0 bg-[#0a0612]/60 backdrop-blur-[2px]" />
+          <div className="absolute inset-0 bg-background/60 backdrop-blur-[2px]" />
           <div className="absolute inset-0">
              <div className="absolute top-20 left-10 w-96 h-96 bg-vare-purple/20 rounded-full blur-[120px] animate-pulse" />
              <div className="absolute bottom-20 right-10 w-[500px] h-[500px] bg-vare-gold/10 rounded-full blur-[150px]" />
@@ -342,7 +342,7 @@ export default function AboutPage() {
         </section>
 
         {/* Our Values */}
-        <section ref={valuesRef} className="py-24 sm:py-32 bg-[#0a0612] relative overflow-hidden">
+        <section ref={valuesRef} className="py-24 sm:py-32 bg-background relative overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="text-center mb-20">
               <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-vare-purple-light text-xs font-bold uppercase tracking-widest mb-6">
@@ -373,7 +373,7 @@ export default function AboutPage() {
         </section>
 
         {/* Our Journey - Timeline */}
-        <section ref={timelineRef} className="py-24 sm:py-32 bg-[#0a0612] relative overflow-hidden">
+        <section ref={timelineRef} className="py-24 sm:py-32 bg-background relative overflow-hidden">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-vare-purple/5 blur-[120px] rounded-full pointer-events-none" />
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="text-center mb-20">
@@ -464,7 +464,7 @@ export default function AboutPage() {
         </section>
 
         {/* Trusted by Industry Leaders - Partners */}
-        <section ref={partnersRef} className="py-24 sm:py-32 bg-[#0a0612] overflow-hidden relative">
+        <section ref={partnersRef} className="py-24 sm:py-32 bg-background overflow-hidden relative">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-20 relative z-10">
             <div className="text-center">
               <span className="partners-header inline-flex items-center px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-vare-purple-light text-xs font-bold uppercase tracking-widest mb-6 opacity-0">
@@ -544,7 +544,7 @@ export default function AboutPage() {
         </section>
 
         {/* Final CTA */}
-        <section className="py-24 sm:py-32 bg-[#0a0612] relative overflow-hidden">
+        <section className="py-24 sm:py-32 bg-background relative overflow-hidden">
            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
               <div className="glass-card rounded-[4rem] p-12 sm:p-24 border border-white/5 relative overflow-hidden group">
                  <div className="absolute inset-0 bg-gradient-to-br from-vare-purple/10 via-transparent to-vare-gold/5 pointer-events-none opacity-50 group-hover:opacity-100 transition-opacity duration-700" />

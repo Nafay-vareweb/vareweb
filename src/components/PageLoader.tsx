@@ -83,7 +83,7 @@ export default function PageLoader({ onComplete }: { onComplete?: () => void }) 
   return (
     <div ref={loaderRef} className="fixed inset-0 z-[9999] overflow-hidden select-none">
       {/* Layered backdrops for staggered wipe */}
-      <div ref={backdrop1Ref} className="absolute inset-0 bg-[#0a0612]" />
+      <div ref={backdrop1Ref} className="absolute inset-0 bg-background" />
       <div ref={backdrop2Ref} className="absolute inset-0"
         style={{ background: 'linear-gradient(135deg, #100824 0%, #0a0612 60%, #160930 100%)' }}
       />

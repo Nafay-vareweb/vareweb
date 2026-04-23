@@ -112,7 +112,7 @@ export default function BlogListingPage() {
 
         {/* Hero */}
         <section ref={heroRef} className="relative min-h-[70vh] flex items-center mesh-gradient-purple overflow-hidden">
-          <div className="absolute inset-0 bg-[#0a0612]/60 backdrop-blur-[2px]" />
+          <div className="absolute inset-0 bg-background/60 backdrop-blur-[2px]" />
           <div className="absolute inset-0">
             <div className="absolute top-20 right-20 w-[600px] h-[600px] rounded-full bg-vare-purple/20 blur-[150px] animate-pulse" />
             <div className="absolute bottom-20 left-20 w-[500px] h-[500px] rounded-full bg-vare-gold/10 blur-[120px]" />
@@ -137,7 +137,7 @@ export default function BlogListingPage() {
         </section>
 
         {/* Featured Post Hero */}
-        <section ref={featuredRef} className="py-24 sm:py-32 bg-[#0a0612] relative overflow-hidden">
+        <section ref={featuredRef} className="py-24 sm:py-32 bg-background relative overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="featured-anim glass-card-accent rounded-[3rem] border-white/5 overflow-hidden shadow-[0_32px_64px_rgba(0,0,0,0.6)] group">
               <div className="absolute inset-0 bg-gradient-to-br from-vare-purple/10 via-transparent to-vare-gold/5 opacity-50 pointer-events-none" />
@@ -231,7 +231,7 @@ export default function BlogListingPage() {
                           <FileText className="w-16 h-16 text-white/5" />
                         </div>
                       )}
-                      <div className="absolute inset-0 bg-[#0a0612]/20 group-hover:bg-transparent transition-colors duration-500" />
+                      <div className="absolute inset-0 bg-background/20 group-hover:bg-transparent transition-colors duration-500" />
                       <div className="absolute top-6 left-6">
                         <span className="px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-vare-purple-light text-[10px] font-black uppercase tracking-widest border-white/10">
                           {blog.category || 'Intel'}
@@ -270,7 +270,7 @@ export default function BlogListingPage() {
         </section>
 
         {/* Newsletter Subscription */}
-        <section ref={newsletterRef} className="py-24 sm:py-32 relative overflow-hidden bg-[#0a0612]">
+        <section ref={newsletterRef} className="py-24 sm:py-32 relative overflow-hidden bg-background">
           <div className="absolute inset-0 mesh-gradient-dark opacity-30" />
           <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="newsletter-anim glass-card-accent rounded-[4rem] p-12 lg:p-24 border border-white/5 relative overflow-hidden group">
@@ -338,7 +338,7 @@ export default function BlogListingPage() {
         </section>
 
         {/* CTA - Need Help With Your Project? */}
-        <section className="py-24 sm:py-32 bg-[#0a0612] relative overflow-hidden">
+        <section className="py-24 sm:py-32 bg-background relative overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
             <div className="glass-card-accent rounded-[4rem] p-12 sm:p-24 border border-white/5 relative overflow-hidden group">
               <div className="absolute inset-0 bg-gradient-to-br from-vare-purple/10 via-transparent to-vare-gold/5 pointer-events-none opacity-50 group-hover:opacity-100 transition-opacity duration-700" />

@@ -70,7 +70,7 @@ export default function NotFound() {
   };
 
   return (
-    <div ref={pageRef} className="min-h-screen bg-[#0a0612] flex items-center justify-center px-4 py-12 relative overflow-hidden">
+    <div ref={pageRef} className="min-h-screen bg-background flex items-center justify-center px-4 py-12 relative overflow-hidden">
       <ParticleBackground count={60} interactive={true} zIndex={5} />
       {/* Subtle background decoration */}
       <div className="absolute inset-0 pointer-events-none">
