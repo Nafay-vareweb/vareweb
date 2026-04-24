@@ -2424,6 +2424,303 @@ function ProcessSection() {
   );
 }
 
+// ==================== SECTION: SKILLS & EXPERTISE (Unique Interactive) ====================
+function SkillsExpertiseSection() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
+  const lineHRef = useRef<HTMLDivElement>(null);
+  const lineVRef = useRef<HTMLDivElement>(null);
+
+  const stats = [
+    { number: 8000, label: 'Brands Designed', icon: 'zap', position: 'top' },
+    { number: 46, label: 'Conversion Rate', icon: 'trending', position: 'right', suffix: '%' },
+    { number: 5300, label: 'Projects Delivered', icon: 'code', position: 'bottom' },
+    { number: 100, label: 'Measurable Results', icon: 'search', position: 'left', suffix: '+' },
+  ];
+
+  const skills = [
+    'Strategic Branding',
+    'Senior Designer',
+    'Years of experience',
+    'UI/UX Design',
+    'Digital Marketing',
+    'Print Design',
+    '500+ Customers',
+    'Creative Excellence',
+  ];
+
+  const getIcon = (iconType: string) => {
+    switch(iconType) {
+      case 'zap': return <Zap className="w-8 h-8 text-vare-purple-light" />;
+      case 'trending': return <TrendingUp className="w-8 h-8 text-blue-400" />;
+      case 'code': return <Code className="w-8 h-8 text-vare-gold" />;
+      case 'search': return <Search className="w-8 h-8 text-vare-purple-light" />;
+      default: return null;
+    }
+  };
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Heading animation
+      gsap.fromTo(
+        '.section-title',
+        { x: -50, opacity: 0 },
+        {
+          x: 0, opacity: 1, duration: 0.8, ease: 'power3.out',
+          scrollTrigger: { trigger: sectionRef.current, start: 'top 80%' }
+        }
+      );
+
+      // Content animation
+      gsap.fromTo(
+        '.section-content',
+        { x: 50, opacity: 0 },
+        {
+          x: 0, opacity: 1, duration: 0.8, ease: 'power3.out', delay: 0.2,
+          scrollTrigger: { trigger: sectionRef.current, start: 'top 80%' }
+        }
+      );
+
+      // Animated counter for stats
+      const onEnter = () => {
+        stats.forEach((stat, idx) => {
+          const counter = { value: 0 };
+          gsap.to(counter, {
+            value: stat.number,
+            duration: 2,
+            ease: 'power3.out',
+            onUpdate: function() {
+              const statNum = document.querySelector(`.stat-number-${idx}`);
+              if (statNum) {
+                statNum.textContent = Math.floor(counter.value).toLocaleString() + (stat.suffix || '+');
+              }
+            }
+          });
+        });
+      };
+
+      ScrollTrigger.create({
+        trigger: gridRef.current,
+        onEnter: onEnter,
+        once: true
+      });
+
+      // Glowing lines animation
+      if (lineHRef.current) {
+        gsap.to(lineHRef.current, {
+          backgroundPosition: '200% center',
+          duration: 3,
+          repeat: -1,
+          ease: 'none'
+        });
+      }
+
+      if (lineVRef.current) {
+        gsap.to(lineVRef.current, {
+          backgroundPosition: 'center 200%',
+          duration: 3,
+          repeat: -1,
+          ease: 'none'
+        });
+      }
+
+      // Stat items with scale and glow on scroll
+      gsap.fromTo(
+        '.stat-item',
+        { scale: 0.5, opacity: 0 },
+        {
+          scale: 1, opacity: 1, duration: 0.8, ease: 'elastic.out(1, 0.5)', stagger: 0.15,
+          scrollTrigger: { trigger: gridRef.current, start: 'top 85%' }
+        }
+      );
+
+      // Hover effects on stat items
+      document.querySelectorAll('.stat-item').forEach((el) => {
+        el.addEventListener('mouseenter', () => {
+          gsap.to(el, { scale: 1.1, duration: 0.3, ease: 'power2.out' });
+          gsap.to(el.querySelector('.stat-glow'), { opacity: 1, duration: 0.3 });
+        });
+        el.addEventListener('mouseleave', () => {
+          gsap.to(el, { scale: 1, duration: 0.3, ease: 'power2.out' });
+          gsap.to(el.querySelector('.stat-glow'), { opacity: 0.5, duration: 0.3 });
+        });
+      });
+
+      // Infinite loop animation for text
+      gsap.to('.looping-text', {
+        x: -100 + '%',
+        duration: 25,
+        ease: 'none',
+        repeat: -1,
+      });
+
+      // Floating particles animation
+      gsap.utils.toArray<HTMLElement>('.floating-particle').forEach((particle, idx) => {
+        gsap.to(particle, {
+          y: -30,
+          opacity: 0,
+          duration: 3 + idx * 0.5,
+          repeat: -1,
+          ease: 'power1.inOut',
+          delay: idx * 0.3
+        });
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <section ref={sectionRef} className="py-20 md:py-40 relative overflow-hidden bg-gradient-to-b from-[#0a0612] to-[#0d0820]">
+      {/* Animated Background Blobs */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-vare-purple/10 rounded-full blur-[100px] animate-pulse" />
+        <div className="absolute bottom-0 left-0 w-80 h-80 bg-blue-500/10 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute top-1/2 left-1/3 w-72 h-72 bg-vare-gold/5 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '2s' }} />
+      </div>
+
+      <div className="relative z-10">
+        {/* Main Layout */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center mb-20">
+            {/* Left Side - Heading */}
+            <div className="section-title">
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-8 leading-tight">
+                We're a <span className="text-transparent bg-clip-text bg-gradient-to-r from-vare-purple-light via-blue-400 to-vare-gold animate-pulse">creative agency</span> driven by design
+              </h2>
+            </div>
+
+            {/* Right Side - Content and Stats */}
+            <div className="section-content">
+              {/* Description Text */}
+              <p className="text-white/70 text-lg md:text-xl leading-relaxed mb-12 font-medium">
+                Strategy, and storytelling. Our mission is to help brands stand out through bold ideas, thoughtful design, and impactful digital experiences.
+              </p>
+
+              {/* Stats in Cross Pattern - UNIQUE DESIGN */}
+              <div ref={gridRef} className="stats-grid relative w-full h-96 flex items-center justify-center">
+                {/* Animated Horizontal Line */}
+                <div
+                  ref={lineHRef}
+                  className="absolute w-full h-px top-1/2 -translate-y-1/2"
+                  style={{
+                    backgroundImage: 'linear-gradient(90deg, transparent, #7c4dbb, transparent)',
+                    backgroundSize: '200% 100%',
+                    filter: 'drop-shadow(0 0 10px rgba(124, 77, 187, 0.5))'
+                  }}
+                />
+
+                {/* Animated Vertical Line */}
+                <div
+                  ref={lineVRef}
+                  className="absolute h-full w-px left-1/2 -translate-x-1/2"
+                  style={{
+                    backgroundImage: 'linear-gradient(180deg, transparent, #7c4dbb, transparent)',
+                    backgroundSize: '100% 200%',
+                    filter: 'drop-shadow(0 0 10px rgba(124, 77, 187, 0.5))'
+                  }}
+                />
+
+                {/* Stats positioned in cross */}
+                <div className="relative w-full h-full flex items-center justify-center">
+                  {/* Top - Stat 1 */}
+                  <div className="stat-item group absolute top-0 left-1/2 -translate-x-1/2 text-center cursor-pointer">
+                    <div className="relative mb-4">
+                      <div className="stat-glow absolute -inset-4 bg-gradient-to-r from-vare-purple/50 to-blue-500/50 rounded-full blur-lg opacity-50 group-hover:opacity-100 transition-opacity duration-300" />
+                      <div className="relative flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-vare-purple/30 to-blue-500/20 border border-vare-purple/50 group-hover:border-vare-purple transition-all">
+                        {getIcon('zap')}
+                      </div>
+                    </div>
+                    <div className="stat-number-0 text-3xl md:text-4xl font-black text-white mb-1">0+</div>
+                    <div className="text-xs md:text-sm text-white/60 font-semibold uppercase tracking-widest">{stats[0].label}</div>
+                  </div>
+
+                  {/* Right - Stat 2 */}
+                  <div className="stat-item group absolute right-0 top-1/2 -translate-y-1/2 text-center cursor-pointer pr-8">
+                    <div className="relative mb-4">
+                      <div className="stat-glow absolute -inset-4 bg-gradient-to-r from-blue-500/50 to-vare-gold/50 rounded-full blur-lg opacity-50 group-hover:opacity-100 transition-opacity duration-300" />
+                      <div className="relative flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-blue-500/30 to-vare-gold/20 border border-blue-500/50 group-hover:border-blue-400 transition-all">
+                        {getIcon('trending')}
+                      </div>
+                    </div>
+                    <div className="stat-number-1 text-3xl md:text-4xl font-black text-white mb-1">0%</div>
+                    <div className="text-xs md:text-sm text-white/60 font-semibold uppercase tracking-widest whitespace-nowrap">{stats[1].label}</div>
+                  </div>
+
+                  {/* Bottom - Stat 3 */}
+                  <div className="stat-item group absolute bottom-0 left-1/2 -translate-x-1/2 text-center cursor-pointer">
+                    <div className="relative mb-4">
+                      <div className="stat-glow absolute -inset-4 bg-gradient-to-r from-vare-gold/50 to-vare-purple/50 rounded-full blur-lg opacity-50 group-hover:opacity-100 transition-opacity duration-300" />
+                      <div className="relative flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-vare-gold/30 to-vare-purple/20 border border-vare-gold/50 group-hover:border-vare-gold transition-all">
+                        {getIcon('code')}
+                      </div>
+                    </div>
+                    <div className="stat-number-2 text-3xl md:text-4xl font-black text-white mb-1">0+</div>
+                    <div className="text-xs md:text-sm text-white/60 font-semibold uppercase tracking-widest">{stats[2].label}</div>
+                  </div>
+
+                  {/* Left - Stat 4 */}
+                  <div className="stat-item group absolute left-0 top-1/2 -translate-y-1/2 text-center cursor-pointer pl-8">
+                    <div className="relative mb-4">
+                      <div className="stat-glow absolute -inset-4 bg-gradient-to-r from-vare-purple/50 to-blue-500/50 rounded-full blur-lg opacity-50 group-hover:opacity-100 transition-opacity duration-300" />
+                      <div className="relative flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-vare-purple/30 to-blue-500/20 border border-vare-purple/50 group-hover:border-vare-purple transition-all">
+                        {getIcon('search')}
+                      </div>
+                    </div>
+                    <div className="stat-number-3 text-3xl md:text-4xl font-black text-white mb-1">0+</div>
+                    <div className="text-xs md:text-sm text-white/60 font-semibold uppercase tracking-widest whitespace-nowrap">{stats[3].label}</div>
+                  </div>
+
+                  {/* Center - Pulsing Orb */}
+                  <div className="absolute flex items-center justify-center">
+                    <div className="absolute w-6 h-6 bg-vare-purple rounded-full animate-pulse" />
+                    <div className="absolute w-6 h-6 bg-vare-purple rounded-full animate-pulse" style={{ animationDelay: '0.5s', opacity: 0.5 }} />
+                    <div className="absolute w-2 h-2 bg-white rounded-full shadow-[0_0_20px_rgba(255,255,255,0.8)]" />
+                  </div>
+
+                  {/* Floating Particles */}
+                  {[...Array(6)].map((_, i) => (
+                    <div
+                      key={i}
+                      className="floating-particle absolute w-1 h-1 bg-vare-purple rounded-full"
+                      style={{
+                        left: `${25 + i * 12}%`,
+                        top: `${15 + (i % 3) * 20}%`,
+                        opacity: 0.6
+                      }}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Infinite Looping Text Section */}
+        <div className="relative w-full mt-20 pt-12 border-t border-white/10">
+          <div className="overflow-hidden py-6">
+            <div className="looping-text flex gap-8 md:gap-16 whitespace-nowrap">
+              {[...Array(2)].map((_, i) => (
+                <div key={i} className="flex gap-8 md:gap-16">
+                  {skills.map((skill, idx) => (
+                    <div
+                      key={idx}
+                      className="flex items-center gap-4 text-white/80 font-semibold text-sm md:text-base flex-shrink-0 hover:text-vare-purple-light transition-all duration-300 hover:scale-105 cursor-pointer"
+                    >
+                      <span className="text-vare-purple/60 group-hover:text-vare-gold transition-colors">●</span>
+                      <span>{skill}</span>
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // ==================== SECTION: FAQ DATA ====================
 const faqItems = [
   { q: 'How long does it take to design and develop a website?', a: 'Our typical website projects take 2-6 weeks depending on complexity. A simple brochure site can be delivered in as little as 1 week, while complex web applications with custom functionality may take 8-12 weeks. We always provide a detailed timeline before starting.' },
@@ -3423,6 +3720,8 @@ export default function HomePage() {
       <HeroSection />
 
       <PerformanceMetrics/>
+
+      <SkillsExpertiseSection />
 
       <TrustedBySection />
 
