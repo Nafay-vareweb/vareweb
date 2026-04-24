@@ -18,7 +18,7 @@ import {
   Layout, Monitor, Cpu, FileText,
   Briefcase, Heart, UserCircle, Globe, Play,
   Rocket, ShoppingBag, Lock, MoreHorizontal, X, MessageSquare, Bell, Send, Bookmark, Image,
-  Route, ArrowDown,
+  Route, ArrowDown, Mail, Phone, MapPin, User,
 } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
@@ -1881,6 +1881,8 @@ const portfolioItems = [
   { 
     title: 'E-Commerce Platform', 
     category: 'Web Design', 
+    slug: 'e-commerce-platform',
+    desc: 'High-performance storefront with seamless checkout and inventory management.',
     color: 'from-vare-purple to-violet-600', 
     icon: ShoppingCart,
     image: 'https://images.unsplash.com/photo-1557821552-17105176677c?w=1000&auto=format&fit=crop&q=80'
@@ -1888,6 +1890,8 @@ const portfolioItems = [
   { 
     title: 'Brand Identity System', 
     category: 'Branding', 
+    slug: 'brand-identity-system',
+    desc: 'Cohesive visual language that tells a compelling brand story across all touchpoints.',
     color: 'from-blue-600 to-cyan-500', 
     icon: Palette,
     image: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800&h=1000&fit=crop'
@@ -1895,6 +1899,8 @@ const portfolioItems = [
   { 
     title: 'SaaS Dashboard', 
     category: 'UI/UX Design', 
+    slug: 'saas-dashboard',
+    desc: 'Complex data visualization simplified into an intuitive, user-centric dashboard.',
     color: 'from-emerald-500 to-teal-500', 
     icon: Monitor,
     image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=1000&fit=crop'
@@ -1902,20 +1908,24 @@ const portfolioItems = [
   { 
     title: 'Mobile Banking App', 
     category: 'App Design', 
+    slug: 'mobile-banking-app',
+    desc: 'Secure, fast, and user-friendly mobile banking experience for the modern age.',
     color: 'from-orange-500 to-red-500', 
     icon: Smartphone,
     image: 'https://res.cloudinary.com/dahmphiup/image/upload/v1775847315/tran-mau-tri-tam-QwAL909kTiY-unsplash_1_pwxsph.jpg'
   },
   { 
-    title: 'Restaurant Chain Website', 
-    category: 'Web Development', 
+    title: 'Restaurant Website', 
+    category: 'Development', 
+    desc: 'Immersive culinary experience with online booking and menu exploration.',
     color: 'from-pink-500 to-rose-500', 
     icon: Globe,
     image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800&h=1000&fit=crop'
   },
   { 
     title: 'Real Estate Portal', 
-    category: 'Web Design', 
+    category: 'Architecture', 
+    desc: 'Elite property listings with VR tours and advanced search capabilities.',
     color: 'from-indigo-500 to-purple-500', 
     icon: Layout,
     image: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&h=1000&fit=crop'
@@ -2023,11 +2033,15 @@ function PortfolioSection() {
     if (scrollContainerRef.current) {
       scrollContainerRef.current.style.cursor = 'grab';
       scrollContainerRef.current.style.userSelect = '';
-      if (Math.abs(velocity.current) > 0.3) {
+      
+      const v = velocity.current;
+      if (Math.abs(v) > 0.1) {
+        const factor = Math.min(Math.abs(v) * 2000, 800);
         gsap.to(scrollContainerRef.current, {
-          scrollLeft: scrollContainerRef.current.scrollLeft + (velocity.current * 600),
-          duration: 0.8,
-          ease: 'power2.out',
+          scrollLeft: scrollContainerRef.current.scrollLeft + (v * factor),
+          duration: 1.2,
+          ease: 'power3.out',
+          overwrite: true
         });
       }
     }
@@ -2072,45 +2086,37 @@ function PortfolioSection() {
   };
 
   return (
-    <section id="portfolio" ref={sectionRef} className="py-32 bg-[#0a0612] relative overflow-hidden mesh-gradient-dark">
+    <section id="portfolio" ref={sectionRef} className="py-32 bg-[#0a0612] relative overflow-hidden">
+      <div className="absolute inset-0 mesh-gradient-dark opacity-30" />
       <div className="absolute inset-0 bg-[#0a0612]/60 backdrop-blur-3xl" />
       
-      {/* Cinematic Pulse Orbs */}
-      <div className="absolute top-1/4 -left-20 w-[600px] h-[600px] bg-vare-purple/10 rounded-full blur-[140px] animate-pulse-slow" />
-      <div className="absolute bottom-1/4 -right-20 w-[500px] h-[500px] bg-vare-gold/5 rounded-full blur-[120px] animate-pulse-slow" />
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="section-header text-center mb-24">
-          <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-vare-purple-light text-xs font-bold uppercase tracking-widest mb-8">
-             Success Matrix
-          </span>
-          <h2 className="text-5xl md:text-7xl lg:text-8xl font-black text-white mb-8 tracking-tighter leading-tight">
-            Case <span className="text-transparent bg-clip-text bg-gradient-to-r from-vare-gold via-yellow-300 to-yellow-500">Studies</span>
-          </h2>
-          <p className="text-white/40 max-w-2xl mx-auto text-lg md:text-xl font-medium">
-            Discover how we engineer technical dominance for industry leaders.
-          </p>
-          
-          <div className="flex items-center justify-center gap-6 mt-16">
-            <button onClick={() => scroll('left')} className="w-14 h-14 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-vare-purple hover:border-vare-purple-light hover:shadow-[0_0_30px_rgba(124,77,187,0.3)] transition-all group">
-              <ChevronLeft className="w-6 h-6 group-hover:-translate-x-1 transition-transform" />
-            </button>
-            <Link
-              href="/portfolio"
-              className="px-10 py-4 glass-card-accent border border-white/10 rounded-2xl text-white font-black text-xs uppercase tracking-widest hover:bg-white/5 transition-all"
-            >
-              Full Archive
-            </Link>
-            <button onClick={() => scroll('right')} className="w-14 h-14 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-vare-purple hover:border-vare-purple-light hover:shadow-[0_0_30px_rgba(124,77,187,0.3)] transition-all group">
-              <ChevronRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
-            </button>
+        <div className="flex flex-col lg:flex-row items-start lg:items-end justify-between gap-8 md:gap-12 mb-16 md:mb-20">
+          <div className="section-header lg:w-1/2">
+            <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-vare-purple-light text-xs font-bold uppercase tracking-widest mb-6 md:mb-8">
+               Success Matrix
+            </span>
+            <h2 className="text-5xl md:text-7xl lg:text-8xl font-black text-white mb-0 tracking-tighter leading-[1.1] md:leading-tight">
+              Case <span className="text-transparent bg-clip-text bg-gradient-to-r from-vare-gold via-yellow-300 to-yellow-500">Studies</span>
+            </h2>
+          </div>
+          <div className="lg:w-1/2">
+            <p className="text-white/40 text-lg md:text-xl font-medium leading-relaxed max-w-2xl">
+              Discover how we engineer technical dominance for industry leaders through innovative architecture and world-class design systems.
+            </p>
           </div>
         </div>
+      </div>
 
+      <div className="relative z-10 overflow-hidden">
         <div
           ref={scrollContainerRef}
-          className="portfolio-scroll flex gap-8 overflow-x-auto pb-12 cursor-grab select-none"
-          style={{ scrollbarWidth: 'none' }}
+          className="portfolio-scroll flex gap-6 md:gap-8 overflow-x-scroll pb-12 cursor-grab select-none no-scrollbar px-4 sm:px-6 lg:px-[calc((100vw-1280px)/2+32px)]"
+          style={{ 
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none',
+            WebkitOverflowScrolling: 'touch'
+          }}
           onMouseDown={handlePointerDown}
           onMouseMove={handlePointerMove}
           onMouseUp={handlePointerUp}
@@ -2121,49 +2127,64 @@ function PortfolioSection() {
           onWheel={handleWheel}
         >
           {portfolioItems.map((item, i) => (
-            <div key={i} className="portfolio-card flex-shrink-0 w-[280px] xs:w-[300px] sm:w-[320px] md:w-[380px] lg:w-[420px] group transition-all duration-700">
-               <div className="relative glass-card-accent aspect-[4/5] rounded-[2.5rem] p-4 border border-white/5 overflow-hidden group-hover:border-white/20 transition-all duration-700">
-                  {/* Card Background */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${item.color} opacity-10 group-hover:opacity-20 transition-opacity duration-700`} />
-                  
-                  {/* Image Display Container */}
-                  <div className="relative h-full w-full rounded-[2rem] bg-black/40 border border-white/5 flex flex-col items-center justify-center overflow-hidden group-hover:border-white/10 transition-all duration-700">
-                    {/* Background Image */}
-                    <img
-                      src={item.image}
-                      alt={item.title}
-                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).style.display = 'none';
-                      }}
-                    />
-                    
-                    {/* Dark Gradient Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent group-hover:via-black/20 transition-colors duration-700" />
-                    
-                    {/* Fallback Icon (if image fails) */}
-                    <item.icon className="relative w-20 h-20 text-white/10 group-hover:text-white/20 group-hover:scale-110 transition-all duration-700 z-10" />
-                    
-                    {/* View Badge */}
-                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0 z-20">
-                      <div className="px-6 py-3 bg-white text-black text-[10px] font-black uppercase tracking-widest rounded-full shadow-[0_10px_30px_rgba(255,255,255,0.4)]">
-                        Deep Dive
-                      </div>
+            <div key={i} className="portfolio-card flex-shrink-0 w-[82vw] sm:w-[460px] md:w-[750px] min-h-[500px] md:h-[450px] group">
+               <div className="relative h-full flex flex-col glass-card-accent rounded-[2.5rem] md:rounded-[3rem] border border-white/5 overflow-hidden group-hover:border-white/10 transition-all duration-700">
+                  <div className="flex flex-col md:flex-row h-full">
+                    {/* Image Container - Responsive position */}
+                    <div className="w-full md:w-[55%] h-[220px] sm:h-[280px] md:h-auto relative overflow-hidden order-first md:order-last">
+                       <img
+                        src={item.image}
+                        alt={item.title}
+                        className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = '/social-3d.png';
+                        }}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#0a0612] via-transparent to-transparent md:bg-gradient-to-r md:from-[#0a0612] md:via-transparent md:to-transparent" />
                     </div>
-                  </div>
 
-                  {/* Content Overlay */}
-                  <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black via-black/60 to-transparent">
-                    <span className="inline-block text-vare-gold text-[10px] font-black uppercase tracking-[0.2em] mb-4">
-                      {item.category}
-                    </span>
-                    <h3 className="text-2xl sm:text-3xl font-black text-white tracking-tighter leading-none group-hover:text-vare-purple-light transition-colors duration-500">
-                      {item.title}
-                    </h3>
+                    {/* Text Content - Responsive padding and font sizes */}
+                    <div className="w-full md:w-[45%] p-6 sm:p-8 md:p-12 flex flex-col justify-between relative z-10 flex-grow">
+                      <div>
+                        <span className={`inline-block px-3 py-1 rounded-full text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] mb-4 md:mb-6 bg-gradient-to-r ${item.color} text-white`}>
+                          {item.category}
+                        </span>
+                        <h3 className="text-2xl sm:text-3xl lg:text-5xl font-black text-white tracking-tighter leading-tight mb-3 md:mb-6">
+                          {item.title}
+                        </h3>
+                        <p className="text-white/50 text-sm md:text-lg leading-relaxed line-clamp-3 md:line-clamp-4">
+                          {item.desc}
+                        </p>
+                      </div>
+                      
+                      <Link href={`/portfolio/${item.slug}`} className="mt-6 md:mt-8 flex items-center gap-4 group/btn">
+                        <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center">
+                          <item.icon className="w-5 h-5 md:w-6 md:h-6 text-vare-purple-light" />
+                        </div>
+                        <span className="text-white font-bold text-[9px] md:text-xs uppercase tracking-widest group-hover/btn:text-vare-purple-light transition-colors">
+                          Deep Dive <ArrowRight className="inline-block ml-2 w-3 h-3 md:w-4 md:h-4 transition-transform group-hover/btn:translate-x-1" />
+                        </span>
+                      </Link>
+                    </div>
                   </div>
                </div>
             </div>
           ))}
+          
+          {/* Spacer at the end */}
+          <div className="flex-shrink-0 w-2" />
+        </div>
+
+        {/* View All Button - Placed after cards */}
+        <div className="text-center mt-12">
+          <Link
+            href="/portfolio"
+            className="inline-flex items-center gap-4 group relative px-10 py-4 glass-card-accent border border-white/10 rounded-2xl text-white font-black text-xs uppercase tracking-widest hover:bg-white/5 transition-all overflow-hidden"
+          >
+            <span className="relative z-10">Full Project Archive</span>
+            <ArrowRight className="w-4 h-4 relative z-10 group-hover:translate-x-1 transition-transform" />
+            <div className="absolute inset-0 bg-white/5 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
+          </Link>
         </div>
       </div>
     </section>
@@ -2546,13 +2567,24 @@ function SkillsExpertiseSection() {
         });
       });
 
-      // Infinite loop animation for text
-      gsap.to('.looping-text', {
-        x: -100 + '%',
-        duration: 25,
-        ease: 'none',
-        repeat: -1,
-      });
+      // Infinite loop animation for text - seamless looping
+      const loopingText = document.querySelector('.looping-text') as HTMLElement;
+      if (loopingText) {
+        const firstChild = loopingText.firstElementChild as HTMLElement;
+        if (firstChild) {
+          const childWidth = firstChild.offsetWidth;
+          const totalWidth = loopingText.offsetWidth;
+          // Calculate translate distance to create seamless loop
+          const translateDistance = -(childWidth / totalWidth) * 100;
+          
+          gsap.to('.looping-text', {
+            x: translateDistance + '%',
+            duration: 25,
+            ease: 'none',
+            repeat: -1,
+          });
+        }
+      }
 
       // Floating particles animation
       gsap.utils.toArray<HTMLElement>('.floating-particle').forEach((particle, idx) => {
@@ -2700,7 +2732,7 @@ function SkillsExpertiseSection() {
         <div className="relative w-full mt-20 pt-12 border-t border-white/10">
           <div className="overflow-hidden py-6">
             <div className="looping-text flex gap-8 md:gap-16 whitespace-nowrap">
-              {[...Array(2)].map((_, i) => (
+              {[...Array(4)].map((_, i) => (
                 <div key={i} className="flex gap-8 md:gap-16">
                   {skills.map((skill, idx) => (
                     <div
@@ -3246,165 +3278,129 @@ function ClientVideoReviewsSection() {
 // ==================== SECTION: WHY CHOOSE US (UNCHANGED) ====================
 function WhyChooseUsSection() {
   const sectionRef = useRef<HTMLElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [activeIndex, setActiveIndex] = useState(0);
   const reduced = usePrefersReducedMotion();
 
+  const reasons = [
+    { 
+      icon: Shield, 
+      title: 'Proven Results', 
+      desc: 'We engineer digital dominance through data-driven strategies and elite architecture. Our portfolio spans 15,000+ successful projects that redefine industry standards.',
+      image: '/proven_results_v2_1776982004092.png'
+    },
+    { 
+      icon: Users, 
+      title: 'Expert Team', 
+      desc: 'Our collective of 50+ visionary designers and master developers work in perfect synchronicity to bring complex digital ecosystems to life.',
+      image: '/expert_team_v2_1776982025234.png'
+    },
+    { 
+      icon: Clock, 
+      title: 'Fast Delivery', 
+      desc: 'Speed is our competitive edge. We deploy high-performance, production-ready solutions in as little as 24 hours without ever sacrificing quality.',
+      image: '/fast_delivery_bg_1776981179440.png'
+    },
+    { 
+      icon: Zap, 
+      title: 'Innovative Design', 
+      desc: 'Pushing the boundaries of what is possible. We create futuristic, cinematic interfaces that capture attention and drive unmatched conversion rates.',
+      image: '/innovative_design_bg_1776981258780.png'
+    },
+  ];
+
   useEffect(() => {
+    if (reduced) return;
     const ctx = gsap.context(() => {
-      if (reduced) return;
-
-      const cards = cardRefs.current;
-      const totalCards = cards.length;
-
-      // Pin the section and animate cards horizontally
-      gsap.to(containerRef.current, {
-        x: () => -(containerRef.current?.scrollWidth || 0) + window.innerWidth * 0.8,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top top',
-          end: () => `+=${containerRef.current?.scrollWidth || 2000}`,
-          scrub: 1,
-          pin: true,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
-          onUpdate: (self) => {
-            const progress = self.progress;
-            // Calculate which card is "active" based on scroll position
-            const newIndex = Math.min(
-              Math.floor(progress * totalCards * 1.1),
-              totalCards - 1
-            );
-            setActiveIndex(newIndex);
-
-            // Dynamic opacity and scale for sequential entrance
-            cards.forEach((card, i) => {
-              if (!card) return;
-              const cardProgress = (progress * (totalCards - 1));
-              const distance = Math.abs(i - cardProgress);
-              
-              // Only the "active" or "coming" card gets full treatment
-              let opacity = 0.3;
-              let scale = 0.9;
-              
-              if (distance < 0.5) {
-                opacity = 1;
-                scale = 1;
-              } else if (distance < 1.5) {
-                opacity = 0.5; // Half opacity for the next card
-                scale = 0.95;
-              }
-
-              gsap.to(card, {
-                opacity,
-                scale,
-                duration: 0.4,
-                overwrite: 'auto'
-              });
-            });
+      // Entrance animation
+      gsap.fromTo(
+        '.reason-segment',
+        { opacity: 0, x: 50 },
+        { 
+          opacity: 1, 
+          x: 0, 
+          duration: 1, 
+          stagger: 0.1, 
+          ease: 'power4.out',
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top 70%'
           }
         }
-      });
-
+      );
     }, sectionRef.current!);
     return () => ctx.revert();
   }, [reduced]);
 
-  const reasons = [
-    { 
-      id: '01',
-      icon: Shield, 
-      title: 'Proven Results', 
-      desc: '15,000+ successful projects engineered for digital dominance and global scale.',
-      color: 'from-vare-purple to-blue-600'
-    },
-    { 
-      id: '02',
-      icon: Users, 
-      title: 'Expert Team', 
-      desc: 'Elite professionals specializing in high-stakes architecture and cinematic design.',
-      color: 'from-blue-600 to-cyan-500'
-    },
-    { 
-      id: '03',
-      icon: Clock, 
-      title: 'Fast Delivery', 
-      desc: 'Deployment cycles in as little as 24 hours without compromising quality.',
-      color: 'from-cyan-500 to-emerald-500'
-    },
-    { 
-      id: '04',
-      icon: Zap, 
-      title: 'Innovative Design', 
-      desc: 'Pioneering aesthetic boundaries with relentless conversion-focused strategies.',
-      color: 'from-emerald-500 to-fuchsia-500'
-    },
-    { 
-      id: '05',
-      icon: Globe, 
-      title: 'Global Presence', 
-      desc: 'Scale your vision across borders with localized technical strategies and infrastructure.',
-      color: 'from-fuchsia-500 to-vare-purple'
-    }
-  ];
-
   return (
-    <section 
-      ref={sectionRef} 
-      className="min-h-screen bg-[#0a0612] flex flex-col justify-center overflow-hidden"
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full mb-16 sm:mb-24">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
-          <div className="max-w-2xl">
-            <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/[0.03] text-vare-purple-light text-xs font-bold uppercase tracking-widest mb-6 border border-white/[0.08] backdrop-blur-sm">
+    <section ref={sectionRef} className="py-24 sm:py-32 bg-[#0a0612] relative overflow-hidden">
+      {/* Background patterns */}
+      <div className="absolute inset-0 mesh-gradient-dark opacity-30" />
+      <div className="absolute inset-0 bg-[#0a0612]/30 backdrop-blur-3xl" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="flex flex-col lg:flex-row gap-12 items-start mb-20">
+          <div className="lg:w-1/2">
+            <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/[0.03] text-vare-purple-light text-xs font-bold uppercase tracking-widest mb-6 border border-white/[0.08]">
                The Vare Difference
             </span>
-            <h2 className="text-5xl md:text-8xl font-black text-white tracking-tighter leading-none">
-              Success<br /><span className="text-transparent bg-clip-text bg-gradient-to-r from-vare-purple-light to-blue-400">Pillars</span>
+            <h2 className="text-5xl md:text-7xl font-black text-white leading-[1.1] tracking-tighter">
+              DIGITAL SOLUTIONS <br />
+              BUILT FOR <span className="text-transparent bg-clip-text bg-gradient-to-r from-vare-purple-light to-blue-400">WHAT'S NEXT</span>
             </h2>
           </div>
-          <div className="max-w-md">
-            <p className="text-white/40 text-lg sm:text-xl leading-relaxed border-l-2 border-vare-purple/30 pl-6">
-              We don't just build websites. We engineer digital experiences that push boundaries and redefine industry standards.
+          <div className="lg:w-1/2 lg:pt-12">
+            <p className="text-white/40 text-lg md:text-xl font-medium max-w-xl leading-relaxed">
+              VareWeb offers technical ecosystems tailored to the future demands of your industry — from high-performance web architecture to brand scaling — helping you optimize reach, reduce friction, and meet visionary goals.
             </p>
           </div>
         </div>
-      </div>
 
-      <div className="relative">
-        <div 
-          ref={containerRef}
-          className="flex gap-8 px-4 sm:px-[10vw] pb-20 items-center"
-        >
+        {/* Accordion Layout */}
+        <div className="flex flex-col md:flex-row gap-4 h-[600px] md:h-[500px]">
           {reasons.map((reason, i) => (
             <div
               key={i}
-              ref={(el) => { cardRefs.current[i] = el; }}
-              className="relative shrink-0 w-[85vw] sm:w-[500px] h-[400px] sm:h-[500px] rounded-[3rem] overflow-hidden group border border-white/5"
+              onClick={() => setActiveIndex(i)}
+              className={`reason-segment relative group cursor-pointer overflow-hidden rounded-[2.5rem] transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] 
+                ${activeIndex === i ? 'flex-[4] md:flex-[5]' : 'flex-1 md:flex-[0.8] hover:flex-[1.2]'}`}
             >
-              {/* Card Background Gradient */}
-              <div className={`absolute inset-0 bg-gradient-to-br ${reason.color} opacity-10 group-hover:opacity-20 transition-opacity duration-700`} />
-              
-              <div className="relative h-full p-10 flex flex-col justify-between z-10">
-                <div className="flex justify-between items-start">
-                  <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center backdrop-blur-md">
-                    <reason.icon className="w-8 h-8 text-white" />
-                  </div>
-                  <span className="text-5xl font-black text-white/10 tracking-tighter">{reason.id}</span>
+              {/* Background Image */}
+              <div className="absolute inset-0 transition-transform duration-1000 group-hover:scale-110">
+                <img 
+                  src={reason.image} 
+                  alt={reason.title}
+                  className="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity duration-700"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
+              </div>
+
+              {/* Content Container */}
+              <div className="absolute inset-0 p-8 flex flex-col justify-end">
+                {/* Collapsed State: Vertical Text */}
+                <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-opacity duration-500 
+                  ${activeIndex === i ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+                  <h3 className="text-white font-black uppercase tracking-[0.2em] whitespace-nowrap -rotate-90 text-sm md:text-base opacity-40 group-hover:opacity-100 transition-opacity">
+                    {reason.title}
+                  </h3>
                 </div>
 
-                <div>
-                  <h3 className="text-3xl sm:text-4xl font-black text-white mb-4 tracking-tight">{reason.title}</h3>
-                  <p className="text-white/50 text-lg leading-relaxed">
+                {/* Expanded State Content */}
+                <div className={`transition-all duration-700 delay-100 ${activeIndex === i ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+                  <div className="w-12 h-12 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center mb-6">
+                    <reason.icon className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="text-3xl font-black text-white mb-4 tracking-tight">
+                    {reason.title}
+                  </h3>
+                  <p className="text-white/70 text-lg leading-relaxed max-w-md">
                     {reason.desc}
                   </p>
                 </div>
               </div>
-              
-              {/* Decorative Glow */}
-              <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-white/5 rounded-full blur-[80px] group-hover:bg-white/10 transition-all duration-700" />
+
+              {/* Active Indicator Bar */}
+              <div className={`absolute bottom-0 left-0 h-1 bg-vare-purple-light transition-all duration-700 
+                ${activeIndex === i ? 'w-full opacity-100' : 'w-0 opacity-0'}`} />
             </div>
           ))}
         </div>
@@ -3559,6 +3555,375 @@ function LatestBlogSection() {
           }
         `}</style>
       )}
+    </section>
+  );
+}
+
+// ==================== SECTION: NEXT LEVEL UNIQUE CONTACT FORM ====================
+function NextLevelContactForm() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
+  const formContainerRef = useRef<HTMLDivElement>(null);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    company: '',
+    service: '',
+    message: '',
+  });
+  const [submitted, setSubmitted] = useState(false);
+  const [focusedField, setFocusedField] = useState<string | null>(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Title animation
+      gsap.fromTo(
+        '.contact-title',
+        { y: 80, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 1,
+          ease: 'power4.out',
+          scrollTrigger: { trigger: sectionRef.current, start: 'top 75%' },
+        }
+      );
+
+      // Form card 3D tilt on scroll
+      const formCard = formContainerRef.current;
+      if (formCard) {
+        gsap.fromTo(
+          formCard,
+          { rotationY: -15, opacity: 0, z: -200 },
+          {
+            rotationY: 0,
+            opacity: 1,
+            z: 0,
+            duration: 1.2,
+            ease: 'power3.out',
+            scrollTrigger: { trigger: formCard, start: 'top 70%' },
+          }
+        );
+      }
+
+      // Animated grid lines
+      gsap.to('.grid-line-h', {
+        backgroundPosition: '200% center',
+        duration: 6,
+        repeat: -1,
+        ease: 'none',
+      });
+
+      gsap.to('.grid-line-v', {
+        backgroundPosition: 'center 200%',
+        duration: 6,
+        repeat: -1,
+        ease: 'none',
+      });
+
+      // Floating orbs
+      gsap.utils.toArray<HTMLElement>('.floating-orb').forEach((orb, idx) => {
+        gsap.to(orb, {
+          y: -60,
+          x: Math.sin(idx) * 40,
+          opacity: 0,
+          duration: 5 + idx * 0.5,
+          repeat: -1,
+          ease: 'power1.inOut',
+          delay: idx * 0.6,
+        });
+      });
+
+      // Contact info cards hover animation
+      document.querySelectorAll('.contact-info-card').forEach((card) => {
+        card.addEventListener('mouseenter', () => {
+          gsap.to(card, {
+            y: -10,
+            duration: 0.3,
+            ease: 'power2.out',
+          });
+          gsap.to(card.querySelector('.info-icon'), {
+            rotation: 360,
+            duration: 0.6,
+            ease: 'back.out',
+          });
+        });
+        card.addEventListener('mouseleave', () => {
+          gsap.to(card, { y: 0, duration: 0.3 });
+        });
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+      if (response.ok) {
+        setSubmitted(true);
+        setFormData({ name: '', email: '', company: '', service: '', message: '' });
+        setTimeout(() => setSubmitted(false), 3000);
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
+    }
+  };
+
+  return (
+    <section ref={sectionRef} className="py-32 md:py-48 relative overflow-hidden" style={{ perspective: '1200px' }}>
+      {/* Ultra Dynamic Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-[#0a0612] via-[#1a0f2e] to-[#0d0820]" />
+
+      {/* Animated Grid Background */}
+      <div className="absolute inset-0 opacity-20">
+        <div className="grid-line-h absolute w-full h-px top-1/3 bg-gradient-to-r from-transparent via-vare-purple to-transparent" style={{ backgroundSize: '200% 100%' }} />
+        <div className="grid-line-v absolute h-full w-px left-1/3 bg-gradient-to-b from-transparent via-blue-500 to-transparent" style={{ backgroundSize: '100% 200%' }} />
+      </div>
+
+      {/* Animated Orbs with Multiple Layers */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {[...Array(8)].map((_, i) => (
+          <div
+            key={i}
+            className="floating-orb absolute rounded-full blur-[80px]"
+            style={{
+              width: `${100 + i * 40}px`,
+              height: `${100 + i * 40}px`,
+              left: `${20 + i * 12}%`,
+              top: `${10 + (i % 3) * 30}%`,
+              background: [
+                'radial-gradient(circle, rgba(124,77,187,0.3), transparent)',
+                'radial-gradient(circle, rgba(59,130,246,0.3), transparent)',
+                'radial-gradient(circle, rgba(245,158,11,0.2), transparent)',
+              ][i % 3],
+              opacity: 0.4 + (i % 2) * 0.3,
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Glowing Accent Lines */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-1/4 left-0 w-1/2 h-px bg-gradient-to-r from-vare-purple/50 to-transparent shadow-[0_0_20px_rgba(124,77,187,0.5)]" />
+        <div className="absolute bottom-1/3 right-0 w-1/2 h-px bg-gradient-to-l from-blue-500/50 to-transparent shadow-[0_0_20px_rgba(59,130,246,0.5)]" />
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        {/* Hero Title */}
+        <div className="contact-title mb-20 text-center">
+          <div className="inline-block mb-6">
+            <span className="relative inline-flex items-center px-6 py-2 rounded-full bg-gradient-to-r from-vare-purple/20 to-blue-500/20 border border-vare-purple/50 text-vare-purple-light text-xs font-black uppercase tracking-[0.2em] backdrop-blur-xl">
+              <span className="absolute -left-2 w-2 h-2 bg-vare-gold rounded-full animate-pulse" />
+              Let's Build Together
+              <span className="absolute -right-2 w-2 h-2 bg-blue-400 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }} />
+            </span>
+          </div>
+          <h2 className="text-5xl md:text-7xl lg:text-8xl font-black text-white mb-8 leading-[1.1] tracking-tighter">
+            Transform Your <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-vare-purple-light via-blue-400 via-35% to-vare-gold animate-pulse">Vision Into Reality</span>
+          </h2>
+          <p className="text-white/70 max-w-3xl mx-auto text-lg md:text-xl leading-relaxed font-medium">
+            Every project starts with a conversation. Share your vision and let's create something extraordinary together that will captivate your audience.
+          </p>
+        </div>
+
+        {/* Main Form Section */}
+        <div className="grid lg:grid-cols-3 gap-12 items-start">
+          {/* Left Column - Contact Info with Animated Cards */}
+          <div className="space-y-6 lg:col-span-1">
+            {[
+              { icon: Mail, title: 'Email Us', text: 'hello@vareweb.com', color: 'from-vare-purple-light to-blue-400', delay: '0s' },
+              { icon: Phone, title: 'Call Us', text: '+1 (555) 123-4567', color: 'from-blue-400 to-vare-gold', delay: '0.1s' },
+              { icon: MapPin, title: 'Visit Us', text: 'San Francisco, CA', color: 'from-vare-gold to-vare-purple-light', delay: '0.2s' },
+            ].map((item, idx) => (
+              <div
+                key={idx}
+                className="contact-info-card p-6 rounded-2xl bg-white/[0.08] backdrop-blur-lg border border-white/10 hover:border-white/30 transition-all duration-500 group cursor-pointer relative overflow-hidden"
+                style={{ transitionDelay: item.delay }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-10 transition-all duration-500" style={{ backgroundImage: `linear-gradient(135deg, rgb(124,77,187), rgb(59,130,246))` }} />
+                <div className="relative z-10">
+                  <div className={`info-icon w-12 h-12 rounded-full bg-gradient-to-br ${item.color} flex items-center justify-center mb-4 shadow-lg`}>
+                    <item.icon className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="text-lg font-bold text-white mb-2">{item.title}</h3>
+                  <p className="text-white/60 group-hover:text-white/80 transition-colors duration-300 text-sm">{item.text}</p>
+                </div>
+                <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ backgroundImage: `linear-gradient(90deg, rgb(124,77,187), rgb(59,130,246))` }} />
+              </div>
+            ))}
+          </div>
+
+          {/* Right Column - Ultra Spicy Form */}
+          <div className="lg:col-span-2">
+            <div
+              ref={formContainerRef}
+              className="relative p-10 rounded-3xl bg-white/[0.08] backdrop-blur-2xl border border-white/20 shadow-2xl overflow-hidden group"
+              style={{ transformStyle: 'preserve-3d' }}
+            >
+              {/* Animated gradient background */}
+              <div className="absolute inset-0 bg-gradient-to-br from-vare-purple/10 via-transparent to-blue-500/10 opacity-0 group-hover:opacity-100 transition-all duration-500" />
+
+              {/* Glowing border effect */}
+              <div className="absolute -inset-0.5 bg-gradient-to-r from-vare-purple/50 to-blue-500/50 rounded-3xl opacity-0 group-hover:opacity-40 blur transition-all duration-500 -z-10" />
+
+              <form ref={formRef} onSubmit={handleSubmit} className="space-y-6 relative z-10">
+                {/* Row 1: Name & Email */}
+                <div className="grid md:grid-cols-2 gap-5">
+                  {/* Name Input */}
+                  <div className="form-input-wrapper group">
+                    <label className="block text-xs font-black text-white/80 mb-3 uppercase tracking-[0.15em]">Full Name</label>
+                    <div className="relative">
+                      <div className={`absolute inset-0 bg-gradient-to-r from-vare-purple/20 to-blue-500/20 rounded-xl transition-all duration-300 blur ${
+                        focusedField === 'name' ? 'opacity-100' : 'opacity-0'
+                      }`} />
+                      <input
+                        type="text"
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        onFocus={() => setFocusedField('name')}
+                        onBlur={() => setFocusedField(null)}
+                        placeholder="John Doe"
+                        className="relative w-full px-5 py-4 rounded-xl bg-white/5 border border-white/15 text-white placeholder-white/30 focus:outline-none focus:border-vare-purple-light transition-all duration-300 font-medium text-sm focus:bg-white/10 focus:shadow-[0_0_20px_rgba(124,77,187,0.3)]"
+                      />
+                      <div className={`absolute bottom-0 left-0 h-1 bg-gradient-to-r from-vare-purple-light to-blue-400 rounded-full transition-all duration-300 ${
+                        focusedField === 'name' ? 'w-full' : 'w-0'
+                      }`} />
+                    </div>
+                  </div>
+
+                  {/* Email Input */}
+                  <div className="form-input-wrapper group">
+                    <label className="block text-xs font-black text-white/80 mb-3 uppercase tracking-[0.15em]">Email Address</label>
+                    <div className="relative">
+                      <div className={`absolute inset-0 bg-gradient-to-r from-blue-500/20 to-vare-gold/20 rounded-xl transition-all duration-300 blur ${
+                        focusedField === 'email' ? 'opacity-100' : 'opacity-0'
+                      }`} />
+                      <input
+                        type="email"
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        onFocus={() => setFocusedField('email')}
+                        onBlur={() => setFocusedField(null)}
+                        placeholder="john@example.com"
+                        className="relative w-full px-5 py-4 rounded-xl bg-white/5 border border-white/15 text-white placeholder-white/30 focus:outline-none focus:border-blue-400 transition-all duration-300 font-medium text-sm focus:bg-white/10 focus:shadow-[0_0_20px_rgba(59,130,246,0.3)]"
+                      />
+                      <div className={`absolute bottom-0 left-0 h-1 bg-gradient-to-r from-blue-400 to-vare-gold rounded-full transition-all duration-300 ${
+                        focusedField === 'email' ? 'w-full' : 'w-0'
+                      }`} />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Row 2: Company & Service */}
+                <div className="grid md:grid-cols-2 gap-5">
+                  {/* Company Input */}
+                  <div className="form-input-wrapper group">
+                    <label className="block text-xs font-black text-white/80 mb-3 uppercase tracking-[0.15em]">Company</label>
+                    <div className="relative">
+                      <div className={`absolute inset-0 bg-gradient-to-r from-vare-purple/20 to-vare-gold/20 rounded-xl transition-all duration-300 blur ${
+                        focusedField === 'company' ? 'opacity-100' : 'opacity-0'
+                      }`} />
+                      <input
+                        type="text"
+                        value={formData.company}
+                        onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                        onFocus={() => setFocusedField('company')}
+                        onBlur={() => setFocusedField(null)}
+                        placeholder="Your Company"
+                        className="relative w-full px-5 py-4 rounded-xl bg-white/5 border border-white/15 text-white placeholder-white/30 focus:outline-none focus:border-vare-purple-light transition-all duration-300 font-medium text-sm focus:bg-white/10 focus:shadow-[0_0_20px_rgba(124,77,187,0.3)]"
+                      />
+                      <div className={`absolute bottom-0 left-0 h-1 bg-gradient-to-r from-vare-purple-light to-vare-gold rounded-full transition-all duration-300 ${
+                        focusedField === 'company' ? 'w-full' : 'w-0'
+                      }`} />
+                    </div>
+                  </div>
+
+                  {/* Service Dropdown */}
+                  <div className="form-input-wrapper group">
+                    <label className="block text-xs font-black text-white/80 mb-3 uppercase tracking-[0.15em]">Service Type</label>
+                    <div className="relative">
+                      <div className={`absolute inset-0 bg-gradient-to-r from-blue-500/20 to-vare-purple/20 rounded-xl transition-all duration-300 blur ${
+                        focusedField === 'service' ? 'opacity-100' : 'opacity-0'
+                      }`} />
+                      <select
+                        value={formData.service}
+                        onChange={(e) => setFormData({ ...formData, service: e.target.value })}
+                        onFocus={() => setFocusedField('service')}
+                        onBlur={() => setFocusedField(null)}
+                        className="relative w-full px-5 py-4 rounded-xl bg-white/5 border border-white/15 text-white focus:outline-none focus:border-blue-400 transition-all duration-300 font-medium text-sm focus:bg-white/10 focus:shadow-[0_0_20px_rgba(59,130,246,0.3)] appearance-none cursor-pointer"
+                      >
+                        <option value="" className="bg-[#0a0612]">Select service...</option>
+                        <option value="web-design" className="bg-[#0a0612]">Web Design</option>
+                        <option value="web-development" className="bg-[#0a0612]">Web Development</option>
+                        <option value="branding" className="bg-[#0a0612]">Branding</option>
+                        <option value="seo" className="bg-[#0a0612]">SEO Services</option>
+                      </select>
+                      <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40 pointer-events-none" />
+                      <div className={`absolute bottom-0 left-0 h-1 bg-gradient-to-r from-blue-400 to-vare-purple-light rounded-full transition-all duration-300 ${
+                        focusedField === 'service' ? 'w-full' : 'w-0'
+                      }`} />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Message Field - Full Width */}
+                <div className="form-input-wrapper group">
+                  <div className="flex items-center justify-between mb-3">
+                    <label className="block text-xs font-black text-white/80 uppercase tracking-[0.15em]">Message</label>
+                    <span className="text-xs text-white/40">{formData.message.length}/500</span>
+                  </div>
+                  <div className="relative">
+                    <div className={`absolute inset-0 bg-gradient-to-r from-vare-gold/20 to-blue-500/20 rounded-xl transition-all duration-300 blur ${
+                      focusedField === 'message' ? 'opacity-100' : 'opacity-0'
+                    }`} />
+                    <textarea
+                      value={formData.message}
+                      onChange={(e) => setFormData({ ...formData, message: e.target.value.slice(0, 500) })}
+                      onFocus={() => setFocusedField('message')}
+                      onBlur={() => setFocusedField(null)}
+                      placeholder="Tell us about your project goals and vision..."
+                      rows={5}
+                      className="relative w-full px-5 py-4 rounded-xl bg-white/5 border border-white/15 text-white placeholder-white/30 focus:outline-none focus:border-vare-gold transition-all duration-300 font-medium text-sm focus:bg-white/10 focus:shadow-[0_0_20px_rgba(245,158,11,0.3)] resize-none"
+                    />
+                    <div className={`absolute bottom-0 left-0 h-1 bg-gradient-to-r from-vare-gold to-blue-400 rounded-full transition-all duration-300 ${
+                      focusedField === 'message' ? 'w-full' : 'w-0'
+                    }`} />
+                  </div>
+                </div>
+
+                {/* Submit Button - Ultra Spicy */}
+                <button
+                  type="submit"
+                  className="w-full mt-8 py-5 px-8 rounded-2xl font-black text-base uppercase tracking-[0.2em] text-white bg-gradient-to-r from-vare-purple-light via-blue-400 to-vare-gold hover:from-vare-purple hover:via-blue-500 hover:to-yellow-500 transition-all duration-300 shadow-xl hover:shadow-[0_0_60px_rgba(124,77,187,0.6)] transform hover:scale-110 hover:-rotate-1 group relative overflow-hidden"
+                >
+                  <span className="relative z-10 flex items-center justify-center gap-3">
+                    <Rocket className="w-5 h-5 group-hover:rotate-45 transition-transform duration-500" />
+                    Launch Your Project
+                    <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform duration-300" />
+                  </span>
+                  <div className="absolute inset-0 bg-white/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-white rounded-full animate-pulse" />
+                </button>
+
+                {/* Success Message */}
+                {submitted && (
+                  <div className="mt-6 p-6 rounded-xl bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-500/50 text-green-200 text-center font-bold flex items-center justify-center gap-3 animate-pulse">
+                    <CheckCircle2 className="w-6 h-6" />
+                    🎉 Message sent! We'll reach out shortly!
+                  </div>
+                )}
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
   );
 }
@@ -3737,6 +4102,8 @@ export default function HomePage() {
       <WhyChooseUsSection />
 
       <LatestBlogSection />
+
+      <NextLevelContactForm />
 
       {/* CTA Banner - Right Above Footer */}
       <CTABannerSection />
