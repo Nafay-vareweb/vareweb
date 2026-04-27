@@ -178,7 +178,9 @@ export default function Footer() {
                 <div className="w-10 h-10 rounded-full bg-white/[0.03] flex items-center justify-center flex-shrink-0 border border-white/5 circle-icon">
                   <MapPin className="w-4 h-4 text-vare-purple-light" />
                 </div>
-                <span className="text-white/60 text-sm leading-relaxed">5400 Preston Oaks Rd, Dallas, TX 75254, USA</span>
+                <a href="https://maps.google.com/?q=163+Town+Pl,+Fairview,+TX+75069,+United+States" target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-white text-sm font-medium transition-colors">
+                  163 Town Pl, Fairview, TX 75069, United States
+                </a>
               </li>
               <li className="flex items-center space-x-4">
                 <div className="w-10 h-10 rounded-full bg-white/[0.03] flex items-center justify-center flex-shrink-0 border border-white/5 circle-icon">
@@ -192,8 +194,8 @@ export default function Footer() {
                 <div className="w-10 h-10 rounded-full bg-white/[0.03] flex items-center justify-center flex-shrink-0 border border-white/5 circle-icon">
                   <Phone className="w-4 h-4 text-vare-purple-light" />
                 </div>
-                <a href="tel:+1234567890" className="text-white/60 hover:text-white text-sm font-medium transition-colors">
-                  +1 (234) 567-890
+                <a href="tel:+14694666031" className="text-white/60 hover:text-white text-sm font-medium transition-colors">
+                  +1 (469) 466-6031
                 </a>
               </li>
             </ul>

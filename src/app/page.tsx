@@ -9,7 +9,6 @@ import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import ParticleBackground from '@/components/ParticleBackground';
 import VideoPopup from '@/components/VideoPopup';
-import PerformanceMetrics from '@/components/PerformanceMetrics';
 import {
   Smartphone, RefreshCw, Palette, Search, ShoppingCart,
   Star, MousePointer, Target, TrendingDown, ArrowRight, ChevronLeft, ChevronRight, ChevronDown, Quote,
@@ -287,7 +286,7 @@ function PhoneFloat({ frameWidth = 360 }: { frameWidth?: number }) {
   );
 }
 
-function BrowserFramesRotator({ count = 3, width = 360, widths }: { count?: number; width?: number; widths?: number[] }) {
+function BrowserFramesRotator({ count = 3, width = 460, widths }: { count?: number; width?: number; widths?: number[] }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const prefersReduced = usePrefersReducedMotion();
 
@@ -938,7 +937,7 @@ function HeroSection() {
       </div>
 
       {/* Particle Background - reduced for performance on heavy pages */}
-      <ParticleBackground count={40} connectLines={false} interactive={false} zIndex={5} />
+      <ParticleBackground count={100} connectLines={false} interactive={false} zIndex={5} />
 
       {/* ========== Left Edge Discount Bar (NEW) ========== */}
       <button
@@ -965,7 +964,7 @@ function HeroSection() {
       </button>
 
       {/* ========== Main Content — Split Layout ========== */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 md:pl-[88px] lg:pl-[96px] w-full pb-32 lg:pb-8">
+      <div className="relative z-10 max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 md:pl-[88px] lg:pl-[120px] w-full pb-32 lg:pb-8">
         <div className="grid grid-cols-1 xl:grid-cols-5 gap-10 xl:gap-16 items-start">
 
           {/* ===== LEFT COLUMN — Text Content (~60%) ===== */}
@@ -1071,7 +1070,7 @@ function HeroSection() {
 
           {/* ===== RIGHT COLUMN — 4 Images with Smooth Fade Animation ===== */}
           <div className="xl:col-span-2 flex justify-center items-center relative w-full h-auto">
-            <BrowserFramesRotator count={3} widths={[700, 360, 300]} />
+            <BrowserFramesRotator count={3} widths={[700, 600, 300]} />
           </div>
         </div>
       </div>
@@ -1225,8 +1224,8 @@ function TrustedBySection() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="py-20 sm:py-24 bg-[#090510] overflow-hidden relative">
-      <div className="absolute inset-0 bg-gradient-to-b from-[#0a0612] via-transparent to-[#0a0612] opacity-80" />
+    <section ref={sectionRef} className="py-20 sm:py-24 bg-[#5B2C68] overflow-hidden relative">
+      <div className="absolute inset-0 bg-gradient-to-br from-[#0a0612] via-[#1a0f2e] to-[#0d0820] opacity-50" />
       {/* Floating 3D decorative elements */}
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
         {/* Rotating wireframe cube 1 */}
@@ -1332,8 +1331,6 @@ function TrustedBySection() {
       </div>
 
       {/* Fade edges — deep dark theme */}
-      <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-[#0a0612] to-transparent pointer-events-none z-20" />
-      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#090510] to-transparent pointer-events-none z-20" />
       <div className="absolute top-0 bottom-0 left-0 w-16 xs:w-20 sm:w-24 md:w-32 bg-gradient-to-r from-[#090510] to-transparent pointer-events-none z-20" />
       <div className="absolute top-0 bottom-0 right-0 w-16 xs:w-20 sm:w-24 md:w-32 bg-gradient-to-l from-[#090510] to-transparent pointer-events-none z-20" />
 
@@ -1472,7 +1469,6 @@ const services = [
   },
 ];
 
-// ==================== SECTION: SERVICES (Glide.js Carousel — Dark Theme) ====================
 // ==================== SECTION: SERVICES (Cinematic Bento Grid Display) ====================
 function ServicesSection() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -1559,16 +1555,16 @@ function ServicesSection() {
   };
 
   return (
-    <section id="services" ref={sectionRef} className="py-32 bg-[#090510] relative overflow-hidden">
+    <section id="services" ref={sectionRef} className="py-32 bg-[#5B2C68]  relative">
       {/* Background */}
-      <div className="absolute inset-0 mesh-gradient-dark opacity-20" />
-      <div className="absolute inset-0 bg-[#090510]/30 backdrop-blur-3xl" />
+      <div className="absolute inset-0 mesh-gradient-dark opacity-20 pointer-events-none" />
+      <div className="absolute inset-0 bg-[#090510]/30 backdrop-blur-3xl pointer-events-none" />
       
       {/* Animated Orbs */}
       <div className="absolute top-1/4 left-1/4 w-[700px] h-[700px] bg-vare-purple/15 rounded-full blur-[180px] animate-pulse-slow" />
       <div className="absolute bottom-1/4 right-1/4 w-[600px] h-[600px] bg-blue-500/12 rounded-full blur-[160px] animate-pulse-slow" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         {/* Header */}
         <div className="svc-header text-center mb-20">
           <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-vare-purple-light text-xs font-bold uppercase tracking-widest mb-8">
@@ -1583,9 +1579,9 @@ function ServicesSection() {
         </div>
 
         {/* Services Grid - Left Bars & Right Preview */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
           {/* Left: Service Bars */}
-          <div className="space-y-4 flex flex-col">
+          <div className="space-y-4 flex flex-col w-full">
             {services.slice(0, 6).map((service, i) => (
               <div
                 key={i}
@@ -1664,7 +1660,7 @@ function ServicesSection() {
           </div>
 
           {/* Right: Preview Image */}
-          <div ref={previewRef} className="hidden lg:block self-start sticky top-32">
+          <div ref={previewRef} className="hidden lg:block sticky top-20" style={{ height: 'auto', position: '-webkit-sticky' }}>
             <div className="relative rounded-3xl overflow-hidden border border-white/10 h-[700px] bg-gradient-to-br from-white/5 to-white/[0.02]">
               {/* Animated Background */}
               <div className="absolute inset-0 bg-gradient-to-br from-vare-purple/20 via-transparent to-blue-500/10" />
@@ -2086,7 +2082,7 @@ function PortfolioSection() {
   };
 
   return (
-    <section id="portfolio" ref={sectionRef} className="py-32 bg-[#0a0612] relative overflow-hidden">
+    <section id="portfolio" ref={sectionRef} className="py-32 bg-gradient-to-br from-[#0a0612] via-[#1a0f2e] to-[#0d0820] relative overflow-hidden">
       <div className="absolute inset-0 mesh-gradient-dark opacity-30" />
       <div className="absolute inset-0 bg-[#0a0612]/60 backdrop-blur-3xl" />
       
@@ -2096,7 +2092,7 @@ function PortfolioSection() {
             <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-vare-purple-light text-xs font-bold uppercase tracking-widest mb-6 md:mb-8">
                Success Matrix
             </span>
-            <h2 className="text-5xl md:text-7xl lg:text-8xl font-black text-white mb-0 tracking-tighter leading-[1.1] md:leading-tight">
+            <h2 className="text-5xl md:text-7xl lg:text-8xl font-black text-white mb-0 leading-[1.1] md:leading-tight">
               Case <span className="text-transparent bg-clip-text bg-gradient-to-r from-vare-gold via-yellow-300 to-yellow-500">Studies</span>
             </h2>
           </div>
@@ -2131,7 +2127,7 @@ function PortfolioSection() {
                <div className="relative h-full flex flex-col glass-card-accent rounded-[2.5rem] md:rounded-[3rem] border border-white/5 overflow-hidden group-hover:border-white/10 transition-all duration-700">
                   <div className="flex flex-col md:flex-row h-full">
                     {/* Image Container - Responsive position */}
-                    <div className="w-full md:w-[55%] h-[220px] sm:h-[280px] md:h-auto relative overflow-hidden order-first md:order-last">
+                    <div className="w-full md:w-[45%] h-[220px] sm:h-[280px] md:h-auto relative overflow-hidden order-first md:order-last">
                        <img
                         src={item.image}
                         alt={item.title}
@@ -2451,6 +2447,7 @@ function SkillsExpertiseSection() {
   const gridRef = useRef<HTMLDivElement>(null);
   const lineHRef = useRef<HTMLDivElement>(null);
   const lineVRef = useRef<HTMLDivElement>(null);
+  const shapesRef = useRef<(HTMLDivElement | null)[]>([]);
 
   const stats = [
     { number: 8000, label: 'Brands Designed', icon: 'zap', position: 'top' },
@@ -2479,6 +2476,42 @@ function SkillsExpertiseSection() {
       default: return null;
     }
   };
+
+  // 3D Floating Shapes Animation
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      const rotations = [
+        { x: 360, y: 180, z: 90 },
+        { x: 180, y: 360, z: 180 },
+        { x: 90, y: 90, z: 360 },
+        { x: 270, y: 270, z: 180 },
+        { x: 180, y: 90, z: 270 },
+        { x: 360, y: 360, z: 360 },
+        { x: 120, y: 240, z: 60 },
+        { x: 240, y: 60, z: 300 },
+      ];
+
+      shapesRef.current.forEach((shape, i) => {
+        if (!shape) return;
+
+        gsap.to(shape, {
+          rotationX: rotations[i]?.x || 360,
+          rotationY: rotations[i]?.y || 180,
+          rotationZ: rotations[i]?.z || 90,
+          ease: 'none',
+          force3D: true,
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: 1.5,
+          },
+        });
+      });
+    });
+
+    return () => ctx.revert();
+  }, []);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -2603,13 +2636,39 @@ function SkillsExpertiseSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="py-20 md:py-40 relative overflow-hidden bg-gradient-to-b from-[#0a0612] to-[#0d0820]">
+    <section ref={sectionRef} className="py-20 md:py-40 relative overflow-hidden bg-gradient-to-l from-[#A300A3] to-[#582B99]" style={{ perspective: '800px' }}>
       {/* Animated Background Blobs */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-vare-purple/10 rounded-full blur-[100px] animate-pulse" />
         <div className="absolute bottom-0 left-0 w-80 h-80 bg-blue-500/10 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '1s' }} />
         <div className="absolute top-1/2 left-1/3 w-72 h-72 bg-vare-gold/5 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '2s' }} />
       </div>
+
+      {/* Floating 3D geometric shapes */}
+      <>
+        <div ref={(el) => { shapesRef.current[0] = el; }} className="absolute top-[8%] left-[3%] w-10 h-10 border-2 border-vare-purple/15 pointer-events-none" style={{ transformStyle: 'preserve-3d' }} />
+
+        <div ref={(el) => { shapesRef.current[1] = el; }} className="absolute top-[20%] right-[5%] w-8 h-8 rounded-full border-2 border-vare-gold/15 pointer-events-none" style={{ transformStyle: 'preserve-3d' }} />
+
+        <div ref={(el) => { shapesRef.current[2] = el; }} className="absolute top-[45%] left-[2%] w-0 h-0 pointer-events-none" style={{ borderLeft: '14px solid transparent', borderRight: '14px solid transparent', borderBottom: '24px solid rgba(124,77,187,0.1)', transformStyle: 'preserve-3d' }} />
+
+        <div ref={(el) => { shapesRef.current[3] = el; }} className="absolute top-[60%] right-[4%] w-12 h-12 border-2 border-vare-purple/10 pointer-events-none" style={{ transformStyle: 'preserve-3d' }} />
+
+        <div ref={(el) => { shapesRef.current[4] = el; }} className="absolute bottom-[12%] left-[8%] w-6 h-6 rounded-full border-2 border-vare-gold/12 pointer-events-none" style={{ transformStyle: 'preserve-3d' }} />
+
+        <div ref={(el) => { shapesRef.current[5] = el; }} className="absolute bottom-[18%] right-[10%] w-0 h-0 pointer-events-none" style={{ borderLeft: '10px solid transparent', borderRight: '10px solid transparent', borderBottom: '18px solid rgba(124,77,187,0.08)', transformStyle: 'preserve-3d' }} />
+
+        <div ref={(el) => { shapesRef.current[6] = el; }} className="absolute top-[30%] right-[18%] w-16 h-16 pointer-events-none" style={{ transformStyle: 'preserve-3d' }}>
+          <div className="absolute inset-0 border-2 border-vare-purple/10 rotate-[30deg] rounded-sm" />
+          <div className="absolute inset-2 border-2 border-vare-purple/[0.07] rotate-[60deg] rounded-sm" />
+          <div className="absolute inset-4 border-2 border-vare-gold/[0.07] rotate-[90deg] rounded-sm" />
+        </div>
+
+        <div ref={(el) => { shapesRef.current[7] = el; }} className="absolute bottom-[28%] right-[22%] w-10 h-10 pointer-events-none" style={{ transformStyle: 'preserve-3d' }}>
+          <div className="absolute inset-0 border-2 border-vare-purple/10 rotate-45" />
+          <div className="absolute inset-2 border-2 border-vare-purple/[0.07]" />
+        </div>
+      </>
 
       <div className="relative z-10">
         {/* Main Layout */}
@@ -2656,51 +2715,51 @@ function SkillsExpertiseSection() {
                 {/* Stats positioned in cross */}
                 <div className="relative w-full h-full flex items-center justify-center">
                   {/* Top - Stat 1 */}
-                  <div className="stat-item group absolute top-0 left-1/2 -translate-x-1/2 text-center cursor-pointer">
-                    <div className="relative mb-4">
+                  <div className="stat-item group absolute top-0 left-1/2 -translate-x-1/2 flex flex-col items-center cursor-pointer">
+                    <div className="relative mb-3">
                       <div className="stat-glow absolute -inset-4 bg-gradient-to-r from-vare-purple/50 to-blue-500/50 rounded-full blur-lg opacity-50 group-hover:opacity-100 transition-opacity duration-300" />
                       <div className="relative flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-vare-purple/30 to-blue-500/20 border border-vare-purple/50 group-hover:border-vare-purple transition-all">
                         {getIcon('zap')}
                       </div>
                     </div>
-                    <div className="stat-number-0 text-3xl md:text-4xl font-black text-white mb-1">0+</div>
-                    <div className="text-xs md:text-sm text-white/60 font-semibold uppercase tracking-widest">{stats[0].label}</div>
+                    <div className="stat-number-0 text-3xl md:text-4xl font-black text-white mb-2">0+</div>
+                    <div className="text-xs md:text-sm text-white/60 font-semibold uppercase tracking-widest whitespace-nowrap text-center">{stats[0].label}</div>
                   </div>
 
                   {/* Right - Stat 2 */}
-                  <div className="stat-item group absolute right-0 top-1/2 -translate-y-1/2 text-center cursor-pointer pr-8">
-                    <div className="relative mb-4">
+                  <div className="stat-item group absolute right-0 top-1/2 -translate-y-1/2 flex flex-col items-center cursor-pointer pr-8">
+                    <div className="relative mb-3">
                       <div className="stat-glow absolute -inset-4 bg-gradient-to-r from-blue-500/50 to-vare-gold/50 rounded-full blur-lg opacity-50 group-hover:opacity-100 transition-opacity duration-300" />
                       <div className="relative flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-blue-500/30 to-vare-gold/20 border border-blue-500/50 group-hover:border-blue-400 transition-all">
                         {getIcon('trending')}
                       </div>
                     </div>
-                    <div className="stat-number-1 text-3xl md:text-4xl font-black text-white mb-1">0%</div>
-                    <div className="text-xs md:text-sm text-white/60 font-semibold uppercase tracking-widest whitespace-nowrap">{stats[1].label}</div>
+                    <div className="stat-number-1 text-3xl md:text-4xl font-black text-white mb-2">0%</div>
+                    <div className="text-xs md:text-sm text-white/60 font-semibold uppercase tracking-widest whitespace-nowrap text-center">{stats[1].label}</div>
                   </div>
 
                   {/* Bottom - Stat 3 */}
-                  <div className="stat-item group absolute bottom-0 left-1/2 -translate-x-1/2 text-center cursor-pointer">
-                    <div className="relative mb-4">
+                  <div className="stat-item group absolute bottom-0 left-1/2 -translate-x-1/2 flex flex-col items-center cursor-pointer">
+                    <div className="relative mb-3">
                       <div className="stat-glow absolute -inset-4 bg-gradient-to-r from-vare-gold/50 to-vare-purple/50 rounded-full blur-lg opacity-50 group-hover:opacity-100 transition-opacity duration-300" />
                       <div className="relative flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-vare-gold/30 to-vare-purple/20 border border-vare-gold/50 group-hover:border-vare-gold transition-all">
                         {getIcon('code')}
                       </div>
                     </div>
-                    <div className="stat-number-2 text-3xl md:text-4xl font-black text-white mb-1">0+</div>
-                    <div className="text-xs md:text-sm text-white/60 font-semibold uppercase tracking-widest">{stats[2].label}</div>
+                    <div className="stat-number-2 text-3xl md:text-4xl font-black text-white mb-2">0+</div>
+                    <div className="text-xs md:text-sm text-white/60 font-semibold uppercase tracking-widest whitespace-nowrap text-center">{stats[2].label}</div>
                   </div>
 
                   {/* Left - Stat 4 */}
-                  <div className="stat-item group absolute left-0 top-1/2 -translate-y-1/2 text-center cursor-pointer pl-8">
-                    <div className="relative mb-4">
+                  <div className="stat-item group absolute left-0 top-1/2 -translate-y-1/2 flex flex-col items-center cursor-pointer pl-8">
+                    <div className="relative mb-3">
                       <div className="stat-glow absolute -inset-4 bg-gradient-to-r from-vare-purple/50 to-blue-500/50 rounded-full blur-lg opacity-50 group-hover:opacity-100 transition-opacity duration-300" />
                       <div className="relative flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-vare-purple/30 to-blue-500/20 border border-vare-purple/50 group-hover:border-vare-purple transition-all">
                         {getIcon('search')}
                       </div>
                     </div>
-                    <div className="stat-number-3 text-3xl md:text-4xl font-black text-white mb-1">0+</div>
-                    <div className="text-xs md:text-sm text-white/60 font-semibold uppercase tracking-widest whitespace-nowrap">{stats[3].label}</div>
+                    <div className="stat-number-3 text-3xl md:text-4xl font-black text-white mb-2">0+</div>
+                    <div className="text-xs md:text-sm text-white/60 font-semibold uppercase tracking-widest whitespace-nowrap text-center">{stats[3].label}</div>
                   </div>
 
                   {/* Center - Pulsing Orb */}
@@ -2749,9 +2808,16 @@ function SkillsExpertiseSection() {
           </div>
         </div>
       </div>
+      <br></br>
+       <div className="text-center mt-20">
+          <p className="text-white/30 text-sm font-medium uppercase tracking-widest">
+            Continuously evolving. Always improving.
+          </p>
+        </div>
     </section>
   );
 }
+
 
 // ==================== SECTION: FAQ DATA ====================
 const faqItems = [
@@ -2762,6 +2828,7 @@ const faqItems = [
   { q: 'Do you provide SEO services with web design?', a: 'Yes, every website we build includes foundational SEO setup including meta tags, schema markup, sitemap, and optimized page structure. We also offer advanced SEO packages with content strategy, keyword research, link building, and ongoing optimization to improve your search rankings.' },
   { q: 'What technologies do you use for development?', a: 'We use modern, industry-standard technologies including React, Next.js, Node.js, TypeScript, and Tailwind CSS for front-end development. For back-end, we work with various platforms including WordPress, Shopify, and custom solutions built with Prisma and PostgreSQL.' },
 ];
+
 
 // ==================== SECTION: TESTIMONIALS DATA ====================
 const testimonials = [
@@ -3412,7 +3479,7 @@ function WhyChooseUsSection() {
 // ==================== SECTION: LATEST FROM BLOG (UNCHANGED) ====================
 function LatestBlogSection() {
   const sectionRef = useRef<HTMLElement>(null);
-  const blogCardRefs = useRef<(HTMLAnchorElement | null)[]>([]);
+  const cardRefs = useRef<(HTMLAnchorElement | null)[]>([]);
   const reduced = usePrefersReducedMotion();
   const [blogs, setBlogs] = useState<{ id: string; title: string; excerpt: string; category: string; createdAt: string; slug?: string }[]>([]);
 
@@ -3431,7 +3498,7 @@ function LatestBlogSection() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      const blogHeader = sectionRef.current?.querySelector('.section-header');
+      const blogHeader = sectionRef.current?.querySelector('.blog-section-header');
       if (blogHeader) {
         gsap.fromTo(
           blogHeader,
@@ -3439,122 +3506,104 @@ function LatestBlogSection() {
           { y: 0, opacity: 1, duration: 0.7, ease: 'power3.out', scrollTrigger: { trigger: sectionRef.current, start: 'top 75%' } }
         );
       }
-      const blogCards = sectionRef.current?.querySelectorAll('.blog-card');
-      const blogGrid = sectionRef.current?.querySelector('.blog-grid');
-      if (blogCards && blogCards.length && blogGrid) {
+
+      // Staggered card animations
+      const allCards = cardRefs.current.filter(Boolean);
+      if (allCards.length) {
         gsap.fromTo(
-          blogCards,
-          { y: 50, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.5, stagger: 0.15, ease: 'power3.out', scrollTrigger: { trigger: blogGrid, start: 'top 80%' } }
+          allCards,
+          { y: 40, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.6, ease: 'power3.out', scrollTrigger: { trigger: sectionRef.current, start: 'top 70%' }, stagger: 0.1 }
         );
       }
 
       if (reduced) return;
 
-      // 3D tilt on hover for blog cards
-      blogCardRefs.current.forEach((card) => {
+      // Hover effects for cards
+      cardRefs.current.forEach((card) => {
         if (!card) return;
-        card.addEventListener('mousemove', (e: Event) => {
-          const me = e as MouseEvent;
-          const rect = card.getBoundingClientRect();
-          const x = (me.clientX - rect.left) / rect.width - 0.5;
-          const y = (me.clientY - rect.top) / rect.height - 0.5;
-          gsap.to(card, {
-            rotateY: x * 8,
-            rotateX: -y * 5,
-            duration: 0.3,
-            ease: 'power2.out',
-            force3D: true,
-          });
+
+        card.addEventListener('mouseenter', () => {
+          gsap.to(card.querySelector('.blog-image'), { y: -8, duration: 0.3, ease: 'power2.out' });
         });
+
         card.addEventListener('mouseleave', () => {
-          gsap.to(card, {
-            rotateY: 0,
-            rotateX: 0,
-            duration: 0.5,
-            ease: 'power2.out',
-            force3D: true,
-          });
+          gsap.to(card.querySelector('.blog-image'), { y: 0, duration: 0.3, ease: 'power2.out' });
         });
       });
     });
+
     return () => ctx.revert();
   }, [reduced]);
 
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  };
+
   return (
-    <section ref={sectionRef} className="py-24 sm:py-32 bg-[#0d0716] relative overflow-hidden" style={{ perspective: '1000px' }}>
-      {/* Subtle moving gradient background */}
-      {!reduced && (
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background: 'linear-gradient(135deg, rgba(124,77,187,0.03) 0%, transparent 40%, rgba(245,158,11,0.03) 70%, transparent 100%)',
-            backgroundSize: '200% 200%',
-            animation: 'blogGradientShift 8s ease-in-out infinite',
-          }}
-        />
-      )}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="section-header text-center mb-16 sm:mb-20">
-          <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/[0.05] text-vare-purple-light text-xs font-bold uppercase tracking-widest mb-6 border border-white/[0.1]">
-             Knowledge Hub
-          </span>
-          <h2 className="text-4xl md:text-6xl font-black text-white mb-6">
-            Latest from the <span className="text-transparent bg-clip-text bg-gradient-to-r from-vare-purple-light to-blue-400">Blog</span>
+    <section ref={sectionRef} className="py-16 sm:py-24 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="blog-section-header mb-16">
+          <span className="text-sm font-medium text-gray-500 uppercase tracking-wide block mb-4">Insights</span>
+          <h2 className="text-5xl sm:text-6xl font-serif text-black mb-12" style={{ fontFamily: 'Georgia, serif' }}>
+            Transform Your Digital Future
           </h2>
-          <p className="text-white/50 max-w-2xl mx-auto text-lg leading-relaxed">
-            Stay updated with the latest trends, tips, and insights in web design and digital marketing.
-          </p>
         </div>
-        <div className="blog-grid grid grid-cols-1 md:grid-cols-3 gap-8">
-            {blogs.map((blog, i) => (
-              <Link
-                key={blog.id}
-                ref={(el) => { if(blogCardRefs.current) blogCardRefs.current[i] = el; }}
-                href={blog.slug ? `/blog/${blog.slug}` : '/blog'}
-                className="blog-card group cursor-pointer block glass-card rounded-3xl p-4 border-white/5 hover:border-white/15 transition-all duration-500"
-                style={{ transformStyle: 'preserve-3d' }}
-              >
-                <div className="aspect-[16/10] rounded-2xl bg-gradient-to-br from-vare-purple/40 to-violet-600/20 mb-6 overflow-hidden relative border border-white/5">
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-500" />
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <FileText className="w-12 h-12 text-white/10" />
-                  </div>
-                  <div className="absolute top-4 left-4">
-                    <span className="px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-wider border border-white/10">
-                      {blog.category || 'General'}
-                    </span>
-                  </div>
+
+        {/* Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+          {blogs.map((blog, i) => (
+            <Link
+              key={blog.id}
+              ref={(el) => { if(cardRefs.current) cardRefs.current[i] = el; }}
+              href={blog.slug ? `/blog/${blog.slug}` : '/blog'}
+              className="blog-card group flex flex-col"
+            >
+              {/* Image Container */}
+              <div className="blog-image mb-6 overflow-hidden rounded-sm bg-gray-200 aspect-[3/2] transition-all duration-300">
+                <div className="w-full h-full bg-gradient-to-br from-gray-300 via-gray-200 to-gray-300 flex items-center justify-center">
+                  <FileText className="w-12 h-12 text-gray-400" />
                 </div>
-                <h3 className="text-lg font-bold text-white mb-3 group-hover:text-vare-purple-light transition-colors duration-300 line-clamp-2 px-1">
+              </div>
+
+              {/* Content */}
+              <div className="flex flex-col flex-grow">
+                {/* Meta information */}
+                <p className="text-xs text-gray-500 mb-3 font-medium">
+                  {formatDate(blog.createdAt)} · Author Name
+                </p>
+
+                {/* Title */}
+                <h3 className="text-2xl font-serif text-black mb-3 leading-tight group-hover:text-gray-700 transition-colors duration-300" style={{ fontFamily: 'Georgia, serif' }}>
                   {blog.title}
                 </h3>
-                <p className="text-white/40 text-sm leading-relaxed line-clamp-2 px-1">{blog.excerpt}</p>
-                <div className="mt-6 flex items-center text-vare-purple-light font-bold text-xs uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-1 group-hover:translate-y-0 px-1">
-                  Read Article <ArrowRight className="ml-2 w-4 h-4" />
+
+                {/* Excerpt */}
+                <p className="text-gray-600 text-sm leading-relaxed mb-6 flex-grow">
+                  {blog.excerpt}
+                </p>
+
+                {/* Read More Link */}
+                <div className="inline-flex items-center text-black text-sm font-medium group-hover:translate-x-1 transition-transform duration-300">
+                  Read more <ArrowRight className="ml-2 w-4 h-4" />
                 </div>
-              </Link>
-            ))}
+              </div>
+            </Link>
+          ))}
         </div>
-        <div className="text-center mt-16 sm:mt-20">
+
+        {/* CTA Button */}
+        <div className="flex justify-start">
           <Link
             href="/blog"
-            className="inline-flex items-center px-8 py-4 text-sm font-bold uppercase tracking-widest text-white border border-white/10 rounded-2xl hover:bg-white/5 hover:border-white/30 transition-all duration-300 bg-white/0"
+            className="group inline-flex items-center px-6 py-3 text-sm font-medium border-2 border-black text-black hover:bg-black hover:text-white transition-all duration-300"
           >
-            Explore Journal <ArrowRight className="ml-3 w-4 h-4" />
+            View more articles <ArrowRight className="ml-2 w-4 h-4" />
           </Link>
         </div>
       </div>
-      {/* Blog gradient animation keyframes */}
-      {!reduced && (
-        <style>{`
-          @keyframes blogGradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-          }
-        `}</style>
-      )}
     </section>
   );
 }
@@ -3738,9 +3787,9 @@ function NextLevelContactForm() {
           {/* Left Column - Contact Info with Animated Cards */}
           <div className="space-y-6 lg:col-span-1">
             {[
-              { icon: Mail, title: 'Email Us', text: 'hello@vareweb.com', color: 'from-vare-purple-light to-blue-400', delay: '0s' },
-              { icon: Phone, title: 'Call Us', text: '+1 (555) 123-4567', color: 'from-blue-400 to-vare-gold', delay: '0.1s' },
-              { icon: MapPin, title: 'Visit Us', text: 'San Francisco, CA', color: 'from-vare-gold to-vare-purple-light', delay: '0.2s' },
+              { icon: Mail, title: 'Email Us', text: 'contact@vareweb.com', color: 'from-vare-purple-light to-blue-400', delay: '0s' },
+              { icon: Phone, title: 'Call Us', text: '+1 (469) 466-6031', color: 'from-blue-400 to-vare-gold', delay: '0.1s' },
+              { icon: MapPin, title: 'Visit Us', text: '163 Town Pl, Fairview, TX 75069, United States', color: 'from-vare-gold to-vare-purple-light', delay: '0.2s' },
             ].map((item, idx) => (
               <div
                 key={idx}
@@ -4078,13 +4127,11 @@ function CTABannerSection() {
 // ==================== MAIN PAGE ====================
 export default function HomePage() {
   return (
-    <main>
-      <FloatingElements />
+    <main className="relative w-full">
       <Navigation />
-      <div className="relative z-10 overflow-x-hidden">
+      <FloatingElements />
+      <div className="relative w-full">
       <HeroSection />
-
-      <PerformanceMetrics/>
 
       <SkillsExpertiseSection />
 

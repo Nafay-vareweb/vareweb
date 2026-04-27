@@ -295,6 +295,12 @@
   .glow-gold {
     box-shadow: 0 0 20px rgba(245, 158, 11, 0.3), 0 0 60px rgba(245, 158, 11, 0.1);
   }
+
+  /* Ensure sticky positioning works */
+  .sticky {
+    position: -webkit-sticky;
+    position: sticky;
+  }
 }
 
 /* Page Loader Animation */

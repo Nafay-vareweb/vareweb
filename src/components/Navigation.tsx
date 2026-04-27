@@ -59,7 +59,7 @@ export default function Navigation() {
       gsap.fromTo(
         navRef.current,
         { y: -100, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out', delay: 0.2 }
+        { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out', delay: 0 }
       );
     }
   }, []);
@@ -80,11 +80,12 @@ export default function Navigation() {
     <>
       <nav
         ref={navRef}
-        className={`fixed top-0 left-0 right-0 z-[9999] pointer-events-auto transition-all duration-500 opacity-0 ${
+        className={`fixed top-0 left-0 right-0 z-[9999] pointer-events-auto transition-all duration-500 will-change-transform ${
           scrolled
             ? 'py-3'
             : 'py-5'
         }`}
+        style={{ opacity: 1 }}
       >
         <div className={`absolute inset-0 transition-all duration-500 pointer-events-none ${
           scrolled 
