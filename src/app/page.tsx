@@ -6,7 +6,6 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
 import Navigation from '@/components/Navigation';
-import Footer from '@/components/Footer';
 import ParticleBackground from '@/components/ParticleBackground';
 import VideoPopup from '@/components/VideoPopup';
 import {
@@ -2636,7 +2635,7 @@ function SkillsExpertiseSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="py-20 md:py-40 relative overflow-hidden bg-gradient-to-l from-[#A300A3] to-[#582B99]" style={{ perspective: '800px' }}>
+    <section ref={sectionRef} className="py-20 md:py-40 relative overflow-hidden bg-gradient-to-t from-[#A300A3] to-[#020202]" style={{ perspective: '800px' }}>
       {/* Animated Background Blobs */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-vare-purple/10 rounded-full blur-[100px] animate-pulse" />
@@ -3236,7 +3235,7 @@ function ClientVideoReviewsSection() {
   return (
     <>
       <section ref={sectionRef} className="py-24 sm:py-32 relative overflow-hidden mesh-gradient-dark">
-        <div className="absolute inset-0 bg-[#0a0612]/60 backdrop-blur-3xl" />
+        <div className="absolute inset-0 bg-[#F5F5DC] backdrop-blur-3xl" />
         
         {/* Floating particle dots */}
         <div className="absolute inset-0 pointer-events-none opacity-20">
@@ -3264,8 +3263,8 @@ function ClientVideoReviewsSection() {
               <Quote className="w-4 h-4 mr-2 text-vare-gold" />
               Social Proof
             </span>
-            <h2 className="text-3xl sm:text-5xl font-bold text-white mb-6">
-              Client Video <span className="text-transparent bg-clip-text bg-gradient-to-r from-vare-purple-light to-blue-400">Reviews</span>
+            <h2 className="text-3xl sm:text-5xl font-bold text-black mb-6">
+              Client Video <span className="text-transparent bg-clip-text bg-gradient-to-r from-vare-purple-dark to-blue-400">Reviews</span>
             </h2>
             <p className="text-white/50 max-w-2xl mx-auto text-lg leading-relaxed">
               Real stories from business leaders who scaled with VareWeb
@@ -4156,7 +4155,6 @@ export default function HomePage() {
       <CTABannerSection />
 
       </div>{/* end relative z-10 wrapper */}
-      <Footer />
     </main>
   );
 }
